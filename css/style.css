@@ -167,3 +167,60 @@ footer {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+
+/* =========================================
+   Mobile Responsiveness (ဖုန်းစခရင်အတွက်)
+   ========================================= */
+@media (max-width: 768px) {
+    /* Header ကို ဘယ်ဘက်သို့ စီရန် */
+    .header-container {
+        flex-direction: column; 
+        align-items: flex-start;
+    }
+    
+    nav ul {
+        justify-content: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* Container များ၏ ဘေးဘောင် Space ကို လျှော့ချရန် */
+    .container {
+        padding: 1.5rem 15px; 
+    }
+    
+    .single-post-container {
+        padding: 1.5rem 15px !important;
+    }
+
+    .search-bar {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Post ဖတ်သည့် စာမျက်နှာရှိ Font များကို သေးပေးရန် */
+    .single-post-title {
+        font-size: 1.6rem !important; 
+        margin-bottom: 0.5rem !important;
+        line-height: 1.4;
+    }
+    
+    .single-post-header {
+        padding-bottom: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .single-post-content {
+        font-size: 1.05rem !important; 
+        line-height: 1.7 !important;
+    }
+
+    /* Text Editor မှ ဝင်လာသော ခေါင်းစဉ်ကြီးများကို ဖုန်းတွင် သေးပေးရန် */
+    .ql-editor h1 { font-size: 1.5rem !important; line-height: 1.4; }
+    .ql-editor h2 { font-size: 1.3rem !important; line-height: 1.4; }
+    .ql-editor h3 { font-size: 1.2rem !important; line-height: 1.4; }
+    
+    /* ပုံများကို ဖုန်းစခရင်အပြည့် နေရာယူစေရန် */
+    .ql-editor img {
+        margin: 1rem 0 !important;
+    }
+}
