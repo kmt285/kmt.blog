@@ -46,12 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ၂။ Backend မှ Post များ လှမ်းယူခြင်း (Category ပါပါက စစ်ထုတ်မည်)
+// ၂။ Backend မှ Post များ လှမ်းယူခြင်း (Loading State ထည့်သွင်းထားသည်)
     async function fetchPosts(page = 1, append = false) {
         try {
+            // Data မရောက်လာခင် Loading ပြသရန်
+            if (!append) {
+                postContainer.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-muted); padding: 3rem 0; font-size: 1.1rem;">Loading posts...</p>';
+            }
+            // Data ဆွဲယူနေစဉ် Load More ခလုတ်ကို ဖျောက်ထားရန်
+            loadMoreBtn.classList.add('hidden');
+
             let url = `${API_URL}/posts?page=${page}&limit=6`;
             if (currentCategoryId) {
-                url += `&category=${currentCategoryId}`; // Category ID ထည့်၍ ခေါ်မည်
+                url += `&category=${currentCategoryId}`;
             }
 
             const response = await fetch(url);
@@ -67,14 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             renderPosts(currentPosts);
 
+            // Data အားလုံးပြပြီးမှသာ လိုအပ်ပါက Load More ခလုတ်ကို ပြန်ပြရန်
             if (currentPage < totalPages) {
                 loadMoreBtn.classList.remove('hidden');
-            } else {
-                loadMoreBtn.classList.add('hidden');
             }
         } catch (error) {
             console.error('Error fetching posts:', error);
-            postContainer.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1;">Failed to load data. Please try again later.</p>';
+            postContainer.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1; padding: 3rem 0;">Failed to load data. Please try again later.</p>';
         }
     }
 
