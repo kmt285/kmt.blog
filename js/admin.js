@@ -1,6 +1,6 @@
 // js/admin.js
 
-const API_URL = 'https://kmt285476.onrender.com/'; 
+const API_URL = 'https://kmt285476.onrender.com/api'; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('loginSection');
