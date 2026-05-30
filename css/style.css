@@ -8,7 +8,7 @@
     --secondary-bg: #f8f9fa;
     --text-main: #212529;
     --text-muted: #6c757d;
-    --accent-color: #000000;
+    --accent-color: #FF4200;
     --border-color: #e9ecef;
     
     /* Typography */
@@ -151,12 +151,21 @@ nav a:hover, nav a.active {
 }
 
 .read-more {
+    display: inline-block;
     text-decoration: none;
-    color: var(--accent-color);
+    background-color: var(--accent-color);
+    color: #ffffff !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
-    border-bottom: 1px solid var(--accent-color);
-    padding-bottom: 2px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 1rem;
+}
+
+.read-more:hover {
+    background-color: #e03a00; /* Hover လုပ်လျှင် အရောင်အနည်းငယ်ရင့်သွားမည် */
+    transform: translateY(-1px);
 }
 
 /* Footer */
@@ -223,4 +232,63 @@ footer {
     .ql-editor img {
         margin: 1rem 0 !important;
     }
+}
+
+/* Rich Footer Section Styling */
+footer {
+    background-color: var(--secondary-bg);
+    border-top: 1px solid var(--border-color);
+    padding: 4rem 20px 2rem 20px;
+    color: var(--text-main);
+    margin-top: 5rem;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.footer-section h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: var(--accent-color);
+}
+
+.footer-section p {
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.7rem;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.85rem;
 }
