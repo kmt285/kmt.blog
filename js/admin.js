@@ -37,20 +37,54 @@ document.addEventListener('DOMContentLoaded', () => {
         loadCategories(); loadAdminPosts();
     }
 
+// --- Categories များကို ဆွဲယူခြင်းနှင့် UI တွင် ပြသခြင်း ---
     async function loadCategories() {
         try {
             const res = await fetch(`${API_URL}/categories`);
             const categories = await res.json();
+            
             const createSelect = document.getElementById('postCategory');
             const editSelect = document.getElementById('editPostCategory');
+            const catList = document.getElementById('categoryList'); // HTML မှ list ကို ဖမ်းယူခြင်း
+
             createSelect.innerHTML = '<option value="" disabled selected>Select</option>';
             editSelect.innerHTML = '<option value="" disabled selected>Select</option>';
+            catList.innerHTML = ''; // စာရင်းကို အရင်ရှင်းထုတ်မည်
+
             categories.forEach(cat => {
                 const opt = `<option value="${cat._id}">${cat.name}</option>`;
-                createSelect.innerHTML += opt; editSelect.innerHTML += opt;
+                createSelect.innerHTML += opt; 
+                editSelect.innerHTML += opt;
+
+                // Category စာရင်းထဲသို့ နာမည်နှင့် Delete ခလုတ် ထည့်ခြင်း
+                catList.innerHTML += `
+                    <li style="display: flex; justify-content: space-between; padding: 0.8rem; border-bottom: 1px solid #f1f3f5; align-items: center;">
+                        <span style="font-weight: 500;">${cat.name}</span>
+                        <button class="del-cat-btn" data-id="${cat._id}" style="color: red; background: none; border: none; cursor: pointer; font-weight: bold;">Delete</button>
+                    </li>
+                `;
             });
-        } catch (err) { console.error(err); }
+        } catch (err) { console.error('Failed to load categories', err); }
     }
+
+    // --- Category ဖျက်မည့် ခလုတ်ကို နှိပ်သောအခါ ---
+    document.getElementById('categoryList').addEventListener('click', async (e) => {
+        if (e.target.classList.contains('del-cat-btn')) {
+            if (confirm('Are you sure you want to delete this category? (Note: Posts under this category will become Uncategorized)')) {
+                const id = e.target.getAttribute('data-id');
+                try {
+                    const res = await fetch(`${API_URL}/categories/${id}`, { 
+                        method: 'DELETE', 
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` } 
+                    });
+                    if (res.ok) {
+                        loadCategories(); // စာရင်းကို အသစ်ပြန်ခေါ်မည်
+                        loadAdminPosts(); // ဇယားကိုပါ အသစ်ပြန်ခေါ်မည်
+                    }
+                } catch (err) { console.error('Error deleting category', err); }
+            }
+        }
+    });
 
     async function loadAdminPosts() {
         try {
