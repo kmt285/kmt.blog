@@ -6,31 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // --- ၁။ ပုံများကို Cloudinary သို့ တိုက်ရိုက်တင်မည့် Function ---
+    // --- ၁။ Cloudinary သို့ တိုက်ရိုက်တင်မည့် Function ---
     function imageHandler() {
-        // သတိပေးစာသား - ဤစာသားပေါ်လာမှသာ Code အသစ် အလုပ်လုပ်ခြင်းဖြစ်သည်
-        alert("Cloudinary Upload စနစ် စတင်အလုပ်လုပ်ပါပြီ!"); 
+        const activeEditor = this.quill; // Toolbar ကို ဖမ်းယူခြင်း
 
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('accept', 'image/*');
-        input.click();
+        document.body.appendChild(input); // ဖုန်း Browser များအတွက် ထည့်ပေးရပါသည်
+        input.style.display = 'none';
 
         input.onchange = async () => {
             const file = input.files[0];
-            if (!file) return;
+            if (!file) {
+                document.body.removeChild(input);
+                return;
+            }
 
             const formData = new FormData();
             formData.append('image', file);
 
-            const activeEditor = this.quill;
-            
-            // Cursor နေရာကို သေချာပေါက်ရှာမည့် Code
             let range = activeEditor.getSelection(true);
             if (!range) {
                 range = { index: activeEditor.getLength() };
             }
 
+            // ပုံတင်နေစဉ် စောင့်ဆိုင်းရန်
             activeEditor.insertText(range.index, 'Uploading image...', 'user');
 
             try {
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 activeEditor.deleteText(range.index, 18); 
 
-                if (res.ok) {
+                if (res.ok && data.url) {
                     activeEditor.insertEmbed(range.index, 'image', data.url);
                 } else {
                     alert('Image upload failed: ' + (data.error || 'Unknown error'));
@@ -52,30 +53,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeEditor.deleteText(range.index, 18);
                 alert('Network error while uploading image.');
             }
+            document.body.removeChild(input);
         };
+        
+        input.click();
     }
 
-    // --- ၂။ Editor Configuration ---
+    // --- ၂။ Editor Configuration (Handlers မပါတော့ပါ) ---
     const quillConfig = { 
         theme: 'snow', 
         placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
         modules: { 
-            toolbar: {
-                container: [ 
-                    [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
-                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'align': [] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'indent': '-1'}, { 'indent': '+1' }],
-                    ['link', 'image', 'video'],
-                    ['clean']
-                ],
-                handlers: {
-                    image: imageHandler // ဤနေရာတွင် ကျွန်တော်တို့၏ Function ဖြင့် အစားထိုးပါသည်
-                }
-            },
+            // ဤနေရာတွင် ရိုးရိုး Toolbar များကိုသာ သတ်မှတ်မည်
+            toolbar: [ 
+                [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ],
             imageResize: {
                 displayStyles: { backgroundColor: 'black', border: 'none', color: 'white' },
                 modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
@@ -86,6 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const quill = new Quill('#editor-container', quillConfig);
     const editQuill = new Quill('#edit-editor-container', quillConfig);
 
+    // --- ၃။ အရေးကြီးဆုံးအပိုင်း (Force Override) ---
+    // Editor တည်ဆောက်ပြီးမှ Toolbar ကိုဖမ်း၍ Image ခလုတ်ကို အတင်းအဓမ္မ အစားထိုးခြင်းဖြစ်သည်
+    quill.getModule('toolbar').addHandler('image', imageHandler);
+    editQuill.getModule('toolbar').addHandler('image', imageHandler);
+
+    // ==========================================
+    // ကျန်ရှိသော လုပ်ဆောင်ချက်များ (အတိုင်းထားပါ)
+    // ==========================================
     const token = localStorage.getItem('adminToken');
     if (token) showDashboard();
 
@@ -141,17 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('categoryList').addEventListener('click', async (e) => {
         if (e.target.classList.contains('del-cat-btn')) {
-            if (confirm('Are you sure you want to delete this category? (Note: Posts under this category will become Uncategorized)')) {
+            if (confirm('Are you sure you want to delete this category?')) {
                 const id = e.target.getAttribute('data-id');
                 try {
                     const res = await fetch(`${API_URL}/categories/${id}`, { 
                         method: 'DELETE', 
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` } 
                     });
-                    if (res.ok) {
-                        loadCategories(); 
-                        loadAdminPosts(); 
-                    }
+                    if (res.ok) { loadCategories(); loadAdminPosts(); }
                 } catch (err) { console.error('Error deleting category', err); }
             }
         }
