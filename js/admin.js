@@ -7,26 +7,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logoutBtn');
     
     // Editors
+    
     const quillConfig = { 
         theme: 'snow', 
         placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
         modules: { 
             toolbar: [ 
-                [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }], // Font နှင့် အရွယ်အစား
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }], // ခေါင်းစဉ် အကြီး/အသေး
-                ['bold', 'italic', 'underline', 'strike'], // စာလုံးအမည်း၊ အစောင်း၊ မျဉ်းတား
-                [{ 'color': [] }, { 'background': [] }], // စာလုံးအရောင် နှင့် နောက်ခံအရောင်
-                [{ 'align': [] }], // ဘယ်၊ ညာ၊ အလယ် ညှိရန် (Alignment)
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }], // နံပါတ်စဉ် နှင့် အစက်
-                [{ 'indent': '-1'}, { 'indent': '+1' }], // စာကြောင်းဆုတ်/တိုး
-                ['link', 'image', 'video'], // လင့်ခ်၊ ပုံ၊ ဗီဒီယို
-                ['clean'] // Format များအားလုံးကို ပြန်ဖျက်ရန်
-            ] 
+                [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ],
+            // ပုံများကို ဆွဲချဲ့ရန်နှင့် Align လုပ်ရန် Module သစ်
+            imageResize: {
+                displayStyles: { backgroundColor: 'black', border: 'none', color: 'white' },
+                modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+            }
         } 
     };
 
     const quill = new Quill('#editor-container', quillConfig);
     const editQuill = new Quill('#edit-editor-container', quillConfig);
+
 
     const token = localStorage.getItem('adminToken');
     if (token) showDashboard();
