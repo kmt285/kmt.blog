@@ -32,8 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quill = new Quill('#editor-container', quillConfig);
     const editQuill = new Quill('#edit-editor-container', quillConfig);
 
-    // --- ၂။ Bulletproof Image Handler Function ---
-    // ဤ Function သည် Editor နေရာ မပျောက်စေရန် (editorInstance) ကို အတိအကျ တောင်းယူပါသည်
+    // --- ၂။ လုံးဝ အမှားမခံသော Image Upload Function ---
     function selectLocalImage(editorInstance) {
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
@@ -47,11 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('image', file);
 
-            // Cursor နေရာကို သေချာပေါက်ရှာမည်
+            // Cursor နေရာကို အတိအကျ မှတ်သားခြင်း
             let range = editorInstance.getSelection(true);
             if (!range) range = { index: editorInstance.getLength() };
 
-            editorInstance.insertText(range.index, 'Uploading image to Cloudinary...', 'user', 'blue');
+            editorInstance.insertText(range.index, 'Uploading image...', 'user');
 
             try {
                 const res = await fetch(`${API_URL}/upload`, {
@@ -61,28 +60,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 
-                // စာသားကို ပြန်ဖျက်မည်
-                editorInstance.deleteText(range.index, 32); 
+                // Uploading စာသားကို ပြန်ဖျက်မည်
+                editorInstance.deleteText(range.index, 18); 
 
                 if (res.ok && data.url) {
+                    // Cloudinary မှ ရလာသော လင့်ခ်အမှန်ကို ထည့်သွင်းခြင်း
                     editorInstance.insertEmbed(range.index, 'image', data.url);
                 } else {
-                    alert('Upload Failed: ' + (data.error || 'Server error occurred.'));
+                    alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
                 }
             } catch (err) {
-                editorInstance.deleteText(range.index, 32);
-                alert('Network Error: Backend API နှင့် မချိတ်ဆက်နိုင်ပါ။');
+                editorInstance.deleteText(range.index, 18);
+                alert('Network Error while uploading.');
             }
         };
     }
 
-    // --- ၃။ Toolbar Image Button များကို Function နှင့် သေချာပေါက် ချိတ်ဆက်ခြင်း ---
-    quill.getModule('toolbar').addHandler('image', () => {
-        selectLocalImage(quill);
-    });
-    editQuill.getModule('toolbar').addHandler('image', () => {
-        selectLocalImage(editQuill);
-    });
+    // --- ၃။ အရေးကြီးဆုံးအပိုင်း: Toolbar နှင့် Function ကို အတိအကျ ချိတ်ဆက်ခြင်း ---
+    quill.getModule('toolbar').addHandler('image', () => selectLocalImage(quill));
+    editQuill.getModule('toolbar').addHandler('image', () => selectLocalImage(editQuill));
 
     // ==========================================
     // အောက်ပါ Code များသည် မူလ အတိုင်းဖြစ်ပါသည်
