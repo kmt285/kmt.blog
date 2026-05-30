@@ -28,23 +28,46 @@ body {
     line-height: 1.6;
 }
 
-/* Header & Navigation */
+/* Header & Navigation Update */
 header {
     border-bottom: 1px solid var(--border-color);
-    padding: 2rem 0;
-    text-align: center;
+    background-color: var(--primary-bg);
+    padding: 1.5rem 20px; 
 }
 
-.logo {
+.header-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; /* ဘယ်/ညာ ခွဲထုတ်ရန် */
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: 1rem;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Logo နှင့် စာသားကြား အကွာအဝေး */
+    text-decoration: none;
+}
+
+.site-logo {
+    width: 40px; /* Logo အရွယ်အစား (စိတ်ကြိုက်ပြင်ပါ) */
+    height: 40px;
+    border-radius: 50%; /* အဝိုင်းပုံဖြစ်စေရန် */
+    object-fit: cover;
+}
+
+.logo-text {
     font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: 2px;
-    text-decoration: none;
     color: var(--accent-color);
 }
 
 nav {
-    margin-top: 1.5rem;
+    margin-top: 0; 
 }
 
 nav ul {
