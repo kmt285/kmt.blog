@@ -6,65 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // --- ၁။ Cloudinary သို့ တိုက်ရိုက်တင်မည့် Function ---
-    function imageHandler() {
-        const activeEditor = this.quill; // Toolbar ကို ဖမ်းယူခြင်း
-
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        document.body.appendChild(input); // ဖုန်း Browser များအတွက် ထည့်ပေးရပါသည်
-        input.style.display = 'none';
-
-        input.onchange = async () => {
-            const file = input.files[0];
-            if (!file) {
-                document.body.removeChild(input);
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('image', file);
-
-            let range = activeEditor.getSelection(true);
-            if (!range) {
-                range = { index: activeEditor.getLength() };
-            }
-
-            // ပုံတင်နေစဉ် စောင့်ဆိုင်းရန်
-            activeEditor.insertText(range.index, 'Uploading image...', 'user');
-
-            try {
-                const res = await fetch(`${API_URL}/upload`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
-                    body: formData
-                });
-                const data = await res.json();
-                
-                activeEditor.deleteText(range.index, 18); 
-
-                if (res.ok && data.url) {
-                    activeEditor.insertEmbed(range.index, 'image', data.url);
-                } else {
-                    alert('Image upload failed: ' + (data.error || 'Unknown error'));
-                }
-            } catch (err) {
-                activeEditor.deleteText(range.index, 18);
-                alert('Network error while uploading image.');
-            }
-            document.body.removeChild(input);
-        };
-        
-        input.click();
-    }
-
-    // --- ၂။ Editor Configuration (Handlers မပါတော့ပါ) ---
+    // --- ၁။ Editor Configuration (ပုံမှန်အတိုင်း သတ်မှတ်မည်) ---
     const quillConfig = { 
         theme: 'snow', 
         placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
         modules: { 
-            // ဤနေရာတွင် ရိုးရိုး Toolbar များကိုသာ သတ်မှတ်မည်
             toolbar: [ 
                 [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -86,13 +32,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const quill = new Quill('#editor-container', quillConfig);
     const editQuill = new Quill('#edit-editor-container', quillConfig);
 
-    // --- ၃။ အရေးကြီးဆုံးအပိုင်း (Force Override) ---
-    // Editor တည်ဆောက်ပြီးမှ Toolbar ကိုဖမ်း၍ Image ခလုတ်ကို အတင်းအဓမ္မ အစားထိုးခြင်းဖြစ်သည်
-    quill.getModule('toolbar').addHandler('image', imageHandler);
-    editQuill.getModule('toolbar').addHandler('image', imageHandler);
+    // --- ၂။ Bulletproof Image Handler Function ---
+    // ဤ Function သည် Editor နေရာ မပျောက်စေရန် (editorInstance) ကို အတိအကျ တောင်းယူပါသည်
+    function selectLocalImage(editorInstance) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // Cursor နေရာကို သေချာပေါက်ရှာမည်
+            let range = editorInstance.getSelection(true);
+            if (!range) range = { index: editorInstance.getLength() };
+
+            editorInstance.insertText(range.index, 'Uploading image to Cloudinary...', 'user', 'blue');
+
+            try {
+                const res = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                    body: formData
+                });
+                const data = await res.json();
+                
+                // စာသားကို ပြန်ဖျက်မည်
+                editorInstance.deleteText(range.index, 32); 
+
+                if (res.ok && data.url) {
+                    editorInstance.insertEmbed(range.index, 'image', data.url);
+                } else {
+                    alert('Upload Failed: ' + (data.error || 'Server error occurred.'));
+                }
+            } catch (err) {
+                editorInstance.deleteText(range.index, 32);
+                alert('Network Error: Backend API နှင့် မချိတ်ဆက်နိုင်ပါ။');
+            }
+        };
+    }
+
+    // --- ၃။ Toolbar Image Button များကို Function နှင့် သေချာပေါက် ချိတ်ဆက်ခြင်း ---
+    quill.getModule('toolbar').addHandler('image', () => {
+        selectLocalImage(quill);
+    });
+    editQuill.getModule('toolbar').addHandler('image', () => {
+        selectLocalImage(editQuill);
+    });
 
     // ==========================================
-    // ကျန်ရှိသော လုပ်ဆောင်ချက်များ (အတိုင်းထားပါ)
+    // အောက်ပါ Code များသည် မူလ အတိုင်းဖြစ်ပါသည်
     // ==========================================
     const token = localStorage.getItem('adminToken');
     if (token) showDashboard();
