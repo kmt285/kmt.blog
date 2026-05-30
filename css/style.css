@@ -234,13 +234,13 @@ footer {
     }
 }
 
-/* Rich Footer Section Styling */
+/* Rich Footer Section Styling Update */
 footer {
     background-color: var(--secondary-bg);
     border-top: 1px solid var(--border-color);
-    padding: 4rem 20px 2rem 20px;
+    padding: 3rem 20px 1.5rem 20px; /* အပေါ်/အောက် Space များ လျှော့ချလိုက်ပါသည် */
     color: var(--text-main);
-    margin-top: 5rem;
+    margin-top: 3rem; /* အပေါ်က Post များနှင့် အကွာအဝေးကို လျှော့ချလိုက်ပါသည် */
 }
 
 .footer-container {
@@ -248,21 +248,26 @@ footer {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2.5rem;
-    margin-bottom: 3rem;
+    gap: 1.5rem; /* Column တစ်ခုနှင့်တစ်ခု ကြားအကွာအဝေး (Space) ကို လျှော့ချလိုက်ပါသည် */
+    margin-bottom: 2rem;
+}
+
+/* ဤနေရာတွင် သူ့ Column နှင့်သူ ဘယ်ဘက်သို့ သပ်သပ်ရပ်ရပ် ကပ်စေရန် (Left Align) လုပ်ထားပါသည် */
+.footer-section {
+    text-align: left; 
 }
 
 .footer-section h4 {
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem; /* ခေါင်းစဉ်နှင့် စာသားကြား Space ကို ကျစ်လစ်စေရန် လျှော့ထားပါသည် */
     color: var(--accent-color);
 }
 
 .footer-section p {
     color: var(--text-muted);
-    margin-bottom: 0.8rem;
-    line-height: 1.6;
+    margin-bottom: 0.5rem; /* စာကြောင်းများကြား Space လျှော့ရန် */
+    line-height: 1.5;
     font-size: 0.95rem;
 }
 
@@ -272,7 +277,7 @@ footer {
 }
 
 .footer-links li {
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.5rem; /* Link များကြား Space လျှော့ရန် */
 }
 
 .footer-links a {
@@ -286,7 +291,7 @@ footer {
 }
 
 .footer-bottom {
-    text-align: center;
+    text-align: center; /* Copyright စာသားကိုတော့ အလယ်မှာပဲ ထားပါမည် */
     padding-top: 1.5rem;
     border-top: 1px solid var(--border-color);
     color: var(--text-muted);
