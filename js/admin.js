@@ -15,14 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         input.onchange = async () => {
             const file = input.files[0];
+            if (!file) return;
+
             const formData = new FormData();
             formData.append('image', file);
 
-            // လက်ရှိအသုံးပြုနေသော Editor (Create သို့မဟုတ် Edit) ကို ဖမ်းယူခြင်း
+            // လက်ရှိအသုံးပြုနေသော Editor ကို ဖမ်းယူခြင်း
             const activeEditor = this.quill;
-            const range = activeEditor.getSelection();
+            
+            // အရေးကြီးဆုံးအချက် - (true) ပါမှသာ Editor က မှတ်သားထားသော နေရာကို ပြန်ရှာတွေ့မည်ဖြစ်သည်
+            // နေရာမရှာတွေ့ပါက အောက်ဆုံးတွင် အလိုအလျောက် ထည့်ပေးမည့်စနစ် ပါဝင်သည်
+            const range = activeEditor.getSelection(true) || { index: activeEditor.getLength() };
 
-            // ပုံတင်နေစဉ် စောင့်ဆိုင်းရန် စာသားလေး ပြထားမည်
+            // ပုံတင်နေစဉ် စောင့်ဆိုင်းရန်
             activeEditor.insertText(range.index, 'Uploading image...', 'user');
 
             try {
@@ -37,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeEditor.deleteText(range.index, 18); 
 
                 if (res.ok) {
-                    // အောင်မြင်ပါက Cloudinary URL အစစ်ကို Editor ထဲသို့ ထည့်မည်
+                    // အောင်မြင်ပါက Cloudinary URL ကို ထည့်မည်
                     activeEditor.insertEmbed(range.index, 'image', data.url);
                 } else {
                     alert('Image upload failed: ' + (data.error || 'Unknown error'));
