@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const postContainer = document.getElementById('postContainer');
     const searchInput = document.getElementById('searchInput');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
-    const categoryNav = document.querySelector('nav ul'); // Menu နေရာကို ဖမ်းယူခြင်း
+    const categoryNav = document.getElementById('categoryMenu'); 
 
     let currentPage = 1;
     let totalPages = 1;
