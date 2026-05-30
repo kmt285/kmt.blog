@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="post-category">${categoryName}</span>
                 <h2 class="post-title">${post.title}</h2>
                 <p class="post-excerpt">${excerpt}</p>
-                <a href="#" class="read-more">Read Full Post</a>
+                <a href="post.html?id=${post._id}" class="read-more">Read Full Post</a>
             `;
             
             postContainer.appendChild(postCard);
