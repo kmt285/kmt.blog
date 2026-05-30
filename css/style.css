@@ -1,0 +1,146 @@
+/* css/style.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+:root {
+    /* Theme Colors - ဒီနေရာမှာ အရောင်များကို စိတ်ကြိုက်ပြောင်းလဲနိုင်ပါသည် */
+    --primary-bg: #ffffff;
+    --secondary-bg: #f8f9fa;
+    --text-main: #212529;
+    --text-muted: #6c757d;
+    --accent-color: #000000;
+    --border-color: #e9ecef;
+    
+    /* Typography */
+    --font-family: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--primary-bg);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* Header & Navigation */
+header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-decoration: none;
+    color: var(--accent-color);
+}
+
+nav {
+    margin-top: 1.5rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+nav a:hover, nav a.active {
+    color: var(--accent-color);
+}
+
+/* Main Content Layout */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 20px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: var(--font-family);
+    outline: none;
+}
+
+.search-bar:focus {
+    border-color: var(--accent-color);
+}
+
+/* Post Grid */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.post-card {
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-3px);
+}
+
+.post-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.post-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+}
+
+.post-excerpt {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.read-more {
+    text-decoration: none;
+    color: var(--accent-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 2px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 3rem 20px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
