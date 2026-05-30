@@ -175,25 +175,66 @@ document.addEventListener('DOMContentLoaded', () => {
         loadCategories(); setTimeout(() => document.getElementById('catMessage').innerText = '', 2000);
     });
 
-    // Create Post
+// --- Create Post နေရာကို အောက်ပါအတိုင်း အစားထိုးပါ ---
     document.getElementById('postForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        await fetch(`${API_URL}/posts`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, 
-            body: JSON.stringify({ title: document.getElementById('postTitle').value, category: document.getElementById('postCategory').value, fileUrl: document.getElementById('fileUrl').value, content: quill.root.innerHTML }) 
-        });
-        document.getElementById('postMessage').innerText = 'Published!'; document.getElementById('postForm').reset(); quill.setContents([]);
-        loadAdminPosts(); setTimeout(() => document.getElementById('postMessage').innerText = '', 2000);
+        
+        // Loading ပြရန်
+        document.getElementById('postMessage').innerText = 'Publishing...';
+        document.getElementById('postMessage').style.color = 'blue';
+
+        try {
+            const response = await fetch(`${API_URL}/posts`, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, 
+                body: JSON.stringify({ title: document.getElementById('postTitle').value, category: document.getElementById('postCategory').value, fileUrl: document.getElementById('fileUrl').value, content: quill.root.innerHTML }) 
+            });
+
+            if (response.ok) { // တကယ်အောင်မြင်မှသာ Published ဟုပြမည်
+                document.getElementById('postMessage').style.color = 'green';
+                document.getElementById('postMessage').innerText = 'Published Successfully!'; 
+                document.getElementById('postForm').reset(); 
+                quill.setContents([]);
+                loadAdminPosts(); 
+                setTimeout(() => document.getElementById('postMessage').innerText = '', 3000);
+            } else { // Backend မှ ပိတ်ချပါက Error ပြမည်
+                const errorData = await response.json();
+                document.getElementById('postMessage').style.color = 'red';
+                document.getElementById('postMessage').innerText = 'Error: ' + (errorData.error || 'Failed to publish');
+            }
+        } catch (err) {
+            document.getElementById('postMessage').style.color = 'red';
+            document.getElementById('postMessage').innerText = 'Network Error. Please try again.';
+        }
     });
 
-    // Update Post
+    // --- Update Post နေရာကို အောက်ပါအတိုင်း အစားထိုးပါ ---
     document.getElementById('editPostForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('editPostId').value;
-        await fetch(`${API_URL}/posts/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, 
-            body: JSON.stringify({ title: document.getElementById('editPostTitle').value, category: document.getElementById('editPostCategory').value, fileUrl: document.getElementById('editFileUrl').value, content: editQuill.root.innerHTML }) 
-        });
-        document.getElementById('editPostMessage').innerText = 'Updated!';
-        loadAdminPosts();
-        setTimeout(() => { document.getElementById('editPostMessage').innerText = ''; document.getElementById('cancelEditBtn').click(); }, 1500);
+        
+        document.getElementById('editPostMessage').innerText = 'Updating...';
+        document.getElementById('editPostMessage').style.color = 'blue';
+
+        try {
+            const response = await fetch(`${API_URL}/posts/${id}`, { 
+                method: 'PUT', 
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, 
+                body: JSON.stringify({ title: document.getElementById('editPostTitle').value, category: document.getElementById('editPostCategory').value, fileUrl: document.getElementById('editFileUrl').value, content: editQuill.root.innerHTML }) 
+            });
+            
+            if (response.ok) {
+                document.getElementById('editPostMessage').style.color = 'green';
+                document.getElementById('editPostMessage').innerText = 'Updated Successfully!';
+                loadAdminPosts();
+                setTimeout(() => { document.getElementById('editPostMessage').innerText = ''; document.getElementById('cancelEditBtn').click(); }, 1500);
+            } else {
+                const errorData = await response.json();
+                document.getElementById('editPostMessage').style.color = 'red';
+                document.getElementById('editPostMessage').innerText = 'Error: ' + (errorData.error || 'Failed to update');
+            }
+        } catch (err) {
+            document.getElementById('editPostMessage').style.color = 'red';
+            document.getElementById('editPostMessage').innerText = 'Network Error. Please try again.';
+        }
     });
-});
