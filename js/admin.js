@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-// --- ပုံများကို Cloudinary သို့ တိုက်ရိုက်တင်မည့် Function ---
+    // --- ၁။ ပုံများကို Cloudinary သို့ တိုက်ရိုက်တင်မည့် Function ---
     function imageHandler() {
+        // သတိပေးစာသား - ဤစာသားပေါ်လာမှသာ Code အသစ် အလုပ်လုပ်ခြင်းဖြစ်သည်
+        alert("Cloudinary Upload စနစ် စတင်အလုပ်လုပ်ပါပြီ!"); 
+
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.setAttribute('accept', 'image/*');
@@ -20,14 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('image', file);
 
-            // လက်ရှိအသုံးပြုနေသော Editor ကို ဖမ်းယူခြင်း
             const activeEditor = this.quill;
             
-            // အရေးကြီးဆုံးအချက် - (true) ပါမှသာ Editor က မှတ်သားထားသော နေရာကို ပြန်ရှာတွေ့မည်ဖြစ်သည်
-            // နေရာမရှာတွေ့ပါက အောက်ဆုံးတွင် အလိုအလျောက် ထည့်ပေးမည့်စနစ် ပါဝင်သည်
-            const range = activeEditor.getSelection(true) || { index: activeEditor.getLength() };
+            // Cursor နေရာကို သေချာပေါက်ရှာမည့် Code
+            let range = activeEditor.getSelection(true);
+            if (!range) {
+                range = { index: activeEditor.getLength() };
+            }
 
-            // ပုံတင်နေစဉ် စောင့်ဆိုင်းရန်
             activeEditor.insertText(range.index, 'Uploading image...', 'user');
 
             try {
@@ -38,11 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 
-                // Uploading စာသားကို ပြန်ဖျက်မည်
                 activeEditor.deleteText(range.index, 18); 
 
                 if (res.ok) {
-                    // အောင်မြင်ပါက Cloudinary URL ကို ထည့်မည်
                     activeEditor.insertEmbed(range.index, 'image', data.url);
                 } else {
                     alert('Image upload failed: ' + (data.error || 'Unknown error'));
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- Editor Configuration ပြင်ဆင်ခြင်း ---
+    // --- ၂။ Editor Configuration ---
     const quillConfig = { 
         theme: 'snow', 
         placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
@@ -72,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ['clean']
                 ],
                 handlers: {
-                    image: imageHandler // ပုံတင်သည့် ခလုတ်ကို ကျွန်တော်တို့၏ Function ဖြင့် အစားထိုးခြင်း
+                    image: imageHandler // ဤနေရာတွင် ကျွန်တော်တို့၏ Function ဖြင့် အစားထိုးပါသည်
                 }
             },
             imageResize: {
@@ -84,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const quill = new Quill('#editor-container', quillConfig);
     const editQuill = new Quill('#edit-editor-container', quillConfig);
-
 
     const token = localStorage.getItem('adminToken');
     if (token) showDashboard();
@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loadCategories(); loadAdminPosts();
     }
 
-// --- Categories များကို ဆွဲယူခြင်းနှင့် UI တွင် ပြသခြင်း ---
     async function loadCategories() {
         try {
             const res = await fetch(`${API_URL}/categories`);
@@ -120,18 +119,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const createSelect = document.getElementById('postCategory');
             const editSelect = document.getElementById('editPostCategory');
-            const catList = document.getElementById('categoryList'); // HTML မှ list ကို ဖမ်းယူခြင်း
+            const catList = document.getElementById('categoryList');
 
             createSelect.innerHTML = '<option value="" disabled selected>Select</option>';
             editSelect.innerHTML = '<option value="" disabled selected>Select</option>';
-            catList.innerHTML = ''; // စာရင်းကို အရင်ရှင်းထုတ်မည်
+            catList.innerHTML = ''; 
 
             categories.forEach(cat => {
                 const opt = `<option value="${cat._id}">${cat.name}</option>`;
                 createSelect.innerHTML += opt; 
                 editSelect.innerHTML += opt;
-
-                // Category စာရင်းထဲသို့ နာမည်နှင့် Delete ခလုတ် ထည့်ခြင်း
                 catList.innerHTML += `
                     <li style="display: flex; justify-content: space-between; padding: 0.8rem; border-bottom: 1px solid #f1f3f5; align-items: center;">
                         <span style="font-weight: 500;">${cat.name}</span>
@@ -142,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { console.error('Failed to load categories', err); }
     }
 
-    // --- Category ဖျက်မည့် ခလုတ်ကို နှိပ်သောအခါ ---
     document.getElementById('categoryList').addEventListener('click', async (e) => {
         if (e.target.classList.contains('del-cat-btn')) {
             if (confirm('Are you sure you want to delete this category? (Note: Posts under this category will become Uncategorized)')) {
@@ -153,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` } 
                     });
                     if (res.ok) {
-                        loadCategories(); // စာရင်းကို အသစ်ပြန်ခေါ်မည်
-                        loadAdminPosts(); // ဇယားကိုပါ အသစ်ပြန်ခေါ်မည်
+                        loadCategories(); 
+                        loadAdminPosts(); 
                     }
                 } catch (err) { console.error('Error deleting category', err); }
             }
@@ -182,11 +178,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { console.error(err); }
     }
 
-    // Handle Edit & Delete Button Clicks in Table
     document.getElementById('adminPostList').addEventListener('click', async (e) => {
         const id = e.target.getAttribute('data-id');
         
-        // Delete Action
         if (e.target.classList.contains('delete-btn')) {
             if (confirm('Are you sure you want to delete this post?')) {
                 await fetch(`${API_URL}/posts/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` } });
@@ -194,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Edit Action
         if (e.target.classList.contains('edit-btn')) {
             try {
                 const res = await fetch(`${API_URL}/posts/${id}`);
@@ -218,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('createPostDiv').classList.remove('hidden');
     });
 
-    // Create Category
     document.getElementById('categoryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         await fetch(`${API_URL}/categories`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, body: JSON.stringify({ name: document.getElementById('newCategoryName').value }) });
@@ -226,11 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadCategories(); setTimeout(() => document.getElementById('catMessage').innerText = '', 2000);
     });
 
-// --- Create Post နေရာကို အောက်ပါအတိုင်း အစားထိုးပါ ---
     document.getElementById('postForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        // Loading ပြရန်
         document.getElementById('postMessage').innerText = 'Publishing...';
         document.getElementById('postMessage').style.color = 'blue';
 
@@ -241,14 +230,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ title: document.getElementById('postTitle').value, category: document.getElementById('postCategory').value, fileUrl: document.getElementById('fileUrl').value, content: quill.root.innerHTML }) 
             });
 
-            if (response.ok) { // တကယ်အောင်မြင်မှသာ Published ဟုပြမည်
+            if (response.ok) { 
                 document.getElementById('postMessage').style.color = 'green';
                 document.getElementById('postMessage').innerText = 'Published Successfully!'; 
                 document.getElementById('postForm').reset(); 
                 quill.setContents([]);
                 loadAdminPosts(); 
                 setTimeout(() => document.getElementById('postMessage').innerText = '', 3000);
-            } else { // Backend မှ ပိတ်ချပါက Error ပြမည်
+            } else { 
                 const errorData = await response.json();
                 document.getElementById('postMessage').style.color = 'red';
                 document.getElementById('postMessage').innerText = 'Error: ' + (errorData.error || 'Failed to publish');
@@ -259,11 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Update Post နေရာကို အောက်ပါအတိုင်း အစားထိုးပါ ---
     document.getElementById('editPostForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('editPostId').value;
-        
         document.getElementById('editPostMessage').innerText = 'Updating...';
         document.getElementById('editPostMessage').style.color = 'blue';
 
