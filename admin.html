@@ -48,6 +48,19 @@
             </form>
         </div>
 
+        <div style="margin-bottom: 3rem; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;">
+            <h3>Manage Categories</h3>
+            <form id="categoryForm" style="margin-top: 1rem; display: flex; gap: 10px;">
+                <input type="text" id="newCategoryName" class="form-input" placeholder="e.g. Software" required style="flex: 1;">
+                <button type="submit" class="btn-primary">Add Category</button>
+            </form>
+            <span id="catMessage" style="color: green; display: block; margin-top: 10px;"></span>
+            
+            <h4 style="margin-top: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Existing Categories</h4>
+            <ul id="categoryList" style="list-style: none; padding: 0; margin-top: 1rem;">
+                </ul>
+        </div>
+
         <div style="margin-bottom: 3rem; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;" id="createPostDiv">
             <h3>Publish New Post</h3>
             <form id="postForm" style="margin-top: 1rem;">
