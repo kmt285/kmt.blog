@@ -1,6 +1,6 @@
 // js/app.js
 
-const API_URL = 'https://kmt-api.onrender.com/api'; // သင့် Backend URL အမှန်ဖြစ်ပါစေ
+const API_URL = 'https://kmt285476.onrender.com/api'; // သင့် Backend URL အမှန်ဖြစ်ပါစေ
 
 document.addEventListener('DOMContentLoaded', () => {
     const postContainer = document.getElementById('postContainer');
