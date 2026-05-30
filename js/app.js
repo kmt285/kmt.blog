@@ -5,11 +5,8 @@ const API_URL = 'https://kmt285476.onrender.com/api';
 document.addEventListener('DOMContentLoaded', () => {
     const postContainer = document.getElementById('postContainer');
     const searchInput = document.getElementById('searchInput');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
     const categoryNav = document.getElementById('categoryMenu'); 
 
-    let currentPage = 1;
-    let totalPages = 1;
     let currentPosts = [];
     let currentCategoryId = ''; // လက်ရှိ ရွေးချယ်ထားသော Category
 
@@ -25,20 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
             });
 
-            // ခလုတ်နှိပ်လျှင် အလုပ်လုပ်မည့် စနစ်
+            // Category ခလုတ်နှိပ်လျှင် စစ်ထုတ်မည့် စနစ်
             const navLinks = categoryNav.querySelectorAll('a');
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     
-                    // အရောင်ပြောင်းရန် (Active class)
                     navLinks.forEach(l => l.classList.remove('active'));
                     e.target.classList.add('active');
                     
-                    // သက်ဆိုင်ရာ Post များသာ ပြန်ခေါ်ရန်
                     currentCategoryId = e.target.getAttribute('data-id');
-                    currentPage = 1; // စာမျက်နှာ ၁ မှ ပြန်စရန်
-                    fetchPosts(1, false);
+                    fetchPosts(); // စာမူများကို ပြန်လည်ခေါ်ယူမည်
                 });
             });
         } catch (err) {
@@ -46,17 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-// ၂။ Backend မှ Post များ လှမ်းယူခြင်း (Loading State ထည့်သွင်းထားသည်)
-    async function fetchPosts(page = 1, append = false) {
+    // ၂။ Backend မှ Post များ ဆွဲယူခြင်း (Limit ကို ၅၀ အထိ တိုးမြှင့်ထားသဖြင့် ခလုတ်နှိပ်ရန် မလိုဘဲ အကုန်ပေါ်မည်)
+    async function fetchPosts() {
         try {
-            // Data မရောက်လာခင် Loading ပြသရန်
-            if (!append) {
-                postContainer.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-muted); padding: 3rem 0; font-size: 1.1rem;">Loading posts...</p>';
-            }
-            // Data ဆွဲယူနေစဉ် Load More ခလုတ်ကို ဖျောက်ထားရန်
-            loadMoreBtn.classList.add('hidden');
+            postContainer.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-muted); padding: 3rem 0; font-size: 1.1rem;">Loading posts...</p>';
 
-            let url = `${API_URL}/posts?page=${page}&limit=6`;
+            // စာမူပေါင်း ၅၀ အထိ တစ်ခါတည်း ဆွဲယူရန် ပြင်ဆင်လိုက်ပါသည်
+            let url = `${API_URL}/posts?page=1&limit=50`;
             if (currentCategoryId) {
                 url += `&category=${currentCategoryId}`;
             }
@@ -64,20 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(url);
             const data = await response.json();
 
-            totalPages = data.totalPages;
-            
-            if (append) {
-                currentPosts = [...currentPosts, ...data.posts];
-            } else {
-                currentPosts = data.posts;
-            }
-
+            currentPosts = data.posts;
             renderPosts(currentPosts);
 
-            // Data အားလုံးပြပြီးမှသာ လိုအပ်ပါက Load More ခလုတ်ကို ပြန်ပြရန်
-            if (currentPage < totalPages) {
-                loadMoreBtn.classList.remove('hidden');
-            }
         } catch (error) {
             console.error('Error fetching posts:', error);
             postContainer.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1; padding: 3rem 0;">Failed to load data. Please try again later.</p>';
@@ -89,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         postContainer.innerHTML = ''; 
         
         if (postsToRender.length === 0) {
-            postContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1;">No posts available in this category yet.</p>';
+            postContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 2rem 0;">No posts available in this category yet.</p>';
             return;
         }
 
@@ -125,14 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPosts(filteredPosts);
     });
 
-    loadMoreBtn.addEventListener('click', () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            fetchPosts(currentPage, true);
-        }
-    });
-
-    // စစချင်းတွင် Category များနှင့် Post များကို ဆွဲယူမည်
+    // စတင်ချိန်တွင် လုပ်ဆောင်မည့် လုပ်ငန်းစဉ်များ
     fetchCategories();
-    fetchPosts(currentPage);
+    fetchPosts();
 });
