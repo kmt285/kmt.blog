@@ -1,20 +1,60 @@
 // js/app.js
 
-const API_URL = 'https://kmt285476.onrender.com/api'; // သင့် Backend URL အမှန်ဖြစ်ပါစေ
+const API_URL = 'https://kmt285476.onrender.com/api'; 
 
 document.addEventListener('DOMContentLoaded', () => {
     const postContainer = document.getElementById('postContainer');
     const searchInput = document.getElementById('searchInput');
     const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const categoryNav = document.querySelector('nav ul'); // Menu နေရာကို ဖမ်းယူခြင်း
 
     let currentPage = 1;
     let totalPages = 1;
     let currentPosts = [];
+    let currentCategoryId = ''; // လက်ရှိ ရွေးချယ်ထားသော Category
 
-    // Backend မှ Post များ လှမ်းယူခြင်း
+    // ၁။ Menu တွင် ပြသရန် Category များကို လှမ်းယူခြင်း
+    async function fetchCategories() {
+        try {
+            const res = await fetch(`${API_URL}/categories`);
+            const categories = await res.json();
+            
+            // Menu ခလုတ်များ တည်ဆောက်ခြင်း
+            categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
+            categories.forEach(cat => {
+                categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
+            });
+
+            // ခလုတ်နှိပ်လျှင် အလုပ်လုပ်မည့် စနစ်
+            const navLinks = categoryNav.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // အရောင်ပြောင်းရန် (Active class)
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    // သက်ဆိုင်ရာ Post များသာ ပြန်ခေါ်ရန်
+                    currentCategoryId = e.target.getAttribute('data-id');
+                    currentPage = 1; // စာမျက်နှာ ၁ မှ ပြန်စရန်
+                    fetchPosts(1, false);
+                });
+            });
+        } catch (err) {
+            console.error('Error fetching categories:', err);
+        }
+    }
+
+    // ၂။ Backend မှ Post များ လှမ်းယူခြင်း (Category ပါပါက စစ်ထုတ်မည်)
     async function fetchPosts(page = 1, append = false) {
         try {
-            const response = await fetch(`${API_URL}/posts?page=${page}&limit=6`);
+            let url = `${API_URL}/posts?page=${page}&limit=6`;
+            if (currentCategoryId) {
+                url += `&category=${currentCategoryId}`; // Category ID ထည့်၍ ခေါ်မည်
+            }
+
+            const response = await fetch(url);
             const data = await response.json();
 
             totalPages = data.totalPages;
@@ -27,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             renderPosts(currentPosts);
 
-            // Load More ခလုတ်ကို လိုအပ်မှသာ ပြရန်
             if (currentPage < totalPages) {
                 loadMoreBtn.classList.remove('hidden');
             } else {
@@ -39,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // UI ပေါ်တွင် Post များပြသရန် Function
+    // ၃။ UI ပေါ်တွင် Post များပြသရန် Function
     function renderPosts(postsToRender) {
         postContainer.innerHTML = ''; 
         
         if (postsToRender.length === 0) {
-            postContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1;">No posts available yet.</p>';
+            postContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1;">No posts available in this category yet.</p>';
             return;
         }
 
@@ -52,10 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const postCard = document.createElement('div');
             postCard.className = 'post-card';
             
-            // Category မရှိပါက 'Uncategorized' ဟု ပြရန်
             const categoryName = post.category ? post.category.name : 'Uncategorized';
             
-            // Content ထဲမှ HTML Tag များကို ဖျက်ပြီး စာသားသက်သက် အနည်းငယ်သာ ယူရန်
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = post.content;
             const textContent = tempDiv.textContent || tempDiv.innerText || "";
@@ -72,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Search လုပ်ဆောင်ချက် (လက်ရှိ ဆွဲယူထားသော Data များထဲမှ ရှာရန်)
+    // Search လုပ်ဆောင်ချက်
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
         const filteredPosts = currentPosts.filter(post => 
@@ -82,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPosts(filteredPosts);
     });
 
-    // Load More ခလုတ် နှိပ်သောအခါ
     loadMoreBtn.addEventListener('click', () => {
         if (currentPage < totalPages) {
             currentPage++;
@@ -90,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // စစချင်းတွင် Page 1 ကို ဆွဲယူမည်
+    // စစချင်းတွင် Category များနှင့် Post များကို ဆွဲယူမည်
+    fetchCategories();
     fetchPosts(currentPage);
 });
