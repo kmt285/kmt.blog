@@ -238,3 +238,4 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('editPostMessage').innerText = 'Network Error. Please try again.';
         }
     });
+});
