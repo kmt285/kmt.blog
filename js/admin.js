@@ -6,24 +6,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // Editors
-    
+// --- ပုံများကို Cloudinary သို့ တိုက်ရိုက်တင်မည့် Function ---
+    function imageHandler() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // လက်ရှိအသုံးပြုနေသော Editor (Create သို့မဟုတ် Edit) ကို ဖမ်းယူခြင်း
+            const activeEditor = this.quill;
+            const range = activeEditor.getSelection();
+
+            // ပုံတင်နေစဉ် စောင့်ဆိုင်းရန် စာသားလေး ပြထားမည်
+            activeEditor.insertText(range.index, 'Uploading image...', 'user');
+
+            try {
+                const res = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                    body: formData
+                });
+                const data = await res.json();
+                
+                // Uploading စာသားကို ပြန်ဖျက်မည်
+                activeEditor.deleteText(range.index, 18); 
+
+                if (res.ok) {
+                    // အောင်မြင်ပါက Cloudinary URL အစစ်ကို Editor ထဲသို့ ထည့်မည်
+                    activeEditor.insertEmbed(range.index, 'image', data.url);
+                } else {
+                    alert('Image upload failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                activeEditor.deleteText(range.index, 18);
+                alert('Network error while uploading image.');
+            }
+        };
+    }
+
+    // --- Editor Configuration ပြင်ဆင်ခြင်း ---
     const quillConfig = { 
         theme: 'snow', 
         placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
         modules: { 
-            toolbar: [ 
-                [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'align': [] }],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'indent': '-1'}, { 'indent': '+1' }],
-                ['link', 'image', 'video'],
-                ['clean']
-            ],
-            // ပုံများကို ဆွဲချဲ့ရန်နှင့် Align လုပ်ရန် Module သစ်
+            toolbar: {
+                container: [ 
+                    [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ],
+                handlers: {
+                    image: imageHandler // ပုံတင်သည့် ခလုတ်ကို ကျွန်တော်တို့၏ Function ဖြင့် အစားထိုးခြင်း
+                }
+            },
             imageResize: {
                 displayStyles: { backgroundColor: 'black', border: 'none', color: 'white' },
                 modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
