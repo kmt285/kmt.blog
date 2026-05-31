@@ -84,14 +84,22 @@ nav ul {
     list-style: none;
     display: flex;
     flex-wrap: nowrap !important;
-    justify-content: flex-start; /* ဘယ်ဘက် Search Box အစွန်းမှ စတင်စေရန် */
-    gap: 1.5rem;
+    justify-content: flex-start;
+    gap: 1rem; /* Category များကြား အကွာအဝေးကို အနည်းငယ် လျှော့လိုက်ပါသည် */
     overflow-x: auto; 
     white-space: nowrap; 
-    padding-bottom: 10px; 
+    padding-bottom: 15px; 
     width: 100%;
     -ms-overflow-style: none;  
     scrollbar-width: none;  
+    
+    /* Desktop တွင် Mouse ဖြင့် ဖိဆွဲနိုင်ရန် */
+    cursor: grab;
+    user-select: none;
+}
+
+nav ul.active {
+    cursor: grabbing; /* Mouse ဖိထားချိန်တွင် လက်ဆုပ်ပုံစံပြောင်းရန် */
 }
 
 /* Scrollbar ဖျောက်ရန် */
@@ -99,21 +107,29 @@ nav ul::-webkit-scrollbar {
     display: none; 
 }
 
-/* ခလုတ်များ ပိန်မသွားစေရန် */
 nav ul li {
     flex: 0 0 auto;
 }
 
+/* ဤနေရာသည် Category များကို ခလုတ်အဝိုင်း (Pill) ပုံစံ ပြောင်းပေးမည့် အပိုင်းဖြစ်သည် */
 nav a {
+    display: inline-block;
     text-decoration: none;
-    color: var(--text-muted);
+    color: var(--text-main);
+    background-color: var(--secondary-bg); /* နောက်ခံအရောင် အဖျော့လေးထည့်ထားသည် */
+    padding: 0.6rem 1.2rem; /* ဘေးဘောင်ချဲ့ရန် */
+    border-radius: 30px; /* ခလုတ်ကို အဝိုင်းပုံစံဖြစ်စေရန် */
     font-size: 0.9rem;
-    font-weight: 400;
-    transition: color 0.3s ease;
+    font-weight: 500;
+    border: 1px solid var(--border-color); /* ဘောင်လိုင်းအပါးလေး ထည့်ထားသည် */
+    transition: all 0.3s ease;
 }
 
 nav a:hover, nav a.active {
-    color: var(--accent-color);
+    background-color: var(--accent-color); /* Active ဖြစ်ချိန် သို့မဟုတ် Mouse တင်ချိန်တွင် လိမ္မော်ရောင်ပြောင်းမည် */
+    color: #ffffff !important;
+    border-color: var(--accent-color);
+    transform: translateY(-2px); /* အပေါ်သို့ အနည်းငယ် ကြွတက်လာမည့် Effect */
 }
 
 /* Main Content Layout */
