@@ -213,15 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else { 
                 errorText.innerText = data.message || "Invalid credentials! Please try again."; 
             }
-        } catch (err) { 
-            console.error(err); 
-            errorText.innerText = "Network Error! Server might be starting up. Please try again.";
+        } catch (err) {
+            console.error(err);
         } finally {
             submitBtn.innerText = 'Login';
-            submitBtn.style.opacity = '1';
             submitBtn.disabled = false; 
         }
     });
+    
 
     logoutBtn.addEventListener('click', () => performLogout(false));
 
