@@ -16,14 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let allPosts = []; 
     let categories = []; 
 
-    // --- Theme (Dark Mode / Light Mode) ခလုတ် လုပ်ဆောင်ချက် ---
+    // --- Theme (Dark Mode / Light Mode) ခလုတ် လုပ်ဆောင်ချက် (Professional SVG) ---
     const themeToggleBtn = document.getElementById('themeToggle');
+    const moonIcon = document.getElementById('moonIcon');
+    const sunIcon = document.getElementById('sunIcon');
     const currentTheme = localStorage.getItem('theme');
 
-    // ယခင်က Dark Mode သုံးထားလျှင် ပြန်ခေါ်ရန်
+    // ယခင်က Dark Mode သုံးထားလျှင် Page အားလုံးတွင် အလိုအလျောက် ပြန်ခေါ်ရန်
     if (currentTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        if (themeToggleBtn) themeToggleBtn.innerText = '☀️';
+        if (moonIcon && sunIcon) {
+            moonIcon.classList.add('hidden');
+            sunIcon.classList.remove('hidden');
+        }
     }
 
     if (themeToggleBtn) {
@@ -33,11 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (theme === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
-                themeToggleBtn.innerText = '🌙';
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
-                themeToggleBtn.innerText = '☀️';
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
             }
         });
     }
