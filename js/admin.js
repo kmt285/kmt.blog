@@ -80,6 +80,68 @@ document.addEventListener('DOMContentLoaded', () => {
     quill.getModule('toolbar').addHandler('image', () => selectLocalImage(quill));
     editQuill.getModule('toolbar').addHandler('image', () => selectLocalImage(editQuill));
 
+    // --- ၄။ Copy/Paste နှင့် Drag & Drop လုပ်လျှင် Cloudinary သို့ အလိုအလျောက် တင်ပေးမည့် စနစ် ---
+    async function uploadDroppedOrPastedImage(file, editorInstance) {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        let range = editorInstance.getSelection(true);
+        if (!range) range = { index: editorInstance.getLength() };
+
+        // ပုံတင်နေစဉ် 'Uploading image...' ဟု ပြသထားမည်
+        editorInstance.insertText(range.index, 'Uploading image...', 'user');
+
+        try {
+            const res = await fetch(`${API_URL}/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                body: formData
+            });
+            const data = await res.json();
+            
+            // Uploading စာသားကို ပြန်ဖျက်မည်
+            editorInstance.deleteText(range.index, 18); 
+
+            if (res.ok && data.url) {
+                // Cloudinary မှ ရလာသော လင့်ခ်အမှန်ကို ထည့်သွင်းခြင်း
+                editorInstance.insertEmbed(range.index, 'image', data.url);
+            } else {
+                alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
+            }
+        } catch (err) {
+            editorInstance.deleteText(range.index, 18);
+            alert('Network Error while uploading.');
+        }
+    }
+
+    function handlePasteAndDrop(editorInstance) {
+        // Copy / Paste (Ctrl+V) လုပ်လျှင်
+        editorInstance.root.addEventListener('paste', async (e) => {
+            if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length) {
+                const file = e.clipboardData.files[0];
+                if (file.type.startsWith('image/')) {
+                    e.preventDefault(); // Base64 စာသားရှည်ကြီးများအဖြစ် ဝင်သွားခြင်းကို တားဆီးမည်
+                    await uploadDroppedOrPastedImage(file, editorInstance);
+                }
+            }
+        });
+
+        // Drag & Drop ဆွဲထည့်လျှင်
+        editorInstance.root.addEventListener('drop', async (e) => {
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                const file = e.dataTransfer.files[0];
+                if (file.type.startsWith('image/')) {
+                    e.preventDefault(); // Base64 စာသားရှည်ကြီးများအဖြစ် ဝင်သွားခြင်းကို တားဆီးမည်
+                    await uploadDroppedOrPastedImage(file, editorInstance);
+                }
+            }
+        });
+    }
+
+    // Editor နှစ်ခုလုံး (Post အသစ်တင်သည့်နေရာ ရော Edit လုပ်သည့်နေရာပါ) တွင် ချိတ်ဆက်မည်
+    handlePasteAndDrop(quill);
+    handlePasteAndDrop(editQuill);
+
     // ==========================================
     // အောက်ပါ Code များသည် မူလ အတိုင်းဖြစ်ပါသည်
     // ==========================================
