@@ -127,7 +127,7 @@ header {
 .category-nav-container {
     position: relative;
     max-width: 1000px;
-    margin: 1.5rem auto 2.5rem auto;
+    margin: 1.5rem auto 1rem auto;
     padding: 0 45px; 
     width: 100%;
     display: flex;
@@ -207,13 +207,13 @@ nav a.active {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem 20px;
+    padding: 0.5rem 20px 2rem 20px;
 }
 
 .search-bar {
     width: 100%;
     padding: 0.9rem 1.2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background-color: var(--card-bg);
@@ -432,7 +432,7 @@ footer {
     }
 
     .container {
-        padding: 1.5rem 15px; 
+        padding: 0.5rem 15px 1.5rem 15px;
     }
     
     .slider-card {
