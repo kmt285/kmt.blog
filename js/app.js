@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-// ၂။ Menu တည်ဆောက်ခြင်း (Premium Smooth Dragging ဖြင့်)
+// ၂။ Menu တည်ဆောက်ခြင်း (Desktop မြှားခလုတ်စနစ်ဖြင့်)
     function buildCategoryMenu() {
         categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
         
@@ -48,49 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
         });
 
-        // --- Desktop တွင် Category Menu ကို အလွန်ချောမွေ့စွာ Mouse ဖြင့် ဆွဲ၍ရအောင် ထည့်သွင်းခြင်း ---
-        let isNavDown = false;
-        let navStartX;
-        let navScrollLeft;
-        let isDragging = false; // ဖိဆွဲနေခြင်း ဟုတ်/မဟုတ် စစ်ဆေးရန်
-
-        categoryNav.addEventListener('mousedown', (e) => {
-            isNavDown = true;
-            isDragging = false; // စနှိပ်ချိန်တွင် Drag မလုပ်သေးပါ
-            categoryNav.classList.add('active');
-            navStartX = e.pageX - categoryNav.offsetLeft;
-            navScrollLeft = categoryNav.scrollLeft;
-        });
-
-        categoryNav.addEventListener('mouseleave', () => {
-            isNavDown = false;
-            categoryNav.classList.remove('active');
-        });
-
-        categoryNav.addEventListener('mouseup', () => {
-            isNavDown = false;
-            categoryNav.classList.remove('active');
-        });
-
-        categoryNav.addEventListener('mousemove', (e) => {
-            if (!isNavDown) return;
-            e.preventDefault(); 
-            isDragging = true; // Mouse ရွေ့သွားပါက Drag လုပ်နေသည်ဟု သတ်မှတ်မည်
-            const x = e.pageX - categoryNav.offsetLeft;
-            const walk = (x - navStartX) * 1.5; // အမြန်နှုန်းကို သဘာဝကျအောင် 1.5 သို့ လျှော့ချထားသည်
-            categoryNav.scrollLeft = navScrollLeft - walk;
-        });
-
-        // --- ခလုတ်များ နှိပ်သည့်အခါ အလုပ်လုပ်မည့်စနစ် ---
+        // --- Category နှိပ်သည့်အခါ အလုပ်လုပ်မည့်စနစ် ---
         const navLinks = categoryNav.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                // အကယ်၍ Mouse ဖြင့် ဖိဆွဲနေခြင်း (Dragging) ဖြစ်ပါက Click ကို လက်မခံဘဲ ပယ်ဖျက်မည်
-                if (isDragging) {
-                    e.preventDefault();
-                    return;
-                }
-
                 e.preventDefault();
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.target.classList.add('active');
@@ -114,6 +75,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
+
+        // --- Desktop မြှားခလုတ် (Left / Right) ဖြင့် ညင်သာစွာ Scroll ရွှေ့ခြင်း ---
+        const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+        const scrollRightBtn = document.getElementById('scrollRightBtn');
+
+        if (scrollLeftBtn && scrollRightBtn) {
+            scrollLeftBtn.addEventListener('click', () => {
+                categoryNav.scrollBy({ left: -250, behavior: 'smooth' });
+            });
+
+            scrollRightBtn.addEventListener('click', () => {
+                categoryNav.scrollBy({ left: 250, behavior: 'smooth' });
+            });
+        }
     }
     
     // ၃။ Home Page ပြသခြင်း (Slider အကန့်အသတ် နှင့် Slider အတွင်းရှိ Post များ Random စနစ်)
