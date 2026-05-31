@@ -1,24 +1,43 @@
 /* css/style.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* Theme Colors - ဒီနေရာမှာ အရောင်များကို စိတ်ကြိုက်ပြောင်းလဲနိုင်ပါသည် */
+    /* ☀️ Light Theme (Default) */
     --primary-bg: #ffffff;
     --secondary-bg: #f8f9fa;
+    --card-bg: #ffffff;
     --text-main: #212529;
     --text-muted: #6c757d;
     --accent-color: #FF4200;
     --border-color: #e9ecef;
-    
-    /* Typography */
+    --nav-pill-bg: #f1f3f5;
+    --nav-pill-hover: #e2e6ea;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md: 0 6px 16px rgba(0,0,0,0.08);
     --font-family: 'Inter', sans-serif;
+}
+
+[data-theme="dark"] {
+    /* 🌙 Dark Theme */
+    --primary-bg: #121212;
+    --secondary-bg: #1e1e1e;
+    --card-bg: #1a1a1a;
+    --text-main: #e0e0e0;
+    --text-muted: #9ca3af;
+    --accent-color: #FF5A22; /* Dark mode တွင် လိမ္မော်ရောင် အနည်းငယ် ပိုလင်းစေရန် */
+    --border-color: #2d2d2d;
+    --nav-pill-bg: #2a2a2a;
+    --nav-pill-hover: #3a3a3a;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+    --shadow-md: 0 6px 16px rgba(0,0,0,0.6);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Dark Mode ပြောင်းလျှင် Smooth ဖြစ်စေရန် */
 }
 
 html, body {
@@ -26,84 +45,102 @@ html, body {
     background-color: var(--primary-bg);
     color: var(--text-main);
     line-height: 1.6;
-    overflow-x: hidden; /* ဤနေရာက Website ကြီး ဘေးတိုက်ရွေ့သွားခြင်းကို တားဆီးပေးပါမည် */
+    overflow-x: hidden; 
     width: 100%;
 }
 
-/* ဤ Utility Class ကို body အောက်တွင် ထပ်ဖြည့်ပါ */
 .hidden {
     display: none !important;
 }
 
-/* Header & Navigation Update */
+/* Header & Navigation */
 header {
     border-bottom: 1px solid var(--border-color);
     background-color: var(--primary-bg);
-    padding: 1.5rem 20px; 
+    padding: 1.2rem 20px; 
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .header-container {
     max-width: 1000px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between; /* ဘယ်/ညာ ခွဲထုတ်ရန် */
+    justify-content: space-between; 
     align-items: center;
-    flex-wrap: wrap; 
-    gap: 1rem;
 }
 
 .logo-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px; /* Logo နှင့် စာသားကြား အကွာအဝေး */
+    gap: 12px; 
     text-decoration: none;
 }
 
 .site-logo {
-    width: 40px; /* Logo အရွယ်အစား (စိတ်ကြိုက်ပြင်ပါ) */
+    width: 40px; 
     height: 40px;
-    border-radius: 50%; /* အဝိုင်းပုံဖြစ်စေရန် */
+    border-radius: 50%; 
     object-fit: cover;
 }
 
 .logo-text {
     font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 2px;
+    font-weight: 700;
+    letter-spacing: 1px;
     color: var(--accent-color);
 }
 
-/* =========================================
-   Premium Category Menu (With Arrows for Desktop)
-   ========================================= */
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--nav-pill-hover);
+    transform: rotate(15deg);
+}
+
+/* Category Menu */
 .category-nav-container {
     position: relative;
     max-width: 1000px;
     margin: 1.5rem auto 2.5rem auto;
-    padding: 0 45px; /* ခလုတ်များ နေရာယူနိုင်ရန် ဘေးဘောင်ချန်ထားခြင်း */
+    padding: 0 45px; 
     width: 100%;
     display: flex;
     align-items: center;
 }
 
-/* Scroll ခလုတ်များ၏ ဒီဇိုင်း */
 .nav-scroll-btn {
     position: absolute;
-    top: 40%;
+    top: 45%;
     transform: translateY(-50%);
-    background-color: var(--primary-bg);
+    background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     color: var(--text-main);
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
 }
 
 .nav-scroll-btn:hover {
@@ -127,77 +164,76 @@ nav ul {
     width: 100%;
     -ms-overflow-style: none;  
     scrollbar-width: none;  
-    scroll-behavior: smooth; /* ခလုတ်နှိပ်လျှင် Smooth ပြေးသွားစေရန် */
+    scroll-behavior: smooth; 
 }
 
-nav ul::-webkit-scrollbar {
-    display: none; 
-}
-
-nav ul li {
-    flex: 0 0 auto;
-}
+nav ul::-webkit-scrollbar { display: none; }
+nav ul li { flex: 0 0 auto; }
 
 nav a {
     display: inline-block;
     text-decoration: none;
     color: var(--text-main);
-    background-color: #f1f3f5; 
+    background-color: var(--nav-pill-bg); 
     padding: 0.5rem 1.2rem; 
     border-radius: 20px; 
     font-size: 0.9rem;
     font-weight: 500;
-    border: 1px solid transparent;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
 }
 
 nav a:hover {
-    background-color: #e2e6ea; 
+    background-color: var(--nav-pill-hover); 
 }
 
 nav a.active {
     background-color: var(--accent-color); 
     color: #ffffff !important;
-    box-shadow: 0 4px 10px rgba(255, 66, 0, 0.3); 
+    border-color: var(--accent-color);
 }
 
-/* Main Content Layout */
+/* Main Content */
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 3rem 20px;
+    padding: 2rem 20px;
 }
 
 .search-bar {
     width: 100%;
-    padding: 0.8rem;
+    padding: 0.9rem 1.2rem;
     margin-bottom: 3rem;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 8px;
+    background-color: var(--card-bg);
+    color: var(--text-main);
     font-family: var(--font-family);
+    font-size: 1rem;
     outline: none;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .search-bar:focus {
     border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(255, 66, 0, 0.1);
 }
 
-/* =========================================
-   Netflix Style Sliders & Section Titles
-   ========================================= */
+/* Section Titles & Sliders */
 .section-title {
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1.5rem;
     color: var(--text-main);
     padding-left: 12px;
-    border-left: 4px solid var(--accent-color); /* ဘယ်ဘက်တွင် အရောင်လိုင်းလေးပြရန် */
+    border-left: 4px solid var(--accent-color); 
 }
 
 .slider-section {
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     width: 100%;
-    overflow: hidden; /* Screen အပြင်ဘက် ရောက်သွားသော အပိုင်းများကို ဖျောက်ရန် */
+    overflow: hidden; 
 }
 
 .slider-container {
@@ -211,187 +247,97 @@ nav a.active {
     scrollbar-width: none;  
     cursor: grab;
     user-select: none; 
-    width: 100%; /* Slider ကို Container အတွင်း၌သာ ရှိစေရန် */
+    width: 100%; 
 }
 
-.slider-container.active {
-    cursor: grabbing;
-    scroll-snap-type: none; /* Mouse ဖြင့်ဆွဲနေစဉ် Snap မဖြစ်စေရန် */
-}
+.slider-container.active { cursor: grabbing; scroll-snap-type: none; }
+.slider-container::-webkit-scrollbar { display: none; }
 
-/* Chrome, Safari များတွင် Scrollbar ဖျောက်ရန် */
-.slider-container::-webkit-scrollbar {
-    display: none; 
-}
-
-.slider-card {
-    flex: 0 0 280px; /* Slider တစ်ခု၏ အကျယ် (Fixed Width) */
-    scroll-snap-align: start;
+/* Modified Card UI for Professional Look */
+.slider-card, .post-card {
+    background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 1.5rem;
-    background: var(--primary-bg);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 250px;
 }
 
-/* Netflix Style Hover Pop Effect */
-.slider-card:hover {
-    transform: scale(1.05); /* Mouse တင်လျှင် အရှေ့သို့ ကြွတက်လာမည် */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+.slider-card {
+    flex: 0 0 280px; 
+    scroll-snap-align: start;
+    min-height: 260px;
+}
+
+.slider-card:hover, .post-card:hover {
+    transform: translateY(-4px); 
+    box-shadow: var(--shadow-md);
     border-color: var(--accent-color);
     z-index: 2;
 }
 
-/* ဖုန်းစခရင်အတွက် Slider ကတ်ကို အနည်းငယ် သေးပေးရန် */
-@media (max-width: 768px) {
-    .slider-card {
-        flex: 0 0 240px;
-        padding: 1.2rem;
-    }
-}
-
-/* Post Grid */
 .post-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
 }
 
-.post-card {
-    border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    border-radius: 4px;
-    transition: transform 0.2s ease;
-}
-
-.post-card:hover {
-    transform: translateY(-3px);
-}
-
 .post-category {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: var(--text-muted);
+    font-weight: 600;
+    color: var(--accent-color);
     letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     display: block;
 }
 
 .post-title {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.15rem;
+    font-weight: 700;
     margin-bottom: 1rem;
     color: var(--text-main);
+    line-height: 1.4;
 }
 
 .post-excerpt {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-muted);
     margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
 .read-more {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
     background-color: var(--accent-color);
     color: #ffffff !important;
-    padding: 0.5rem 1.2rem;
-    border-radius: 4px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
     transition: background-color 0.2s ease, transform 0.1s ease;
     margin-top: 1rem;
-
-    /* ခလုတ်ကြီး ဘေးသို့ ကားထွက်မသွားစေရန် */
     align-self: flex-start; 
     width: max-content; 
 }
 
 .read-more:hover {
-    background-color: #e03a00; /* Hover လုပ်လျှင် အရောင်အနည်းငယ်ရင့်သွားမည် */
-    transform: translateY(-1px);
+    background-color: #e03a00; 
+    transform: translateY(-2px);
 }
 
 /* Footer */
 footer {
-    text-align: center;
-    padding: 3rem 20px;
-    border-top: 1px solid var(--border-color);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-/* =========================================
-   Mobile Responsiveness (ဖုန်းစခရင်အတွက်)
-   ========================================= */
-@media (max-width: 768px) {
-    /* ဖုန်း (Mobile) တွင် မြှားခလုတ်များကို ဖျောက်ပြီး မူလအတိုင်း ပွတ်ဆွဲရန် */
-    .nav-scroll-btn {
-        display: none !important;
-    }
-    .category-nav-container {
-        padding: 0 15px; /* ခလုတ်မရှိတော့သဖြင့် နေရာအပြည့် ပြန်ယူမည် */
-    }
-}
-    
-    nav ul {
-        justify-content: flex-start;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    /* Container များ၏ ဘေးဘောင် Space ကို လျှော့ချရန် */
-    .container {
-        padding: 1.5rem 15px; 
-    }
-    
-    .single-post-container {
-        padding: 1.5rem 15px !important;
-    }
-
-    .search-bar {
-        margin-bottom: 1.5rem;
-    }
-
-    /* Post ဖတ်သည့် စာမျက်နှာရှိ Font များကို သေးပေးရန် */
-    .single-post-title {
-        font-size: 1.6rem !important; 
-        margin-bottom: 0.5rem !important;
-        line-height: 1.4;
-    }
-    
-    .single-post-header {
-        padding-bottom: 1rem !important;
-        margin-bottom: 1.5rem !important;
-    }
-    
-    .single-post-content {
-        font-size: 1.05rem !important; 
-        line-height: 1.7 !important;
-    }
-
-    /* Text Editor မှ ဝင်လာသော ခေါင်းစဉ်ကြီးများကို ဖုန်းတွင် သေးပေးရန် */
-    .ql-editor h1 { font-size: 1.5rem !important; line-height: 1.4; }
-    .ql-editor h2 { font-size: 1.3rem !important; line-height: 1.4; }
-    .ql-editor h3 { font-size: 1.2rem !important; line-height: 1.4; }
-    
-    /* ပုံများကို ဖုန်းစခရင်အပြည့် နေရာယူစေရန် */
-    .ql-editor img {
-        margin: 1rem 0 !important;
-    }
-}
-
-/* Rich Footer Section Styling Update */
-footer {
     background-color: var(--secondary-bg);
     border-top: 1px solid var(--border-color);
-    padding: 3rem 20px 1.5rem 20px; /* အပေါ်/အောက် Space များ လျှော့ချလိုက်ပါသည် */
+    padding: 4rem 20px 2rem 20px; 
     color: var(--text-main);
-    margin-top: 3rem; /* အပေါ်က Post များနှင့် အကွာအဝေးကို လျှော့ချလိုက်ပါသည် */
+    margin-top: 4rem; 
 }
 
 .footer-container {
@@ -399,52 +345,80 @@ footer {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem; /* Column တစ်ခုနှင့်တစ်ခု ကြားအကွာအဝေး (Space) ကို လျှော့ချလိုက်ပါသည် */
-    margin-bottom: 2rem;
+    gap: 2rem; 
+    margin-bottom: 2.5rem;
 }
 
-/* ဤနေရာတွင် သူ့ Column နှင့်သူ ဘယ်ဘက်သို့ သပ်သပ်ရပ်ရပ် ကပ်စေရန် (Left Align) လုပ်ထားပါသည် */
-.footer-section {
-    text-align: left; 
-}
-
+.footer-section { text-align: left; }
 .footer-section h4 {
     font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.8rem; /* ခေါင်းစဉ်နှင့် စာသားကြား Space ကို ကျစ်လစ်စေရန် လျှော့ထားပါသည် */
+    font-weight: 700;
+    margin-bottom: 1rem; 
     color: var(--accent-color);
 }
-
 .footer-section p {
     color: var(--text-muted);
-    margin-bottom: 0.5rem; /* စာကြောင်းများကြား Space လျှော့ရန် */
-    line-height: 1.5;
+    margin-bottom: 0.6rem; 
+    line-height: 1.6;
     font-size: 0.95rem;
 }
-
-.footer-links {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-links li {
-    margin-bottom: 0.5rem; /* Link များကြား Space လျှော့ရန် */
-}
-
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 0.6rem; }
 .footer-links a {
     text-decoration: none;
     color: var(--text-muted);
     transition: color 0.2s ease;
 }
-
-.footer-links a:hover {
-    color: var(--accent-color);
-}
-
+.footer-links a:hover { color: var(--accent-color); }
 .footer-bottom {
-    text-align: center; /* Copyright စာသားကိုတော့ အလယ်မှာပဲ ထားပါမည် */
+    text-align: center; 
     padding-top: 1.5rem;
     border-top: 1px solid var(--border-color);
     color: var(--text-muted);
     font-size: 0.85rem;
+}
+
+/* =========================================
+   Mobile Responsiveness & CSS Fixes
+   ========================================= */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: row; /* Logo နှင့် Theme ခလုတ်ကို တစ်တန်းတည်းထားရန် */
+    }
+    
+    .nav-scroll-btn {
+        display: none !important;
+    }
+    .category-nav-container {
+        padding: 0 15px; 
+    }
+    
+    nav ul {
+        justify-content: flex-start;
+        gap: 0.6rem;
+    }
+
+    .container {
+        padding: 1.5rem 15px; 
+    }
+    
+    .slider-card {
+        flex: 0 0 240px;
+        padding: 1.2rem;
+    }
+
+    /* Single Post Fixes for Mobile */
+    .single-post-container {
+        padding: 1.5rem 15px !important;
+    }
+    .single-post-title {
+        font-size: 1.5rem !important; 
+        line-height: 1.4;
+    }
+    .single-post-content {
+        font-size: 1rem !important; 
+    }
+    .ql-editor h1 { font-size: 1.4rem !important; }
+    .ql-editor h2 { font-size: 1.2rem !important; }
+    .ql-editor img { margin: 1rem 0 !important; }
 }
