@@ -191,9 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const errorText = document.getElementById('loginError');
         const submitBtn = loginForm.querySelector('button[type="submit"]');
-        
-        errorText.innerText = '';
-        submitBtn.innerText = 'Logging in... Please wait'; 
+        submitBtn.innerText = 'Logging in...'; 
+        submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
         submitBtn.disabled = true; 
 
