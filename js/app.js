@@ -16,6 +16,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let allPosts = []; 
     let categories = []; 
 
+    // --- Theme (Dark Mode / Light Mode) ခလုတ် လုပ်ဆောင်ချက် ---
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    // ယခင်က Dark Mode သုံးထားလျှင် ပြန်ခေါ်ရန်
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        if (themeToggleBtn) themeToggleBtn.innerText = '☀️';
+    }
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            
+            if (theme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggleBtn.innerText = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggleBtn.innerText = '☀️';
+            }
+        });
+    }
+
     // ၁။ စတင်ချိန်တွင် Data အားလုံးကို ဆွဲယူမည်
     async function initApp() {
         try {
