@@ -1,3 +1,4 @@
+// js/admin.js
 const API_URL = 'https://kmt285476.onrender.com/api'; 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -6,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // --- ၁။ Editor Configuration (ပုံမှန်အတိုင်း သတ်မှတ်မည်) ---
+    // --- ၁။ Editor Configuration ---
     const quillConfig = { 
         theme: 'snow', 
         placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
@@ -46,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('image', file);
 
-            // Cursor နေရာကို အတိအကျ မှတ်သားခြင်း
             let range = editorInstance.getSelection(true);
             if (!range) range = { index: editorInstance.getLength() };
 
@@ -60,11 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 
-                // Uploading စာသားကို ပြန်ဖျက်မည်
                 editorInstance.deleteText(range.index, 18); 
 
                 if (res.ok && data.url) {
-                    // Cloudinary မှ ရလာသော လင့်ခ်အမှန်ကို ထည့်သွင်းခြင်း
                     editorInstance.insertEmbed(range.index, 'image', data.url);
                 } else {
                     alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
@@ -76,11 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- ၃။ အရေးကြီးဆုံးအပိုင်း: Toolbar နှင့် Function ကို အတိအကျ ချိတ်ဆက်ခြင်း ---
+    // --- ၃။ Toolbar ချိတ်ဆက်ခြင်း ---
     quill.getModule('toolbar').addHandler('image', () => selectLocalImage(quill));
     editQuill.getModule('toolbar').addHandler('image', () => selectLocalImage(editQuill));
 
-    // --- ၄။ Copy/Paste နှင့် Drag & Drop လုပ်လျှင် Cloudinary သို့ အလိုအလျောက် တင်ပေးမည့် စနစ် ---
+    // --- ၄။ Copy/Paste နှင့် Drag & Drop အလိုအလျောက် တင်ပေးမည့် စနစ် ---
     async function uploadDroppedOrPastedImage(file, editorInstance) {
         const formData = new FormData();
         formData.append('image', file);
@@ -88,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let range = editorInstance.getSelection(true);
         if (!range) range = { index: editorInstance.getLength() };
 
-        // ပုံတင်နေစဉ် 'Uploading image...' ဟု ပြသထားမည်
         editorInstance.insertText(range.index, 'Uploading image...', 'user');
 
         try {
@@ -99,11 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await res.json();
             
-            // Uploading စာသားကို ပြန်ဖျက်မည်
             editorInstance.deleteText(range.index, 18); 
 
             if (res.ok && data.url) {
-                // Cloudinary မှ ရလာသော လင့်ခ်အမှန်ကို ထည့်သွင်းခြင်း
                 editorInstance.insertEmbed(range.index, 'image', data.url);
             } else {
                 alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
@@ -115,51 +110,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handlePasteAndDrop(editorInstance) {
-        // Copy / Paste (Ctrl+V) လုပ်လျှင်
         editorInstance.root.addEventListener('paste', async (e) => {
             if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length) {
                 const file = e.clipboardData.files[0];
                 if (file.type.startsWith('image/')) {
-                    e.preventDefault(); // Base64 စာသားရှည်ကြီးများအဖြစ် ဝင်သွားခြင်းကို တားဆီးမည်
+                    e.preventDefault(); 
                     await uploadDroppedOrPastedImage(file, editorInstance);
                 }
             }
         });
-
-        // Drag & Drop ဆွဲထည့်လျှင်
         editorInstance.root.addEventListener('drop', async (e) => {
             if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                 const file = e.dataTransfer.files[0];
                 if (file.type.startsWith('image/')) {
-                    e.preventDefault(); // Base64 စာသားရှည်ကြီးများအဖြစ် ဝင်သွားခြင်းကို တားဆီးမည်
+                    e.preventDefault(); 
                     await uploadDroppedOrPastedImage(file, editorInstance);
                 }
             }
         });
     }
 
-    // Editor နှစ်ခုလုံး (Post အသစ်တင်သည့်နေရာ ရော Edit လုပ်သည့်နေရာပါ) တွင် ချိတ်ဆက်မည်
     handlePasteAndDrop(quill);
     handlePasteAndDrop(editQuill);
 
     // ==========================================
-// ==========================================
     // လုံခြုံရေးနှင့် Login စနစ် အဆင့်မြှင့်တင်ခြင်း (Auto Logout ပါဝင်သည်)
     // ==========================================
-    
-    // --- Inactivity Auto Logout (၁၀ မိနစ်) ---
     let inactivityTimer;
-    const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 Minutes (in milliseconds)
+    const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 မိနစ်
 
     function resetInactivityTimer() {
         clearTimeout(inactivityTimer);
-        // Admin Token ရှိနေမှသာ Timer အလုပ်လုပ်မည်
         if (localStorage.getItem('adminToken')) {
             inactivityTimer = setTimeout(performLogout, INACTIVITY_LIMIT);
         }
     }
 
-    // Admin Panel တွင် လှုပ်ရှားမှုရှိလျှင် (Mouse ရွှေ့၊ စာရိုက်၊ Scroll ဆွဲ) Timer ပြန်စမည်
     ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(event => {
         document.addEventListener(event, () => {
             if (localStorage.getItem('adminToken')) resetInactivityTimer();
@@ -175,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isAuto) alert("လုံခြုံရေးအရ ၁၀ မိနစ်ကြာ အသုံးမပြုသောကြောင့် အလိုအလျောက် Logout လုပ်လိုက်ပါသည်။");
     }
 
-    // --- Token စစ်ဆေးခြင်း (Refresh လုပ်သောအခါ) ---
     async function checkAuthStatus() {
         const token = localStorage.getItem('adminToken');
         if (!token) {
@@ -184,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // Backend သို့ Token အမှန်/အမှား လှမ်းစစ်မည်
             const res = await fetch(`${API_URL}/auth/verify`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -192,16 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.ok) {
                 showDashboard();
             } else {
-                // Token သက်တမ်းကုန်သွားလျှင် ချက်ချင်း Logout ချမည်
                 performLogout(false);
             }
         } catch (err) {
             console.error("Auth check failed", err);
-            performLogout(false); // Network error ဖြစ်လျှင်လည်း လုံခြုံရေးအရ Logout ချမည်
+            performLogout(false);
         }
     }
 
-    // Page စတက်သည်နှင့် Token ကို အရင်စစ်ဆေးမည်
     checkAuthStatus(); 
 
     // --- Login Form လုပ်ဆောင်ချက် အသစ် ---
@@ -211,9 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const submitBtn = loginForm.querySelector('button[type="submit"]');
         
         errorText.innerText = '';
-        submitBtn.innerText = 'Logging in... Please wait'; // Loading စာသားပြမည်
+        submitBtn.innerText = 'Logging in... Please wait'; 
         submitBtn.style.opacity = '0.7';
-        submitBtn.disabled = true; // Spam မဖြစ်အောင် ခလုတ်ကို ယာယီပိတ်ထားမည်
+        submitBtn.disabled = true; 
 
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
@@ -234,25 +216,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) { 
             console.error(err); 
-            errorText.innerText = "Network Error! Server might be starting up.";
+            errorText.innerText = "Network Error! Server might be starting up. Please try again.";
         } finally {
             submitBtn.innerText = 'Login';
             submitBtn.style.opacity = '1';
-            submitBtn.disabled = false; // ခလုတ်ကို ပြန်ဖွင့်ပေးမည်
+            submitBtn.disabled = false; 
         }
     });
 
-    // --- Logout ခလုတ် (Manual) ---
     logoutBtn.addEventListener('click', () => performLogout(false));
 
     function showDashboard() {
         loginSection.classList.add('hidden'); 
         dashboardSection.classList.remove('hidden');
-        resetInactivityTimer(); // Dashboard ရောက်သည်နှင့် ၁၀ မိနစ် Timer စတင်မည်
+        resetInactivityTimer(); 
         loadCategories(); 
         loadAdminPosts();
     }
 
+    // ==========================================
+    // Data ဆွဲယူခြင်းနှင့် Manage လုပ်ခြင်း အပိုင်း (မူလအတိုင်း)
+    // ==========================================
     async function loadCategories() {
         try {
             const res = await fetch(`${API_URL}/categories`);
