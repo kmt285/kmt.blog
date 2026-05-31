@@ -76,11 +76,25 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // --- Desktop မြှားခလုတ် (Left / Right) ဖြင့် ညင်သာစွာ Scroll ရွှေ့ခြင်း ---
+// --- Desktop မြှားခလုတ် (Left / Right) ဖြင့် ညင်သာစွာ Scroll ရွှေ့ခြင်း ---
         const scrollLeftBtn = document.getElementById('scrollLeftBtn');
         const scrollRightBtn = document.getElementById('scrollRightBtn');
 
+        function toggleScrollButtons() {
+            if (!scrollLeftBtn || !scrollRightBtn) return;
+            
+            if (categoryNav.scrollWidth > categoryNav.clientWidth) {
+                scrollLeftBtn.style.display = 'flex';
+                scrollRightBtn.style.display = 'flex';
+            } else {
+                // Scroll ဆွဲစရာ မလိုလျှင် ခလုတ်များကို ဖျောက်ထားမည်
+                scrollLeftBtn.style.display = 'none';
+                scrollRightBtn.style.display = 'none';
+            }
+        }
+
         if (scrollLeftBtn && scrollRightBtn) {
+            // Button များ နှိပ်လျှင် အလုပ်လုပ်မည့် စနစ်
             scrollLeftBtn.addEventListener('click', () => {
                 categoryNav.scrollBy({ left: -250, behavior: 'smooth' });
             });
@@ -88,6 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
             scrollRightBtn.addEventListener('click', () => {
                 categoryNav.scrollBy({ left: 250, behavior: 'smooth' });
             });
+
+            // Data များ ဝင်လာပြီး UI နေရာချပြီးချိန်တွင် ခလုတ်ပြ/မပြ စစ်ဆေးရန် (setTimeout ဖြင့် အနည်းငယ် စောင့်ပြီးမှ စစ်ပါသည်)
+            setTimeout(toggleScrollButtons, 100); 
+
+            // Window Size အကျယ် ပြောင်းလဲသွားတိုင်း (ဥပမာ Browser ကို ချုံ့/ချဲ့ လုပ်တိုင်း) အလိုအလျောက် ပြန်စစ်ဆေးပေးမည်
+            window.addEventListener('resize', toggleScrollButtons);
         }
     }
     
