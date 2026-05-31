@@ -49,11 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ၁။ စတင်ချိန်တွင် Data အားလုံးကို ဆွဲယူမည်
+// ၁။ စတင်ချိန်တွင် Data အားလုံးကို ဆွဲယူမည်
     async function initApp() {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
         try {
-            slidersContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Loading Awesome Content...</p>';
-            
+            // Data များ ဆွဲယူခြင်း
             const [catRes, postRes] = await Promise.all([
                 fetch(`${API_URL}/categories`),
                 fetch(`${API_URL}/posts?page=1&limit=200`) 
@@ -68,10 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error initializing app:', error);
-            slidersContainer.innerHTML = '<p style="color: red; text-align: center;">Failed to load data. Please try again later.</p>';
+            slidersContainer.innerHTML = '<p style="color: red; text-align: center;">Failed to load data. Server might be sleeping. Please refresh.</p>';
+        } finally {
+            // အောင်မြင်သည်ဖြစ်စေ၊ ကျရှုံးသည်ဖြစ်စေ Loading Overlay ကို ညင်သာစွာ ဖျောက်မည်
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('fade-out');
+            }
         }
     }
-
 // ၂။ Menu တည်ဆောက်ခြင်း (Desktop မြှားခလုတ်စနစ်ဖြင့်)
     function buildCategoryMenu() {
         categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
