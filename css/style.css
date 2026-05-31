@@ -73,20 +73,21 @@ header {
     flex-wrap: nowrap !important; 
 }
 
-/* နာမည်စာလုံးများ အောက်သို့ အဆင့်ဆင့် မကျစေရန် */
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--accent-color);
-    white-space: nowrap !important; 
-}
-
 .logo-wrapper {
     display: flex;
     align-items: center;
     gap: 12px; 
     text-decoration: none;
+    flex-shrink: 0; /* နေရာကျဉ်းလည်း ပိန်မသွားစေရန် */
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--accent-color);
+    white-space: nowrap !important; 
+    flex-shrink: 0; /* နေရာကျဉ်းလည်း ၃ ကြောင်းမဆင့်သွားစေရန် */
 }
 
 .site-logo {
@@ -390,9 +391,10 @@ footer {
 /* ၃။ ဖုန်းစခရင် (Mobile) အတွက် Header အလွဲအချော်များကို အတိအကျ ပြင်ဆင်ခြင်း */
 @media (max-width: 768px) {
     .header-container {
-        flex-direction: row !important; /* Logo နှင့် ခလုတ်ကို တစ်တန်းတည်း အသေထားမည် */
+        flex-direction: row !important; 
         flex-wrap: nowrap !important;
         justify-content: space-between;
+        padding: 0 5px; /* ဘေးဘောင် အနည်းငယ် ချန်ထားမည် */
     }
     
     .logo-wrapper {
@@ -400,14 +402,15 @@ footer {
     }
     
     .logo-text {
-        font-size: 1.15rem; /* ဖုန်းတွင် နာမည်ကို အနည်းငယ် သေးပေးမည် */
-        letter-spacing: 0.5px;
+        font-size: 1.2rem !important; /* ဖုန်းတွင် နာမည်ကို အံဝင်ခွင်ကျ သေးပေးမည် */
+        white-space: nowrap !important;
     }
 
     .theme-toggle-btn {
         width: 36px;
         height: 36px;
-        display: flex !important; /* ဖုန်းတွင် လုံးဝ မပျောက်စေရန် */
+        display: flex !important;
+        flex-shrink: 0; 
     }
 
     .theme-toggle-btn svg {
@@ -420,6 +423,7 @@ footer {
     }
     .category-nav-container {
         padding: 0 15px; 
+        margin-top: 1.2rem; /* ဖုန်းတွင် Menu နှင့် Header ကြား နေရာချန်ရန် */
     }
     
     nav ul {
