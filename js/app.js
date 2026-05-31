@@ -3,108 +3,175 @@
 const API_URL = 'https://kmt285476.onrender.com/api'; 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const postContainer = document.getElementById('postContainer');
     const searchInput = document.getElementById('searchInput');
     const categoryNav = document.getElementById('categoryMenu'); 
+    
+    // UI Containers များကို ဖမ်းယူခြင်း
+    const defaultView = document.getElementById('defaultView');
+    const filteredView = document.getElementById('filteredView');
+    const slidersContainer = document.getElementById('slidersContainer');
+    const randomGridContainer = document.getElementById('randomGridContainer');
+    const filteredGridContainer = document.getElementById('filteredGridContainer');
+    const filterTitle = document.getElementById('filterTitle');
 
-    let currentPosts = [];
-    let currentCategoryId = ''; // လက်ရှိ ရွေးချယ်ထားသော Category
+    let allPosts = []; // Post အားလုံး သိမ်းရန်
+    let categories = []; // Category အားလုံး သိမ်းရန်
 
-    // ၁။ Menu တွင် ပြသရန် Category များကို လှမ်းယူခြင်း
-    async function fetchCategories() {
+    // ၁။ စတင်ချိန်တွင် Data အားလုံးကို တစ်ပြိုင်နက် ဆွဲယူမည်
+    async function initApp() {
         try {
-            const res = await fetch(`${API_URL}/categories`);
-            const categories = await res.json();
+            slidersContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Loading Awesome Content...</p>';
             
-            // Menu ခလုတ်များ တည်ဆောက်ခြင်း
-            categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
-            categories.forEach(cat => {
-                categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
-            });
+            // Category နှင့် Post များကို ပြိုင်တူဆွဲယူခြင်း (ပိုမြန်စေရန်)
+            const [catRes, postRes] = await Promise.all([
+                fetch(`${API_URL}/categories`),
+                fetch(`${API_URL}/posts?page=1&limit=100`) // Post ၁၀၀ အထိ ဆွဲယူမည်
+            ]);
 
-            // Category ခလုတ်နှိပ်လျှင် စစ်ထုတ်မည့် စနစ်
-            const navLinks = categoryNav.querySelectorAll('a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    e.target.classList.add('active');
-                    
-                    currentCategoryId = e.target.getAttribute('data-id');
-                    fetchPosts(); // စာမူများကို ပြန်လည်ခေါ်ယူမည်
-                });
-            });
-        } catch (err) {
-            console.error('Error fetching categories:', err);
-        }
-    }
+            categories = await catRes.json();
+            const postData = await postRes.json();
+            allPosts = postData.posts;
 
-    // ၂။ Backend မှ Post များ ဆွဲယူခြင်း (Limit ကို ၅၀ အထိ တိုးမြှင့်ထားသဖြင့် ခလုတ်နှိပ်ရန် မလိုဘဲ အကုန်ပေါ်မည်)
-    async function fetchPosts() {
-        try {
-            postContainer.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-muted); padding: 3rem 0; font-size: 1.1rem;">Loading posts...</p>';
-
-            // စာမူပေါင်း ၅၀ အထိ တစ်ခါတည်း ဆွဲယူရန် ပြင်ဆင်လိုက်ပါသည်
-            let url = `${API_URL}/posts?page=1&limit=50`;
-            if (currentCategoryId) {
-                url += `&category=${currentCategoryId}`;
-            }
-
-            const response = await fetch(url);
-            const data = await response.json();
-
-            currentPosts = data.posts;
-            renderPosts(currentPosts);
+            buildCategoryMenu();
+            renderDefaultHomeView();
 
         } catch (error) {
-            console.error('Error fetching posts:', error);
-            postContainer.innerHTML = '<p style="color: red; text-align: center; grid-column: 1 / -1; padding: 3rem 0;">Failed to load data. Please try again later.</p>';
+            console.error('Error initializing app:', error);
+            slidersContainer.innerHTML = '<p style="color: red; text-align: center;">Failed to load data. Please try again later.</p>';
         }
     }
 
-    // ၃။ UI ပေါ်တွင် Post များပြသရန် Function
-    function renderPosts(postsToRender) {
-        postContainer.innerHTML = ''; 
-        
-        if (postsToRender.length === 0) {
-            postContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 2rem 0;">No posts available in this category yet.</p>';
-            return;
-        }
+    // ၂။ Menu တည်ဆောက်ခြင်း နှင့် Click နှိပ်လျှင် Filter လုပ်ခြင်း
+    function buildCategoryMenu() {
+        categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
+        categories.forEach(cat => {
+            categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
+        });
 
-        postsToRender.forEach(post => {
-            const postCard = document.createElement('div');
-            postCard.className = 'post-card';
-            
-            const categoryName = post.category ? post.category.name : 'Uncategorized';
-            
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = post.content;
-            const textContent = tempDiv.textContent || tempDiv.innerText || "";
-            const excerpt = textContent.substring(0, 100) + '...';
-
-            postCard.innerHTML = `
-                <span class="post-category">${categoryName}</span>
-                <h2 class="post-title">${post.title}</h2>
-                <p class="post-excerpt">${excerpt}</p>
-                <a href="post.html?id=${post._id}" class="read-more">Read Full Post</a>
-            `;
-            
-            postContainer.appendChild(postCard);
+        const navLinks = categoryNav.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                const catId = e.target.getAttribute('data-id');
+                const catName = e.target.innerText;
+                
+                if (!catId) {
+                    // "All" ကို နှိပ်လျှင် ပုံမှန် Slider အတိုင်း ပြန်ပြမည်
+                    defaultView.classList.remove('hidden');
+                    filteredView.classList.add('hidden');
+                } else {
+                    // Category တစ်ခုကို နှိပ်လျှင် Slider များ ဖျောက်ပြီး ထို Category များကိုသာ ပြမည်
+                    defaultView.classList.add('hidden');
+                    filteredView.classList.remove('hidden');
+                    filterTitle.innerText = `Category: ${catName}`;
+                    
+                    const filteredPosts = allPosts.filter(p => p.category && p.category._id === catId);
+                    renderGrid(filteredPosts, filteredGridContainer);
+                }
+            });
         });
     }
 
-    // Search လုပ်ဆောင်ချက်
+    // ၃။ ပုံမှန် Home Page (Slider + Random Grid) တည်ဆောက်ခြင်း
+    function renderDefaultHomeView() {
+        slidersContainer.innerHTML = ''; 
+
+        // ၃.၁ - Recently Added Slider (နောက်ဆုံးတင်သော ၁၀ ခု)
+        const recentPosts = allPosts.slice(0, 10);
+        if (recentPosts.length > 0) {
+            slidersContainer.appendChild(createSliderSection('Recently Added', recentPosts));
+        }
+
+        // ၃.၂ - Category အလိုက် Slider များ တည်ဆောက်ခြင်း
+        categories.forEach(cat => {
+            const catPosts = allPosts.filter(p => p.category && p.category._id === cat._id);
+            if (catPosts.length > 0) {
+                // Category တစ်ခုစီတိုင်းအတွက် Slider တစ်ခုစီ ပြမည်
+                slidersContainer.appendChild(createSliderSection(cat.name, catPosts));
+            }
+        });
+
+        // ၃.၃ - Random Picks Grid (အောက်ဆုံးတွင် ကျပန်း ၁၂ ခု ပြမည်)
+        const shuffledPosts = [...allPosts].sort(() => 0.5 - Math.random());
+        const randomPicks = shuffledPosts.slice(0, 12);
+        renderGrid(randomPicks, randomGridContainer);
+    }
+
+    // ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function
+    function createSliderSection(title, posts) {
+        const section = document.createElement('div');
+        section.className = 'slider-section';
+        section.innerHTML = `<h3 class="section-title">${title}</h3>`;
+        
+        const slider = document.createElement('div');
+        slider.className = 'slider-container';
+        
+        posts.forEach(post => {
+            slider.innerHTML += buildCardHTML(post, 'slider-card');
+        });
+        
+        section.appendChild(slider);
+        return section;
+    }
+
+    // ၅။ Grid (အကွက်များ) ဖြင့် ပြသသော Function
+    function renderGrid(posts, container) {
+        container.innerHTML = '';
+        if (posts.length === 0) {
+            container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1;">No posts found.</p>';
+            return;
+        }
+        posts.forEach(post => {
+            container.innerHTML += buildCardHTML(post, 'post-card');
+        });
+    }
+
+    // ၆။ Card HTML ပုံစံထုတ်ပေးသော Helper Function (Slider ကော Grid ကော ဤဒီဇိုင်းကို သုံးမည်)
+    function buildCardHTML(post, className) {
+        const categoryName = post.category ? post.category.name : 'Uncategorized';
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = post.content;
+        const textContent = tempDiv.textContent || tempDiv.innerText || "";
+        const excerpt = textContent.substring(0, 80) + '...';
+
+        return `
+            <div class="${className}">
+                <div>
+                    <span class="post-category">${categoryName}</span>
+                    <h2 class="post-title" style="font-size: 1.1rem;">${post.title}</h2>
+                    <p class="post-excerpt" style="font-size: 0.85rem; margin-bottom: 1rem;">${excerpt}</p>
+                </div>
+                <a href="post.html?id=${post._id}" class="read-more">Read Full Post</a>
+            </div>
+        `;
+    }
+
+    // ၇။ Search ရှာဖွေခြင်း လုပ်ဆောင်ချက်
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filteredPosts = currentPosts.filter(post => 
+        
+        if (searchTerm === '') {
+            // စာဖျက်လိုက်လျှင် ပုံမှန် Slider သို့ ပြန်သွားမည်
+            defaultView.classList.remove('hidden');
+            filteredView.classList.add('hidden');
+            return;
+        }
+
+        // စာရိုက်ရှာလျှင် Slider များဖျောက်ပြီး ရှာတွေ့သမျှကို Grid ဖြင့်ပြမည်
+        defaultView.classList.add('hidden');
+        filteredView.classList.remove('hidden');
+        filterTitle.innerText = `Search Results for "${e.target.value}"`;
+
+        const filtered = allPosts.filter(post => 
             post.title.toLowerCase().includes(searchTerm) || 
             (post.category && post.category.name.toLowerCase().includes(searchTerm))
         );
-        renderPosts(filteredPosts);
+        renderGrid(filtered, filteredGridContainer);
     });
 
-    // စတင်ချိန်တွင် လုပ်ဆောင်မည့် လုပ်ငန်းစဉ်များ
-    fetchCategories();
-    fetchPosts();
+    // အားလုံး အသင့်ဖြစ်လျှင် စတင်ခေါ်ယူမည်
+    initApp();
 });
