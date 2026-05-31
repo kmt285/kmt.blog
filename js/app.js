@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function (Desktop Drag-to-Scroll ပါဝင်သည်)
+// ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function (Desktop Momentum Scroll ပါဝင်သည်)
     function createSliderSection(title, posts) {
         const section = document.createElement('div');
         section.className = 'slider-section';
@@ -189,34 +189,63 @@ document.addEventListener('DOMContentLoaded', () => {
             slider.innerHTML += buildCardHTML(post, 'slider-card');
         });
         
+        // --- Desktop အတွက် Momentum Drag-to-Scroll စနစ် ---
         let isDown = false;
         let startX;
         let scrollLeft;
+        let velX = 0; // အရှိန် (Velocity) ကို မှတ်သားရန်
+        let momentumID; // Animation ကို ထိန်းချုပ်ရန်
 
         slider.addEventListener('mousedown', (e) => {
             isDown = true;
             slider.classList.add('active');
             startX = e.pageX - slider.offsetLeft;
             scrollLeft = slider.scrollLeft;
+            
+            // အသစ်ပြန်ဆွဲပါက ယခင်အရှိန်ကို ချက်ချင်းရပ်မည်
+            cancelAnimationFrame(momentumID); 
         });
         
         slider.addEventListener('mouseleave', () => {
+            if (!isDown) return;
             isDown = false;
             slider.classList.remove('active');
+            beginMomentumTracking(); // Mouse အပြင်ရောက်သွားလျှင် အရှိန်ဖြင့် ဆက်သွားစေရန်
         });
         
         slider.addEventListener('mouseup', () => {
             isDown = false;
             slider.classList.remove('active');
+            beginMomentumTracking(); // Mouse လွှတ်လိုက်လျှင် အရှိန်ဖြင့် ဆက်သွားစေရန်
         });
         
         slider.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
+            
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 1.5;
+            const walk = (x - startX) * 1.5; 
+            
+            // လက်ရှိနေရာနှင့် ရွှေ့လိုက်သောနေရာကြားမှ အရှိန် (Velocity) ကို တွက်ချက်ခြင်း
+            const prevScrollLeft = slider.scrollLeft;
             slider.scrollLeft = scrollLeft - walk;
+            velX = slider.scrollLeft - prevScrollLeft; 
         });
+
+        // --- အရှိန်ဖြင့် လိမ့်သွားစေရန် (Momentum / Inertia) တွက်ချက်သော စနစ် ---
+        function beginMomentumTracking() {
+            cancelAnimationFrame(momentumID);
+            momentumID = requestAnimationFrame(momentumLoop);
+        }
+
+        function momentumLoop() {
+            // အရှိန်ရှိနေသေးလျှင် ဆက်ရွှေ့မည်
+            if (Math.abs(velX) > 0.5) { 
+                slider.scrollLeft += velX;
+                velX *= 0.92; // 0.92 သည် အရှိန်တဖြည်းဖြည်း လျော့ကျသွားမည့် ပမာဏ (Friction) ဖြစ်သည်
+                momentumID = requestAnimationFrame(momentumLoop);
+            }
+        }
 
         section.appendChild(slider);
         return section;
