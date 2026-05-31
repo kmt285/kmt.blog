@@ -252,7 +252,6 @@ nav a.active {
     gap: 1.5rem;
     padding: 10px 10px 20px 10px; 
     scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
     -ms-overflow-style: none;  
     scrollbar-width: none;  
     cursor: grab;
@@ -260,7 +259,7 @@ nav a.active {
     width: 100%; 
 }
 
-.slider-container.active { cursor: grabbing; scroll-snap-type: none; }
+.slider-container.active { cursor: grabbing; }
 .slider-container::-webkit-scrollbar { display: none; }
 
 /* Modified Card UI for Professional Look */
@@ -278,7 +277,6 @@ nav a.active {
 
 .slider-card {
     flex: 0 0 280px; 
-    scroll-snap-align: start;
     min-height: 260px;
 }
 
