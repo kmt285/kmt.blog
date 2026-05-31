@@ -78,18 +78,26 @@ nav {
 nav ul {
     list-style: none;
     display: flex;
-    justify-content: flex-start; /* ဖုန်းအတွက် အစမှစရန် */
-    gap: 2rem;
+    flex-wrap: nowrap !important; /* အောက်သို့ အထပ်ထပ် မဆင်းစေရန် */
+    justify-content: flex-start;
+    gap: 1.5rem;
     overflow-x: auto; /* ဘေးတိုက် Scroll ဆွဲခွင့်ပေးမည် */
-    white-space: nowrap; /* စာကြောင်းမဆင်းဘဲ တန်းနေစေရန် */
-    padding-bottom: 10px; /* Scrollbar နေရာအတွက် */
-    -ms-overflow-style: none;  /* IE and Edge အတွက် Scrollbar ဖျောက်ရန် */
-    scrollbar-width: none;  /* Firefox အတွက် Scrollbar ဖျောက်ရန် */
+    white-space: nowrap; 
+    padding-bottom: 10px; 
+    width: 100%;
+    max-width: 100vw;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
 }
 
-/* Chrome, Safari များတွင် Scrollbar ဖျောက်ရန် */
+/* Scrollbar ဖျောက်ရန် */
 nav ul::-webkit-scrollbar {
     display: none; 
+}
+
+/* ခလုတ်များ ပိန်မသွားစေရန် */
+nav ul li {
+    flex: 0 0 auto;
 }
 
 nav a {
