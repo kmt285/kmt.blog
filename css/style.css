@@ -28,6 +28,11 @@ body {
     line-height: 1.6;
 }
 
+/* ဤ Utility Class ကို body အောက်တွင် ထပ်ဖြည့်ပါ */
+.hidden {
+    display: none !important;
+}
+
 /* Header & Navigation Update */
 header {
     border-bottom: 1px solid var(--border-color);
@@ -170,7 +175,6 @@ nav a:hover, nav a.active {
         flex: 0 0 240px;
         padding: 1.2rem;
     }
-    .hidden { display: none !important; }
 }
 
 /* Post Grid */
