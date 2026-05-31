@@ -15,7 +15,7 @@
     --nav-pill-hover: #e2e6ea;
     --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
     --shadow-md: 0 6px 16px rgba(0,0,0,0.08);
-    --font-family: 'Inter', sans-serif;
+    --font-family: 'Pyidaungsu', 'Noto Sans Myanmar', 'Inter', sans-serif;
 }
 
 [data-theme="dark"] {
@@ -383,6 +383,39 @@ footer {
     border-top: 1px solid var(--border-color);
     color: var(--text-muted);
     font-size: 0.85rem;
+}
+
+/* =========================================
+   Myanmar Font (Pyidaungsu) Support & Quill Editor Fixes
+   ========================================= */
+
+/* Admin Panel အတွင်းရှိ Editor နှင့် Post ဖတ်သည့် နေရာများအားလုံးကို Pyidaungsu အတင်းပြောင်းမည် */
+.ql-editor, 
+.ql-editor p, 
+.single-post-content, 
+.single-post-content p {
+    font-family: var(--font-family) !important;
+    line-height: 1.8 !important; /* မြန်မာစာလုံးများ (ဥပမာ - င်္, ျ, ြ) အပေါ်အောက် ထပ်မနေစေရန် */
+    font-size: 1.05rem !important; /* စာဖတ်ရလွယ်ကူစေရန် အရွယ်အစား အနည်းငယ် ချဲ့ထားသည် */
+    color: var(--text-main);
+    word-wrap: break-word; /* စာလုံးများ အပြင်ထွက်မသွားစေရန် */
+}
+
+/* Heading များအတွက် မြန်မာစာ အထူ (Bold) များကို ရှင်းလင်းစွာ ပေါ်စေရန် */
+.ql-editor h1, .ql-editor h2, .ql-editor h3,
+.single-post-content h1, .single-post-content h2, .single-post-content h3 {
+    font-family: var(--font-family) !important;
+    line-height: 1.5 !important;
+    font-weight: 700 !important;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* စာစုစာရင်း (Bullet & Number Lists) များတွင် ဖောင့်မှန်စေရန် */
+.ql-editor li, .single-post-content li {
+    font-family: var(--font-family) !important;
+    line-height: 1.8 !important;
+    margin-bottom: 0.5rem;
 }
 
 /* ၃။ ဖုန်းစခရင် (Mobile) အတွက် Header အလွဲအချော်များကို အတိအကျ ပြင်ဆင်ခြင်း */
