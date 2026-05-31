@@ -74,36 +74,60 @@ header {
 }
 
 /* =========================================
-   Premium Category Menu UI
+   Premium Category Menu (With Arrows for Desktop)
    ========================================= */
-nav {
-    margin: 1.5rem auto 2.5rem auto; /* အောက်ပိုင်း Space အနည်းငယ် ချဲ့ပေးထားသည် */
-    max-width: 1000px; 
-    padding: 0 20px; 
+.category-nav-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 1.5rem auto 2.5rem auto;
+    padding: 0 45px; /* ခလုတ်များ နေရာယူနိုင်ရန် ဘေးဘောင်ချန်ထားခြင်း */
     width: 100%;
+    display: flex;
+    align-items: center;
 }
+
+/* Scroll ခလုတ်များ၏ ဒီဇိုင်း */
+.nav-scroll-btn {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.nav-scroll-btn:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-color);
+}
+
+.left-btn { left: 0; }
+.right-btn { right: 0; }
 
 nav ul {
     list-style: none;
     display: flex;
     flex-wrap: nowrap !important;
     justify-content: flex-start;
-    gap: 0.8rem; /* ခလုတ်များကြား အကွာအဝေးကို ပိုမိုကျစ်လစ်စေရန် */
+    gap: 0.8rem; 
     overflow-x: auto; 
     white-space: nowrap; 
-    padding: 5px 2px 15px 2px; /* အရိပ် (Shadow) မပြတ်သွားစေရန် Padding ထည့်ထားသည် */
+    padding: 5px 2px 15px 2px; 
     width: 100%;
     -ms-overflow-style: none;  
     scrollbar-width: none;  
-    
-    /* Mouse ဖြင့် ဖိဆွဲရာတွင် မထစ်စေရန် CRITICAL FIX */
-    scroll-behavior: auto !important; 
-    cursor: grab;
-    user-select: none;
-}
-
-nav ul.active {
-    cursor: grabbing; 
+    scroll-behavior: smooth; /* ခလုတ်နှိပ်လျှင် Smooth ပြေးသွားစေရန် */
 }
 
 nav ul::-webkit-scrollbar {
@@ -114,14 +138,13 @@ nav ul li {
     flex: 0 0 auto;
 }
 
-/* ခလုတ်ဒီဇိုင်းကို Premium ဆန်ဆန် ပြောင်းလဲခြင်း */
 nav a {
     display: inline-block;
     text-decoration: none;
     color: var(--text-main);
-    background-color: #f1f3f5; /* မျက်စိအေးသော မီးခိုးနုရောင် */
+    background-color: #f1f3f5; 
     padding: 0.5rem 1.2rem; 
-    border-radius: 20px; /* ကျစ်လစ်သော အဝိုင်းပုံစံ */
+    border-radius: 20px; 
     font-size: 0.9rem;
     font-weight: 500;
     border: 1px solid transparent;
@@ -129,15 +152,15 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #e2e6ea; /* Mouse တင်လျှင် အနည်းငယ် ရင့်သွားမည် */
+    background-color: #e2e6ea; 
 }
 
-/* ရွေးချယ်ထားသော (Active) ခလုတ်အတွက် သီးသန့် ဒီဇိုင်း */
 nav a.active {
     background-color: var(--accent-color); 
     color: #ffffff !important;
-    box-shadow: 0 4px 10px rgba(255, 66, 0, 0.3); /* လိမ္မော်ရောင် အရိပ်လေး ထွက်နေစေရန် */
+    box-shadow: 0 4px 10px rgba(255, 66, 0, 0.3); 
 }
+
 /* Main Content Layout */
 .container {
     max-width: 1000px;
@@ -306,11 +329,14 @@ footer {
    Mobile Responsiveness (ဖုန်းစခရင်အတွက်)
    ========================================= */
 @media (max-width: 768px) {
-    /* Header ကို ဘယ်ဘက်သို့ စီရန် */
-    .header-container {
-        flex-direction: column; 
-        align-items: flex-start;
+    /* ဖုန်း (Mobile) တွင် မြှားခလုတ်များကို ဖျောက်ပြီး မူလအတိုင်း ပွတ်ဆွဲရန် */
+    .nav-scroll-btn {
+        display: none !important;
     }
+    .category-nav-container {
+        padding: 0 15px; /* ခလုတ်မရှိတော့သဖြင့် နေရာအပြည့် ပြန်ယူမည် */
+    }
+}
     
     nav ul {
         justify-content: flex-start;
