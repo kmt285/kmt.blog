@@ -143,32 +143,114 @@ document.addEventListener('DOMContentLoaded', () => {
     handlePasteAndDrop(editQuill);
 
     // ==========================================
-    // အောက်ပါ Code များသည် မူလ အတိုင်းဖြစ်ပါသည်
+// ==========================================
+    // လုံခြုံရေးနှင့် Login စနစ် အဆင့်မြှင့်တင်ခြင်း (Auto Logout ပါဝင်သည်)
     // ==========================================
-    const token = localStorage.getItem('adminToken');
-    if (token) showDashboard();
+    
+    // --- Inactivity Auto Logout (၁၀ မိနစ်) ---
+    let inactivityTimer;
+    const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 Minutes (in milliseconds)
 
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        // Admin Token ရှိနေမှသာ Timer အလုပ်လုပ်မည်
+        if (localStorage.getItem('adminToken')) {
+            inactivityTimer = setTimeout(performLogout, INACTIVITY_LIMIT);
+        }
+    }
+
+    // Admin Panel တွင် လှုပ်ရှားမှုရှိလျှင် (Mouse ရွှေ့၊ စာရိုက်၊ Scroll ဆွဲ) Timer ပြန်စမည်
+    ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(event => {
+        document.addEventListener(event, () => {
+            if (localStorage.getItem('adminToken')) resetInactivityTimer();
+        });
+    });
+
+    function performLogout(isAuto = true) {
+        localStorage.removeItem('adminToken');
+        clearTimeout(inactivityTimer);
+        loginSection.classList.remove('hidden'); 
+        dashboardSection.classList.add('hidden');
+        document.getElementById('loginForm').reset();
+        if (isAuto) alert("လုံခြုံရေးအရ ၁၀ မိနစ်ကြာ အသုံးမပြုသောကြောင့် အလိုအလျောက် Logout လုပ်လိုက်ပါသည်။");
+    }
+
+    // --- Token စစ်ဆေးခြင်း (Refresh လုပ်သောအခါ) ---
+    async function checkAuthStatus() {
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            loginSection.classList.remove('hidden');
+            return;
+        }
+
+        try {
+            // Backend သို့ Token အမှန်/အမှား လှမ်းစစ်မည်
+            const res = await fetch(`${API_URL}/auth/verify`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (res.ok) {
+                showDashboard();
+            } else {
+                // Token သက်တမ်းကုန်သွားလျှင် ချက်ချင်း Logout ချမည်
+                performLogout(false);
+            }
+        } catch (err) {
+            console.error("Auth check failed", err);
+            performLogout(false); // Network error ဖြစ်လျှင်လည်း လုံခြုံရေးအရ Logout ချမည်
+        }
+    }
+
+    // Page စတက်သည်နှင့် Token ကို အရင်စစ်ဆေးမည်
+    checkAuthStatus(); 
+
+    // --- Login Form လုပ်ဆောင်ချက် အသစ် ---
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const errorText = document.getElementById('loginError');
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        
+        errorText.innerText = '';
+        submitBtn.innerText = 'Logging in... Please wait'; // Loading စာသားပြမည်
+        submitBtn.style.opacity = '0.7';
+        submitBtn.disabled = true; // Spam မဖြစ်အောင် ခလုတ်ကို ယာယီပိတ်ထားမည်
+
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: document.getElementById('username').value, password: document.getElementById('password').value })
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    username: document.getElementById('username').value, 
+                    password: document.getElementById('password').value 
+                })
             });
             const data = await res.json();
-            if (res.ok) { localStorage.setItem('adminToken', data.token); showDashboard(); }
-            else { document.getElementById('loginError').innerText = data.message; }
-        } catch (err) { console.error(err); }
+            
+            if (res.ok) { 
+                localStorage.setItem('adminToken', data.token); 
+                showDashboard(); 
+            } else { 
+                errorText.innerText = data.message || "Invalid credentials! Please try again."; 
+            }
+        } catch (err) { 
+            console.error(err); 
+            errorText.innerText = "Network Error! Server might be starting up.";
+        } finally {
+            submitBtn.innerText = 'Login';
+            submitBtn.style.opacity = '1';
+            submitBtn.disabled = false; // ခလုတ်ကို ပြန်ဖွင့်ပေးမည်
+        }
     });
 
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('adminToken');
-        loginSection.classList.remove('hidden'); dashboardSection.classList.add('hidden');
-    });
+    // --- Logout ခလုတ် (Manual) ---
+    logoutBtn.addEventListener('click', () => performLogout(false));
 
     function showDashboard() {
-        loginSection.classList.add('hidden'); dashboardSection.classList.remove('hidden');
-        loadCategories(); loadAdminPosts();
+        loginSection.classList.add('hidden'); 
+        dashboardSection.classList.remove('hidden');
+        resetInactivityTimer(); // Dashboard ရောက်သည်နှင့် ၁၀ မိနစ် Timer စတင်မည်
+        loadCategories(); 
+        loadAdminPosts();
     }
 
     async function loadCategories() {
