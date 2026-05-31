@@ -485,3 +485,63 @@ footer {
     .ql-editor h2 { font-size: 1.2rem !important; }
     .ql-editor img { margin: 1rem 0 !important; }
 }
+
+/* =========================================
+   Professional Full-Page Loading Overlay
+   ========================================= */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.7); /* အလင်းရောင်တွင် အဖြူရောင် Blur */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Dark Mode အတွက် နောက်ခံအရောင် ပြောင်းလဲခြင်း */
+[data-theme="dark"] .loading-overlay {
+    background-color: rgba(18, 18, 18, 0.7); 
+}
+
+/* ဤ Class ရောက်လာပါက ညင်သာစွာ ပျောက်သွားမည် */
+.loading-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* လည်နေမည့် အဝိုင်း (Spinner) Design */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    letter-spacing: 1px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
