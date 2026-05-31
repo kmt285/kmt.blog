@@ -303,14 +303,18 @@ nav a.active {
 }
 
 .post-title {
+    /* Inter ကို ရှေ့ဆုံးက ထားလိုက်ပါသည် */
+    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 1rem;
     color: var(--text-main);
-    line-height: 1.4;
+    line-height: 1.6; 
 }
 
 .post-excerpt {
+    /* Inter ကို ရှေ့ဆုံးက ထားလိုက်ပါသည် */
+    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     font-size: 0.95rem;
     color: var(--text-muted);
     margin-bottom: 1.5rem;
@@ -388,13 +392,11 @@ footer {
 /* =========================================
    Myanmar Font Support (For Posts & Editor ONLY)
    ========================================= */
-
 .ql-editor, 
 .ql-editor p, 
 .single-post-content, 
 .single-post-content p {
-    /* ဤနေရာတွင် Post များအတွက်သာ သီးသန့် ဖောင့်သတ်မှတ်သည် */
-    font-family: 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
+    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     line-height: 1.8 !important;
     font-size: 1.05rem !important; 
     color: var(--text-main);
@@ -403,7 +405,7 @@ footer {
 
 .ql-editor h1, .ql-editor h2, .ql-editor h3,
 .single-post-content h1, .single-post-content h2, .single-post-content h3 {
-    font-family: 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
+    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     line-height: 1.5 !important;
     font-weight: 700 !important;
     margin-top: 1.5rem;
@@ -411,7 +413,7 @@ footer {
 }
 
 .ql-editor li, .single-post-content li {
-    font-family: 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
+    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     line-height: 1.8 !important;
     margin-bottom: 0.5rem;
 }
