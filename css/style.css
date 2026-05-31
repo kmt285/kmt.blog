@@ -147,6 +147,8 @@ nav a:hover, nav a.active {
 
 .slider-section {
     margin-bottom: 3rem;
+    width: 100%;
+    overflow: hidden; /* Screen အပြင်ဘက် ရောက်သွားသော အပိုင်းများကို ဖျောက်ရန် */
 }
 
 .slider-container {
@@ -160,6 +162,7 @@ nav a:hover, nav a.active {
     scrollbar-width: none;  
     cursor: grab;
     user-select: none; 
+    width: 100%; /* Slider ကို Container အတွင်း၌သာ ရှိစေရန် */
 }
 
 .slider-container.active {
@@ -253,6 +256,10 @@ nav a:hover, nav a.active {
     font-weight: 600;
     transition: background-color 0.2s ease, transform 0.1s ease;
     margin-top: 1rem;
+
+    /* ခလုတ်ကြီး ဘေးသို့ ကားထွက်မသွားစေရန် */
+    align-self: flex-start; 
+    width: max-content; 
 }
 
 .read-more:hover {
