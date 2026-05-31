@@ -73,10 +73,13 @@ header {
     color: var(--accent-color);
 }
 
+/* =========================================
+   Premium Category Menu UI
+   ========================================= */
 nav {
-    margin: 1.5rem auto 0 auto;
-    max-width: 1000px; /* Search Box ၏ အကျယ်အတိုင်း ကန့်သတ်လိုက်ပါသည် */
-    padding: 0 20px; /* Search Box ၏ ဘေးဘောင်နှင့် တစ်တန်းတည်း ဖြစ်စေရန် */
+    margin: 1.5rem auto 2.5rem auto; /* အောက်ပိုင်း Space အနည်းငယ် ချဲ့ပေးထားသည် */
+    max-width: 1000px; 
+    padding: 0 20px; 
     width: 100%;
 }
 
@@ -85,24 +88,24 @@ nav ul {
     display: flex;
     flex-wrap: nowrap !important;
     justify-content: flex-start;
-    gap: 1rem; /* Category များကြား အကွာအဝေးကို အနည်းငယ် လျှော့လိုက်ပါသည် */
+    gap: 0.8rem; /* ခလုတ်များကြား အကွာအဝေးကို ပိုမိုကျစ်လစ်စေရန် */
     overflow-x: auto; 
     white-space: nowrap; 
-    padding-bottom: 15px; 
+    padding: 5px 2px 15px 2px; /* အရိပ် (Shadow) မပြတ်သွားစေရန် Padding ထည့်ထားသည် */
     width: 100%;
     -ms-overflow-style: none;  
     scrollbar-width: none;  
     
-    /* Desktop တွင် Mouse ဖြင့် ဖိဆွဲနိုင်ရန် */
+    /* Mouse ဖြင့် ဖိဆွဲရာတွင် မထစ်စေရန် CRITICAL FIX */
+    scroll-behavior: auto !important; 
     cursor: grab;
     user-select: none;
 }
 
 nav ul.active {
-    cursor: grabbing; /* Mouse ဖိထားချိန်တွင် လက်ဆုပ်ပုံစံပြောင်းရန် */
+    cursor: grabbing; 
 }
 
-/* Scrollbar ဖျောက်ရန် */
 nav ul::-webkit-scrollbar {
     display: none; 
 }
@@ -111,27 +114,30 @@ nav ul li {
     flex: 0 0 auto;
 }
 
-/* ဤနေရာသည် Category များကို ခလုတ်အဝိုင်း (Pill) ပုံစံ ပြောင်းပေးမည့် အပိုင်းဖြစ်သည် */
+/* ခလုတ်ဒီဇိုင်းကို Premium ဆန်ဆန် ပြောင်းလဲခြင်း */
 nav a {
     display: inline-block;
     text-decoration: none;
     color: var(--text-main);
-    background-color: var(--secondary-bg); /* နောက်ခံအရောင် အဖျော့လေးထည့်ထားသည် */
-    padding: 0.6rem 1.2rem; /* ဘေးဘောင်ချဲ့ရန် */
-    border-radius: 30px; /* ခလုတ်ကို အဝိုင်းပုံစံဖြစ်စေရန် */
+    background-color: #f1f3f5; /* မျက်စိအေးသော မီးခိုးနုရောင် */
+    padding: 0.5rem 1.2rem; 
+    border-radius: 20px; /* ကျစ်လစ်သော အဝိုင်းပုံစံ */
     font-size: 0.9rem;
     font-weight: 500;
-    border: 1px solid var(--border-color); /* ဘောင်လိုင်းအပါးလေး ထည့်ထားသည် */
-    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-nav a:hover, nav a.active {
-    background-color: var(--accent-color); /* Active ဖြစ်ချိန် သို့မဟုတ် Mouse တင်ချိန်တွင် လိမ္မော်ရောင်ပြောင်းမည် */
+nav a:hover {
+    background-color: #e2e6ea; /* Mouse တင်လျှင် အနည်းငယ် ရင့်သွားမည် */
+}
+
+/* ရွေးချယ်ထားသော (Active) ခလုတ်အတွက် သီးသန့် ဒီဇိုင်း */
+nav a.active {
+    background-color: var(--accent-color); 
     color: #ffffff !important;
-    border-color: var(--accent-color);
-    transform: translateY(-2px); /* အပေါ်သို့ အနည်းငယ် ကြွတက်လာမည့် Effect */
+    box-shadow: 0 4px 10px rgba(255, 66, 0, 0.3); /* လိမ္မော်ရောင် အရိပ်လေး ထွက်နေစေရန် */
 }
-
 /* Main Content Layout */
 .container {
     max-width: 1000px;
