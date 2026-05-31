@@ -110,6 +110,69 @@ nav a:hover, nav a.active {
     border-color: var(--accent-color);
 }
 
+/* =========================================
+   Netflix Style Sliders & Section Titles
+   ========================================= */
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+    padding-left: 12px;
+    border-left: 4px solid var(--accent-color); /* ဘယ်ဘက်တွင် အရောင်လိုင်းလေးပြရန် */
+}
+
+.slider-section {
+    margin-bottom: 3rem;
+}
+
+.slider-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    padding: 10px 10px 20px 10px; /* Hover လုပ်လျှင် နေရာလွတ်ရှိစေရန် */
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;  /* IE and Edge အတွက် Scrollbar ဖျောက်ရန် */
+    scrollbar-width: none;  /* Firefox အတွက် Scrollbar ဖျောက်ရန် */
+}
+
+/* Chrome, Safari များတွင် Scrollbar ဖျောက်ရန် */
+.slider-container::-webkit-scrollbar {
+    display: none; 
+}
+
+.slider-card {
+    flex: 0 0 280px; /* Slider တစ်ခု၏ အကျယ် (Fixed Width) */
+    scroll-snap-align: start;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1.5rem;
+    background: var(--primary-bg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250px;
+}
+
+/* Netflix Style Hover Pop Effect */
+.slider-card:hover {
+    transform: scale(1.05); /* Mouse တင်လျှင် အရှေ့သို့ ကြွတက်လာမည် */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border-color: var(--accent-color);
+    z-index: 2;
+}
+
+/* ဖုန်းစခရင်အတွက် Slider ကတ်ကို အနည်းငယ် သေးပေးရန် */
+@media (max-width: 768px) {
+    .slider-card {
+        flex: 0 0 240px;
+        padding: 1.2rem;
+    }
+    .hidden { display: none !important; }
+}
+
 /* Post Grid */
 .post-grid {
     display: grid;
