@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ၂။ Menu တည်ဆောက်ခြင်း (Category များကိုပါ Random ပြမည်)
+// ၂။ Menu တည်ဆောက်ခြင်း (Category များကိုပါ Random ပြမည်)
     function buildCategoryMenu() {
         categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
         
@@ -75,6 +75,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+        });
+
+        // --- Desktop တွင် Category Menu ကို Mouse ဖြင့် ဆွဲ၍ရအောင် ထည့်သွင်းခြင်း ---
+        let isNavDown = false;
+        let navStartX;
+        let navScrollLeft;
+
+        categoryNav.addEventListener('mousedown', (e) => {
+            isNavDown = true;
+            categoryNav.classList.add('active');
+            navStartX = e.pageX - categoryNav.offsetLeft;
+            navScrollLeft = categoryNav.scrollLeft;
+        });
+
+        categoryNav.addEventListener('mouseleave', () => {
+            isNavDown = false;
+            categoryNav.classList.remove('active');
+        });
+
+        categoryNav.addEventListener('mouseup', () => {
+            isNavDown = false;
+            categoryNav.classList.remove('active');
+        });
+
+        categoryNav.addEventListener('mousemove', (e) => {
+            if (!isNavDown) return;
+            e.preventDefault(); // Text များ Select ဖြစ်ခြင်းကို တားရန်
+            const x = e.pageX - categoryNav.offsetLeft;
+            const walk = (x - navStartX) * 2; // Scroll အမြန်နှုန်း
+            categoryNav.scrollLeft = navScrollLeft - walk;
         });
     }
 
