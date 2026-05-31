@@ -14,18 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const filteredGridContainer = document.getElementById('filteredGridContainer');
     const filterTitle = document.getElementById('filterTitle');
 
-    let allPosts = []; // Post အားလုံး သိမ်းရန်
-    let categories = []; // Category အားလုံး သိမ်းရန်
+    let allPosts = []; 
+    let categories = []; 
 
-    // ၁။ စတင်ချိန်တွင် Data အားလုံးကို တစ်ပြိုင်နက် ဆွဲယူမည်
+    // ၁။ စတင်ချိန်တွင် Data အားလုံးကို ဆွဲယူမည်
     async function initApp() {
         try {
             slidersContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Loading Awesome Content...</p>';
             
-            // Category နှင့် Post များကို ပြိုင်တူဆွဲယူခြင်း (ပိုမြန်စေရန်)
             const [catRes, postRes] = await Promise.all([
                 fetch(`${API_URL}/categories`),
-                fetch(`${API_URL}/posts?page=1&limit=100`) // Post ၁၀၀ အထိ ဆွဲယူမည်
+                fetch(`${API_URL}/posts?page=1&limit=200`) // Post များလာပါက limit ကို တိုးပေးနိုင်သည်
             ]);
 
             categories = await catRes.json();
@@ -41,19 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ၂။ Menu တည်ဆောက်ခြင်း နှင့် Click နှိပ်လျှင် Filter လုပ်ခြင်း
+    // ၂။ Menu တည်ဆောက်ခြင်း
     function buildCategoryMenu() {
         categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
         categories.forEach(cat => {
             categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
         });
 
-        // Category ခလုတ်နှိပ်လျှင် စစ်ထုတ်မည့် စနစ်
         const navLinks = categoryNav.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.target.classList.add('active');
                 
@@ -61,11 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const catName = e.target.innerText;
                 
                 if (!catId) {
-                    // "All" ကို နှိပ်လျှင် ပုံမှန် Slider အတိုင်း ပြန်ပြမည်
+                    // "All" ကို နှိပ်လျှင် Random အသစ်ပြန်ဖြစ်စေရန် renderDefaultHomeView() ကို ပြန်ခေါ်မည်
                     defaultView.classList.remove('hidden');
                     filteredView.classList.add('hidden');
+                    renderDefaultHomeView(); 
                 } else {
-                    // Category တစ်ခုကို နှိပ်လျှင် Slider များ ဖျောက်ပြီး ထို Category များကိုသာ ပြမည်
+                    // သီးသန့် Category ကို နှိပ်လျှင်
                     defaultView.classList.add('hidden');
                     filteredView.classList.remove('hidden');
                     filterTitle.innerText = `Category: ${catName}`;
@@ -73,31 +71,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     const filteredPosts = allPosts.filter(p => p.category && p.category._id === catId);
                     renderGrid(filteredPosts, filteredGridContainer);
                 }
-
-                // ရှာဖွေမှုရလဒ်များကို ချက်ချင်းမြင်ရစေရန် စာမျက်နှာကို အပေါ်ဆုံးသို့ ညင်သာစွာ ပြန်တင်ပေးမည်
+                
+                // အပေါ်ဆုံးသို့ Smooth ပြန်တက်မည်
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
     }
 
-    // ၃။ ပုံမှန် Home Page (Slider + Random Grid) တည်ဆောက်ခြင်း
+    // ၃။ Home Page ပြသခြင်း (Slider အကန့်အသတ် နှင့် Random Category စနစ်)
     function renderDefaultHomeView() {
         slidersContainer.innerHTML = ''; 
 
-        // ၃.၁ - Recently Added Slider (နောက်ဆုံးတင်သော ၁၀ ခု)
+        // ၃.၁ - Recently Added Slider (နောက်ဆုံးအသစ်တင်သော ၁၀ ခု)
         const recentPosts = allPosts.slice(0, 10);
         if (recentPosts.length > 0) {
             slidersContainer.appendChild(createSliderSection('Recently Added', recentPosts));
         }
 
-        // ၃.၂ - Category အလိုက် Slider များ တည်ဆောက်ခြင်း
-        categories.forEach(cat => {
+        // ၃.၂ - Category Sliders ကို Random စနစ်ဖြင့် ၄ ခု သာ ကန့်သတ်ပြသမည်
+        // Category များကို ကျပန်း (Shuffle) လုပ်ခြင်း
+        const shuffledCategories = [...categories].sort(() => 0.5 - Math.random());
+        
+        const maxSlidersToShow = 4; // Slider အများဆုံး ၄ ခုသာ ပြမည် (စိတ်ကြိုက် ပြင်နိုင်ပါသည်)
+        let sliderCount = 0;
+
+        for (const cat of shuffledCategories) {
+            if (sliderCount >= maxSlidersToShow) break; // ၄ ခု ပြည့်လျှင် ရပ်မည်
+
             const catPosts = allPosts.filter(p => p.category && p.category._id === cat._id);
             if (catPosts.length > 0) {
-                // Category တစ်ခုစီတိုင်းအတွက် Slider တစ်ခုစီ ပြမည်
                 slidersContainer.appendChild(createSliderSection(cat.name, catPosts));
+                sliderCount++;
             }
-        });
+        }
 
         // ၃.၃ - Random Picks Grid (အောက်ဆုံးတွင် ကျပန်း ၁၂ ခု ပြမည်)
         const shuffledPosts = [...allPosts].sort(() => 0.5 - Math.random());
@@ -105,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGrid(randomPicks, randomGridContainer);
     }
 
-// ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function (Desktop Mouse Dragging ပါဝင်သည်)
+    // ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function (Desktop Drag-to-Scroll ပါဝင်သည်)
     function createSliderSection(title, posts) {
         const section = document.createElement('div');
         section.className = 'slider-section';
@@ -118,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slider.innerHTML += buildCardHTML(post, 'slider-card');
         });
         
-        // --- Desktop အတွက် Drag-to-Scroll (Mouse ဖြင့် ဖိဆွဲရန်) စနစ် ---
+        // --- Desktop အတွက် Drag-to-Scroll စနစ် ---
         let isDown = false;
         let startX;
         let scrollLeft;
@@ -142,9 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         slider.addEventListener('mousemove', (e) => {
             if (!isDown) return;
-            e.preventDefault(); // Text များ Select ဖြစ်ခြင်းကို တားရန်
+            e.preventDefault();
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2; // အမြန်နှုန်း (2 ဆ)
+            const walk = (x - startX) * 2;
             slider.scrollLeft = scrollLeft - walk;
         });
 
@@ -152,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return section;
     }
 
-    // ၅။ Grid (အကွက်များ) ဖြင့် ပြသသော Function
+    // ၅။ Grid ဖြင့် ပြသသော Function
     function renderGrid(posts, container) {
         container.innerHTML = '';
         if (posts.length === 0) {
@@ -164,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ၆။ Card HTML ပုံစံထုတ်ပေးသော Helper Function (Slider ကော Grid ကော ဤဒီဇိုင်းကို သုံးမည်)
+    // ၆။ Card HTML Helper
     function buildCardHTML(post, className) {
         const categoryName = post.category ? post.category.name : 'Uncategorized';
         const tempDiv = document.createElement("div");
@@ -184,18 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // ၇။ Search ရှာဖွေခြင်း လုပ်ဆောင်ချက်
+    // ၇။ Search ရှာဖွေခြင်း
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        
         if (searchTerm === '') {
-            // စာဖျက်လိုက်လျှင် ပုံမှန် Slider သို့ ပြန်သွားမည်
             defaultView.classList.remove('hidden');
             filteredView.classList.add('hidden');
             return;
         }
-
-        // စာရိုက်ရှာလျှင် Slider များဖျောက်ပြီး ရှာတွေ့သမျှကို Grid ဖြင့်ပြမည်
         defaultView.classList.add('hidden');
         filteredView.classList.remove('hidden');
         filterTitle.innerText = `Search Results for "${e.target.value}"`;
