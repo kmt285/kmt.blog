@@ -135,11 +135,18 @@ nav a:hover, nav a.active {
     display: flex;
     overflow-x: auto;
     gap: 1.5rem;
-    padding: 10px 10px 20px 10px; /* Hover လုပ်လျှင် နေရာလွတ်ရှိစေရန် */
+    padding: 10px 10px 20px 10px; 
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
-    -ms-overflow-style: none;  /* IE and Edge အတွက် Scrollbar ဖျောက်ရန် */
-    scrollbar-width: none;  /* Firefox အတွက် Scrollbar ဖျောက်ရန် */
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+    cursor: grab;
+    user-select: none; 
+}
+
+.slider-container.active {
+    cursor: grabbing;
+    scroll-snap-type: none; /* Mouse ဖြင့်ဆွဲနေစဉ် Snap မဖြစ်စေရန် */
 }
 
 /* Chrome, Safari များတွင် Scrollbar ဖျောက်ရန် */
