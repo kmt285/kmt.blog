@@ -48,10 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
         });
 
+        // Category ခလုတ်နှိပ်လျှင် စစ်ထုတ်မည့် စနစ်
         const navLinks = categoryNav.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
+                
                 navLinks.forEach(l => l.classList.remove('active'));
                 e.target.classList.add('active');
                 
@@ -71,6 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const filteredPosts = allPosts.filter(p => p.category && p.category._id === catId);
                     renderGrid(filteredPosts, filteredGridContainer);
                 }
+
+                // ရှာဖွေမှုရလဒ်များကို ချက်ချင်းမြင်ရစေရန် စာမျက်နှာကို အပေါ်ဆုံးသို့ ညင်သာစွာ ပြန်တင်ပေးမည်
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
     }
