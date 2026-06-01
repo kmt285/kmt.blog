@@ -271,24 +271,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // ၆။ Card HTML Helper
     function buildCardHTML(post, className) {
         const categoryName = post.category ? post.category.name : 'Uncategorized';
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = post.content;
-        const textContent = tempDiv.textContent || tempDiv.innerText || "";
-        const excerpt = textContent.substring(0, 80) + '...';
 
-        // --- ပုံဆွဲထုတ်သည့် စနစ် (Auto Image Extractor) အသစ် ---
+        // --- ပုံဆွဲထုတ်သည့် စနစ် (Auto Image Extractor) ---
         const imgMatch = post.content.match(/<img[^>]+src=["']([^"']+)["']/);
-        // ပုံပါလျှင် ထိုပုံကိုပြမည်၊ မပါလျှင် No Image ပုံကိုပြမည်
         const thumbnailUrl = imgMatch ? imgMatch[1] : 'https://placehold.co/600x400/eeeeee/FF4200?text=No+Image';
 
-        // HTML အသစ် (Thumbnail အကွက် နှင့် Content အကွက် ခွဲခြားထားသည်)
+        // HTML အသစ် (Excerpt စာသားများကို ဖယ်ရှားထားပြီး၊ Title အောက်တွင် နေရာလွတ် အနည်းငယ် ချန်ထားပါသည်)
         return `
             <div class="${className}">
                 <div class="post-thumbnail" style="background-image: url('${thumbnailUrl}')"></div>
                 <div class="post-card-content">
                     <span class="post-category">${categoryName}</span>
-                    <h2 class="post-title" style="font-size: 1.1rem; margin-top: 0.5rem;">${post.title}</h2>
-                    <p class="post-excerpt" style="font-size: 0.85rem; margin-bottom: 1rem;">${excerpt}</p>
+                    <h2 class="post-title" style="font-size: 1.1rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">${post.title}</h2>
                     <a href="post.html?id=${post._id}" class="read-more">Read Full Post</a>
                 </div>
             </div>
