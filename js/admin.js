@@ -253,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('editPostDiv').scrollIntoView({ behavior: 'smooth' });
             } catch (err) { console.error(err); }
         }
+    });
 
     document.getElementById('cancelEditBtn').addEventListener('click', () => {
         document.getElementById('editPostDiv').classList.add('hidden');
