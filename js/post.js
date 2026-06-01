@@ -64,7 +64,7 @@ try {
                 <span class="single-post-meta">${categoryName} • ${postDate}</span>
                 <h1 class="single-post-title">${post.title}</h1>
             </div>
-            <div class="single-post-content ql-editor" style="padding: 0;">${post.content}</div>
+            <div class="single-post-content" style="padding: 0;">${post.content}</div>
         `;
 
         if (post.fileUrl) {
