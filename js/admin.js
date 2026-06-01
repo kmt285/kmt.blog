@@ -15,16 +15,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainPostForm = document.getElementById('mainPostForm');
 
     // ==========================================
-    // ၁။ TinyMCE Editor Configuration (The Industry Standard)
+// ==========================================
+    // ၁။ TinyMCE Editor Configuration 
     // ==========================================
     tinymce.init({
         selector: '#tinymce-editor',
         height: 600,
         menubar: false,
         plugins: 'advlist autolink lists link image media table code preview fullscreen',
-        toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media table | fullscreen code',
-        content_style: "body { font-family: 'Pyidaungsu', 'Padauk', 'Myanmar Text', 'Inter', sans-serif; font-size: 16px; line-height: 1.6; color: #333; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
-        promotion: false, // Upgrade ခလုတ်ဖျောက်ရန်
+        // Toolbar တွင် forecolor (စာလုံးအရောင်), backcolor (နောက်ခံအရောင်), lineheight (အကွာအဝေး) များကို ထပ်ထည့်ထားပါသည်
+        toolbar: 'undo redo | blocks fontsize | bold italic underline forecolor backcolor | lineheight alignleft aligncenter alignright alignjustify | bullist numlist | link image media table | fullscreen code',
+        // content_style တွင် p { margin: 0 0 8px 0; } ထည့်ပေးထားသဖြင့် မူလကတည်းက စာကြောင်းများ အရမ်း ဟ/ကွာ မနေတော့ပါ
+        content_style: "body { font-family: 'Pyidaungsu', 'Padauk', 'Myanmar Text', 'Inter', sans-serif; font-size: 16px; line-height: 1.5; color: #333; } p { margin: 0 0 8px 0; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
+        promotion: false, 
         images_upload_handler: async (blobInfo, progress) => {
             const formData = new FormData();
             formData.append('image', blobInfo.blob());
@@ -37,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 if (res.ok && data.url) {
-                    return data.url; // Cloudinary လင့်ခ်အမှန်ကို Editor သို့ ပြန်ပို့မည်
+                    return data.url; 
                 } else {
                     throw new Error(data.error || 'Upload failed');
                 }
