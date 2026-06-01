@@ -69,33 +69,26 @@
                 </ul>
         </div>
 
-        <div style="margin-bottom: 3rem; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;" id="createPostDiv">
-            <h3>Publish New Post</h3>
-            <form id="postForm" style="margin-top: 1rem;">
-                <div class="form-group"><label>Post Title</label><input type="text" id="postTitle" class="form-input" required></div>
-                <div class="form-group"><label>Category</label><select id="postCategory" class="form-input" required></select></div>
-                <div class="form-group"><label>Content</label><div id="editor-container" class="editor-container"></div></div>
-                <div class="form-group"><label>File Download URL</label><input type="url" id="fileUrl" class="form-input"></div>
-                <button type="submit" class="btn-primary">Publish Post</button>
-                <span id="postMessage" style="margin-left: 1rem; color: green;"></span>
+<div style="margin-bottom: 3rem; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;" class="hidden" id="editorMainSection">
+            <h3 id="editorFormTitle">Publish New Post</h3>
+            <form id="mainPostForm" style="margin-top: 1rem;">
+                <input type="hidden" id="currentPostId"> <div class="form-group"><label>Post Title</label><input type="text" id="mainPostTitle" class="form-input" required></div>
+                <div class="form-group"><label>Category</label><select id="mainPostCategory" class="form-input" required></select></div>
+                <div class="form-group"><label>Content</label><div id="gjs-container" class="editor-container"></div></div>
+                <div class="form-group"><label>File Download URL</label><input type="url" id="mainFileUrl" class="form-input"></div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="submit" class="btn-primary" id="savePostBtn">Publish Post</button>
+                    <button type="button" id="cancelEditorBtn" style="background: #e0e0e0; color: #333; border: none; padding: 0.8rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: 600;">Cancel</button>
+                    <span id="mainPostMessage" style="margin-left: 1rem; color: green; font-weight: bold;"></span>
+                </div>
             </form>
         </div>
 
-        <div style="margin-bottom: 3rem; border: 2px solid var(--accent-color); padding: 1.5rem; border-radius: 4px;" class="hidden" id="editPostDiv">
-            <h3 style="display: flex; justify-content: space-between;">Edit Post <button id="cancelEditBtn" style="color: red; background: none; border: none; cursor: pointer; font-weight: bold;">X Cancel</button></h3>
-            <form id="editPostForm" style="margin-top: 1rem;">
-                <input type="hidden" id="editPostId">
-                <div class="form-group"><label>Post Title</label><input type="text" id="editPostTitle" class="form-input" required></div>
-                <div class="form-group"><label>Category</label><select id="editPostCategory" class="form-input" required></select></div>
-                <div class="form-group"><label>Content</label><div id="edit-editor-container" class="editor-container"></div></div>
-                <div class="form-group"><label>File Download URL</label><input type="url" id="editFileUrl" class="form-input"></div>
-                <button type="submit" class="btn-primary">Update Post</button>
-                <span id="editPostMessage" style="margin-left: 1rem; color: green;"></span>
-            </form>
-        </div>
-
-        <div style="border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;">
-            <h3>Manage Posts</h3>
+        <div style="border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;" id="managePostsSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0;">Manage Posts</h3>
+                <button id="showCreateFormBtn" class="btn-primary" style="background-color: #28a745;">+ Create New Post</button>
+            </div>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
                     <thead><tr><th>Title</th><th>Category</th><th style="text-align: right;">Actions</th></tr></thead>
@@ -105,12 +98,10 @@
         </div>
     </main>
 
-    <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
-    <script src="https://unpkg.com/grapesjs"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.21.2/css/grapes.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.21.2/grapes.min.js"></script>
     <script src="https://unpkg.com/grapesjs-preset-webpage@1.0.2"></script>
     
     <script src="js/admin.js"></script>
-</body>
-</html>
 </body>
 </html>
