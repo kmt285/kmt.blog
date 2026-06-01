@@ -7,42 +7,58 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-// --- ၁။ Editor Configuration (Portfolio Level) ---
+// ==========================================
+    // ၂။ GrapesJS Page Builder Configuration (Photoshop လို Layout ချရန်)
+    // ==========================================
+    let editorCreate, editorEdit;
     
-    // HTML Edit Plugin ကို ချိတ်ဆက်ခြင်း
-    Quill.register("modules/htmlEditButton", htmlEditButton);
+    try {
+        // GrapesJS အတွက် အခြေခံ သတ်မှတ်ချက်များနှင့် Cloudinary Upload စနစ်
+        const gjsConfig = (containerId) => ({
+            container: `#${containerId}`,
+            fromElement: true,
+            height: '600px', // Builder ၏ အမြင့်
+            width: 'auto',
+            storageManager: false, // Database ထဲ တိုက်ရိုက်သိမ်းမည်ဖြစ်၍ Local Storage ပိတ်ထားမည်
+            plugins: ['gjs-blocks-basic'], // အခြေခံ Block များ (Column, Text, Image) ပါဝင်မည်
+            assetManager: {
+                // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ်
+                uploadFile: async function(e) {
+                    const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+                    if (!files || files.length === 0) return;
+                    
+                    const formData = new FormData();
+                    formData.append('image', files[0]);
 
-    const quillConfig = { 
-        theme: 'snow', 
-        placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ (သို့) ပုံများကို Drag ဆွဲထည့်ပါ...',
-        modules: { 
-            toolbar: [ 
-                [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'align': [] }], // စာသားများကို ဘယ်/ညာ/အလယ် ညှိရန်
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'indent': '-1'}, { 'indent': '+1' }],
-                ['link', 'image', 'video'],
-                ['clean']
-            ],
-            imageResize: {
-                displayStyles: { backgroundColor: 'black', border: 'none', color: 'white' },
-                modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
-            },
-            // HTML Source Code ခလုတ် အသက်သွင်းခြင်း
-            htmlEditButton: {
-                msg: "Update HTML Code",
-                buttonHTML: "&lt;/&gt;", // Toolbar တွင် ပေါ်မည့် ခလုတ်ပုံစံ
-                buttonTitle: "Show HTML Source"
+                    try {
+                        const res = await fetch(`${API_URL}/upload`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                            body: formData
+                        });
+                        const data = await res.json();
+                        
+                        if (res.ok && data.url) {
+                            // အောင်မြင်ပါက GrapesJS ၏ Asset Gallery ထဲသို့ လင့်ခ်အမှန် ထည့်ပေးမည်
+                            this.add(data.url);
+                        } else {
+                            alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
+                        }
+                    } catch (err) {
+                        alert('Network Error while uploading image.');
+                    }
+                }
             }
-        } 
-    };
+        });
 
-    const quill = new Quill('#editor-container', quillConfig);
-    const editQuill = new Quill('#edit-editor-container', quillConfig);
+        // Editor နှစ်ခု (Post အသစ်တင်ရန် နှင့် ပြင်ရန်) ကို အသက်သွင်းခြင်း
+        editorCreate = grapesjs.init(gjsConfig('editor-container'));
+        editorEdit = grapesjs.init(gjsConfig('edit-editor-container'));
 
+    } catch (gjsError) {
+        console.error("GrapesJS Initialization Error: ", gjsError);
+    }
+    
     // --- ၂။ လုံးဝ အမှားမခံသော Image Upload Function ---
     function selectLocalImage(editorInstance) {
         const input = document.createElement('input');
