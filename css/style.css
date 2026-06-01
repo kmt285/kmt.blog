@@ -574,3 +574,52 @@ footer {
 body, .single-post-content {
     overflow-x: hidden;
 }
+
+/* =========================================================
+   TinyMCE Editor Layout Fixes (Table Spacing & Mobile Auto Responsive)
+   ========================================================= */
+
+/* ၁။ ဇယားများ (Tables / ပုံ ၂ ပုံ ဘေးတိုက်ကပ်ခြင်းများ) အရမ်းမကပ်နေစေရန် */
+.single-post-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.single-post-content table td,
+.single-post-content table th {
+    padding: 15px; /* ပုံနှင့် စာများ အရမ်းမကပ်စေရန် ဘေးတိုက်/အပေါ်အောက် ခြားပေးခြင်း */
+    vertical-align: top;
+}
+
+/* ၂။ ဓာတ်ပုံများ Editor မှ Size အတိုင်းပေါ်စေရန် (မလိုအပ်ဘဲ မဆွဲဆန့်ရန်) */
+.single-post-content img {
+    max-width: 100%; /* ဖုန်းမျက်နှာပြင်ထက် မကျော်သွားစေရန် */
+    height: auto !important; /* ပုံအချိုးအစား မပျက်စေရန် */
+    display: inline-block;
+}
+
+/* ၃။ Mobile (ဖုန်း) အတွက် Auto Responsive ဖြစ်စေရန် အသက်သွင်းခြင်း */
+@media (max-width: 768px) {
+    /* ဖုန်းတွင် Table များကို ဘေးတိုက်မှ အပေါ်/အောက် (Stacking) ပြောင်းစီပေးရန် */
+    .single-post-content table, 
+    .single-post-content tbody, 
+    .single-post-content tr, 
+    .single-post-content td {
+        display: block; 
+        width: 100% !important;
+    }
+    
+    .single-post-content table td {
+        padding: 15px 0; /* ဖုန်းတွင် ဘေးဘောင်မလိုတော့သဖြင့် အပေါ်/အောက်သာ ခြားပေးမည် */
+        border: none;
+    }
+
+    /* ဖုန်းမျက်နှာပြင်တွင် ပုံများ အပြည့်ပေါ်ပြီး အလယ်ဗဟိုကျစေရန် */
+    .single-post-content img {
+        max-width: 100% !important; 
+        height: auto !important;
+        margin: 15px auto !important; 
+        display: block;
+    }
+}
