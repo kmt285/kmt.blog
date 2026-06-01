@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menubar: false,
         plugins: 'advlist autolink lists link image media table code preview fullscreen',
         toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media table | fullscreen code',
-        content_style: "body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; color: #333; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
+        content_style: "body { font-family: 'Pyidaungsu', 'Padauk', 'Myanmar Text', 'Inter', sans-serif; font-size: 16px; line-height: 1.6; color: #333; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
         promotion: false, // Upgrade ခလုတ်ဖျောက်ရန်
         images_upload_handler: async (blobInfo, progress) => {
             const formData = new FormData();
