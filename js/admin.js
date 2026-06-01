@@ -13,10 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let editorCreate, editorEdit;
     
     try {
+       // GrapesJS အတွက် အခြေခံ သတ်မှတ်ချက်များနှင့် Cloudinary Upload စနစ်
         const gjsConfig = (containerId) => ({
             container: `#${containerId}`,
             fromElement: true,
-            height: '700px', // Builder ၏ အမြင့်ကို အနည်းငယ် ထပ်ချဲ့နိုင်ပါသည်
+            height: '700px', 
             width: '100%',
             storageManager: false, 
             plugins: ['gjs-preset-webpage'], 
