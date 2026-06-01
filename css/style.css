@@ -288,7 +288,7 @@ nav a.active {
 
 .post-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
 }
 
@@ -637,7 +637,7 @@ body, .single-post-content {
 /* ဓာတ်ပုံပေါ်မည့် အကွက် */
 .post-thumbnail {
     width: 100%;
-    height: 180px; /* ပုံ၏ အမြင့် */
+    height: 200px; 
     background-size: cover;
     background-position: center;
     background-color: var(--secondary-bg);
@@ -650,4 +650,18 @@ body, .single-post-content {
     display: flex;
     flex-direction: column;
     flex-grow: 1; /* ခလုတ်ကို အောက်ခြေသို့ ကပ်သွားစေရန် */
+}
+
+/* =========================================================
+   Category & Search Results Title Design
+   ========================================================= */
+#filterTitle {
+    background-color: var(--nav-pill-bg);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 2.5rem;
+    font-size: 1.3rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
 }
