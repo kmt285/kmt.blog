@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             storageManager: false, // Database ထဲ တိုက်ရိုက်သိမ်းမည်ဖြစ်၍ Local Storage ပိတ်ထားမည်
             plugins: ['gjs-blocks-basic'], // အခြေခံ Block များ (Column, Text, Image) ပါဝင်မည်
             assetManager: {
-                // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ် (အဆင့်မြှင့်ထားသည်)
+                // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ် 
                 uploadFile: async function(e) {
                     const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
                     if (!files || files.length === 0) return;
@@ -46,18 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         try {
                             data = JSON.parse(textData);
                         } catch (parseErr) {
-                            alert('Server Error: ' + textData); // 500 HTML Error တက်ပါက ပြပေးမည်
+                            alert('Server Error: ' + textData); 
                             return;
                         }
                         
                         if (res.ok && data.url) {
-                            // အောင်မြင်ပါက GrapesJS ၏ Asset Gallery ထဲသို့ ပုံစံမှန်ဖြင့် ထည့်ပေးမည်
-                            this.add({ src: data.url });
+                            // --- ဤနေရာတွင် အတိအကျ ပြင်ဆင်လိုက်ပါသည် ---
+                            // this.add အစား မည်သည့် Editor (Post အသစ်လား / Edit လား) ကို သုံးနေသလဲ စစ်ဆေးပြီး ပုံကို ထည့်သွင်းမည်
+                            const currentEditor = containerId === 'editor-container' ? editorCreate : editorEdit;
+                            currentEditor.AssetManager.add({ src: data.url });
                         } else {
                             alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
                         }
                     } catch (err) {
-                        alert('Connection Error: ' + err.message); // အင်တာနက် သို့မဟုတ် CORS ပြဿနာဖြစ်ပါက အတိအကျ ပြမည်
+                        alert('Connection Error: ' + err.message); 
                     }
                 }
             }
