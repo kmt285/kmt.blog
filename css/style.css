@@ -611,19 +611,38 @@ body, .single-post-content {
     }
     
     .single-post-content table td {
-        padding: 15px 0; /* ဖုန်းတွင် ဘေးဘောင်မလိုတော့သဖြင့် အပေါ်/အောက်သာ ခြားပေးမည် */
+        padding: 15px 0; 
         border: none;
     }
 
-    /* ဖုန်းမျက်နှာပြင်တွင် ပုံများ အပြည့်ပေါ်ပြီး အလယ်ဗဟိုကျစေရန် */
+    /* Editor မှ ပါလာနိုင်သော Fixed Size ဘောင်များကြောင့် ဖုန်းတွင် ပြားမသွားစေရန် */
+    .single-post-content p,
+    .single-post-content span,
+    .single-post-content figure,
+    .single-post-content div {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* ဖုန်းမျက်နှာပြင်တွင် ပုံများ အပြည့်ပေါ်ပြီး အချိုးအစားမှန်ကန်စေရန် */
     .single-post-content img {
+        width: 100% !important; 
         max-width: 100% !important; 
         height: auto !important;
+        object-fit: contain !important; /* ပုံမပြားသွားစေရန် အချိုးအစားထိန်းပေးခြင်း */
         margin: 15px auto !important; 
-        display: block;
+        display: block !important;
+    }
+
+    /* ဖုန်းမျက်နှာပြင်တွင် Video နှင့် Iframe များ အချိုးကျစေရန် */
+    .single-post-content iframe,
+    .single-post-content video,
+    .ql-video {
+        width: 100% !important;
+        height: 250px !important; /* ဖုန်းဖြင့်ကြည့်လျှင် ကွက်တိဖြစ်မည့် အမြင့် */
+        margin: 15px 0 !important;
     }
 }
-
 /* =========================================================
    Post Card Thumbnail (Preview Image) Design
    ========================================================= */
