@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             storageManager: false, // Database ထဲ တိုက်ရိုက်သိမ်းမည်ဖြစ်၍ Local Storage ပိတ်ထားမည်
             plugins: ['gjs-blocks-basic'], // အခြေခံ Block များ (Column, Text, Image) ပါဝင်မည်
             assetManager: {
-                // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ်
+                // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ် (အဆင့်မြှင့်ထားသည်)
                 uploadFile: async function(e) {
                     const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
                     if (!files || files.length === 0) return;
@@ -33,19 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     try {
                         const res = await fetch(`${API_URL}/upload`, {
                             method: 'POST',
-                            headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                            headers: { 
+                                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                                'Accept': 'application/json'
+                            },
                             body: formData
                         });
-                        const data = await res.json();
+                        
+                        // Backend မှ Error စာသားများ ပြန်လာပါက ဖမ်းယူနိုင်ရန်
+                        const textData = await res.text();
+                        let data;
+                        try {
+                            data = JSON.parse(textData);
+                        } catch (parseErr) {
+                            alert('Server Error: ' + textData); // 500 HTML Error တက်ပါက ပြပေးမည်
+                            return;
+                        }
                         
                         if (res.ok && data.url) {
-                            // အောင်မြင်ပါက GrapesJS ၏ Asset Gallery ထဲသို့ လင့်ခ်အမှန် ထည့်ပေးမည်
-                            this.add(data.url);
+                            // အောင်မြင်ပါက GrapesJS ၏ Asset Gallery ထဲသို့ ပုံစံမှန်ဖြင့် ထည့်ပေးမည်
+                            this.add({ src: data.url });
                         } else {
                             alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
                         }
                     } catch (err) {
-                        alert('Network Error while uploading image.');
+                        alert('Connection Error: ' + err.message); // အင်တာနက် သို့မဟုတ် CORS ပြဿနာဖြစ်ပါက အတိအကျ ပြမည်
                     }
                 }
             }
