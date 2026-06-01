@@ -238,19 +238,21 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await fetch(`${API_URL}/posts/${id}`);
                 const post = await res.json();
-                
                 document.getElementById('editPostId').value = post._id;
                 document.getElementById('editPostTitle').value = post.title;
                 document.getElementById('editPostCategory').value = post.category ? post.category._id : '';
                 document.getElementById('editFileUrl').value = post.fileUrl || '';
-                editQuill.root.innerHTML = post.content;
+                
+                // GrapesJS ထဲသို့ Data ပြန်ထည့်ခြင်း
+                if(editorEdit) {
+                    editorEdit.setComponents(post.content); 
+                }
 
                 document.getElementById('createPostDiv').classList.add('hidden');
                 document.getElementById('editPostDiv').classList.remove('hidden');
                 document.getElementById('editPostDiv').scrollIntoView({ behavior: 'smooth' });
             } catch (err) { console.error(err); }
         }
-    });
 
     document.getElementById('cancelEditBtn').addEventListener('click', () => {
         document.getElementById('editPostDiv').classList.add('hidden');
@@ -269,18 +271,26 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('postMessage').innerText = 'Publishing...';
         document.getElementById('postMessage').style.color = 'blue';
 
+        // Post အသစ်တင်သည့် Form တွင်
         try {
+            // HTML နှင့် CSS ကို ပေါင်း၍ သိမ်းမည်
+            const fullContent = editorCreate ? `<style>${editorCreate.getCss()}</style>${editorCreate.getHtml()}` : '';
+
             const response = await fetch(`${API_URL}/posts`, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, 
-                body: JSON.stringify({ title: document.getElementById('postTitle').value, category: document.getElementById('postCategory').value, fileUrl: document.getElementById('fileUrl').value, content: quill.root.innerHTML }) 
+                body: JSON.stringify({ 
+                    title: document.getElementById('postTitle').value, 
+                    category: document.getElementById('postCategory').value, 
+                    fileUrl: document.getElementById('fileUrl').value, 
+                    content: fullContent // <--- ဤနေရာတွင် ပြင်လိုက်ပါသည်
+                }) 
             });
-
             if (response.ok) { 
                 document.getElementById('postMessage').style.color = 'green';
                 document.getElementById('postMessage').innerText = 'Published Successfully!'; 
                 document.getElementById('postForm').reset(); 
-                quill.setContents([]);
+                if(editorCreate) editorCreate.setComponents(''); // Editor ကို ရှင်းလင်းမည်
                 loadAdminPosts(); 
                 setTimeout(() => document.getElementById('postMessage').innerText = '', 3000);
             } else { 
@@ -300,11 +310,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editPostMessage').innerText = 'Updating...';
         document.getElementById('editPostMessage').style.color = 'blue';
 
+        // Edit လုပ်သည့် Form တွင်
         try {
+            const editFullContent = editorEdit ? `<style>${editorEdit.getCss()}</style>${editorEdit.getHtml()}` : '';
+
             const response = await fetch(`${API_URL}/posts/${id}`, { 
                 method: 'PUT', 
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }, 
-                body: JSON.stringify({ title: document.getElementById('editPostTitle').value, category: document.getElementById('editPostCategory').value, fileUrl: document.getElementById('editFileUrl').value, content: editQuill.root.innerHTML }) 
+                body: JSON.stringify({ 
+                    title: document.getElementById('editPostTitle').value, 
+                    category: document.getElementById('editPostCategory').value, 
+                    fileUrl: document.getElementById('editFileUrl').value, 
+                    content: editFullContent // <--- ဤနေရာတွင် ပြင်လိုက်ပါသည်
+                }) 
             });
             
             if (response.ok) {
