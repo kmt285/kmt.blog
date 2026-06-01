@@ -519,3 +519,88 @@ footer {
         margin: 15px 0 !important;
     }
 }
+
+/* ==========================================================================
+   [FINAL FIX] TinyMCE Editor Content - Logic & Responsive Design 
+   ========================================================================== */
+
+/* (၁) အခြေခံ စာသားနှင့် Typography (Desktop & Mobile) */
+.single-post-content {
+    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
+    line-height: 1.8 !important;
+    font-size: 1.05rem;
+    color: var(--text-main);
+    word-wrap: break-word;
+    overflow-x: hidden;
+}
+
+/* (၂) ဓာတ်ပုံများအတွက် Logic (Desktop တွင် TinyMCE အတိုင်းပေါ်စေရန်) */
+.single-post-content img {
+    max-width: 100% !important; 
+    height: auto !important;    /* ပုံများ ပြားမသွားစေရန် အချိုးထိန်းပေးမည် */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+
+/* ဓာတ်ပုံကို ဘယ်/ညာ ကပ်ထားလျှင် စာများနှင့် အရမ်းမကပ်စေရန် ခြားပေးခြင်း */
+.single-post-content img[style*="float: left"] { margin: 10px 20px 10px 0 !important; }
+.single-post-content img[style*="float: right"] { margin: 10px 0 10px 20px !important; }
+
+/* (၃) ဇယားများ (Table) ဖြင့် ပုံ ၂ ပုံ ဘေးတိုက်ကပ်ခြင်းအတွက် Logic */
+.single-post-content table {
+    width: 100% !important;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    table-layout: fixed !important; /* [အရေးကြီးသည်] ပုံ ၂ ပုံကို ၅၀% စီ နေရာတိတိကျကျ ခွဲပေးမည် */
+}
+
+.single-post-content table td,
+.single-post-content table th {
+    padding: 15px !important; /* ပုံ ၂ ပုံကြား ကွက်လပ် ခြားပေးရန် */
+    vertical-align: top;
+    word-wrap: break-word;
+}
+
+/* (၄) ဗီဒီယိုနှင့် Iframe များအတွက် Logic */
+.single-post-content iframe,
+.single-post-content video {
+    width: 100% !important;
+    max-width: 100% !important;
+    aspect-ratio: 16 / 9 !important; /* ၁၆:၉ အချိုးအတိုင်း အမြဲပေါ်စေရန် */
+    height: auto !important;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE (ဖုန်းအတွက် သီးသန့် အချိုးချခြင်း)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .single-post-content {
+        font-size: 1rem; /* ဖုန်းတွင် စာလုံးအရွယ်အစား အနည်းငယ် ချုံ့မည် */
+    }
+    
+    /* [အရေးကြီး] ဓာတ်ပုံများကို ဖုန်းတွင် ဘေးတိုက်မထားတော့ဘဲ မျက်နှာပြင်အပြည့် ပြောင်းစီမည် */
+    .single-post-content img {
+        width: 100% !important; /* Editor မှ သတ်မှတ်ထားသော Width ကို ဖျက်ပြီး မျက်နှာပြင်အပြည့် ယူမည် */
+        height: auto !important; /* Editor မှ သတ်မှတ်ထားသော Height ကို ဖျက်ပြီး ပုံမပြားစေရန် အချိုးထိန်းမည် */
+        margin: 1.5rem 0 !important;
+        float: none !important; /* TinyMCE မှ ဘယ်/ညာ ကပ်ထားသည်များကို ဖြုတ်ချမည် */
+        display: block !important; 
+    }
+
+    /* [အရေးကြီး] ဇယားများ (Tables) ကို ဖုန်းတွင် အပေါ်/အောက် တစ်ကွက်ချင်း ပြောင်းစီမည် */
+    .single-post-content table, 
+    .single-post-content tbody, 
+    .single-post-content tr, 
+    .single-post-content td {
+        display: block !important; 
+        width: 100% !important;
+    }
+    
+    .single-post-content table td {
+        padding: 10px 0 !important; /* ဖုန်းတွင် အပေါ်/အောက်သာ ခြားပေးမည် */
+        border: none !important;
+    }
+}
