@@ -623,3 +623,31 @@ body, .single-post-content {
         display: block;
     }
 }
+
+/* =========================================================
+   Post Card Thumbnail (Preview Image) Design
+   ========================================================= */
+
+/* မူလ Card ၏ Padding ကို ဖျောက်ပြီး အတွင်းပိုင်းတွင် ပြန်ခွဲထည့်မည် (ပုံကို ဘေးဘောင်အပြည့် ပေါ်စေရန်) */
+.slider-card, .post-card {
+    padding: 0 !important; 
+    overflow: hidden; 
+}
+
+/* ဓာတ်ပုံပေါ်မည့် အကွက် */
+.post-thumbnail {
+    width: 100%;
+    height: 180px; /* ပုံ၏ အမြင့် */
+    background-size: cover;
+    background-position: center;
+    background-color: var(--secondary-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* စာသားများပေါ်မည့် အကွက် */
+.post-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* ခလုတ်ကို အောက်ခြေသို့ ကပ်သွားစေရန် */
+}
