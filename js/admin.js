@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let editorCreate, editorEdit;
     
     try {
-        // GrapesJS အတွက် အခြေခံ သတ်မှတ်ချက်များနှင့် Cloudinary Upload စနစ်
         const gjsConfig = (containerId) => ({
             container: `#${containerId}`,
             fromElement: true,
-            height: '600px', // Builder ၏ အမြင့်
-            width: 'auto',
-            storageManager: false, // Database ထဲ တိုက်ရိုက်သိမ်းမည်ဖြစ်၍ Local Storage ပိတ်ထားမည်
-            plugins: ['gjs-blocks-basic'], // အခြေခံ Block များ (Column, Text, Image) ပါဝင်မည်
+            height: '700px', // Builder ၏ အမြင့်ကို အနည်းငယ် ထပ်ချဲ့နိုင်ပါသည်
+            width: '100%',
+            storageManager: false, 
+            plugins: ['gjs-preset-webpage'], 
+
             assetManager: {
                 // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ် 
                 uploadFile: async function(e) {
