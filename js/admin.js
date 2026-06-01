@@ -7,17 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    // --- ၁။ Editor Configuration ---
+// --- ၁။ Editor Configuration (Portfolio Level) ---
+    
+    // HTML Edit Plugin ကို ချိတ်ဆက်ခြင်း
+    Quill.register("modules/htmlEditButton", htmlEditButton);
+
     const quillConfig = { 
         theme: 'snow', 
-        placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ...',
+        placeholder: 'စာမူများကို ဤနေရာတွင် ရိုက်နှိပ်ပါ (သို့) ပုံများကို Drag ဆွဲထည့်ပါ...',
         modules: { 
             toolbar: [ 
                 [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ 'color': [] }, { 'background': [] }],
-                [{ 'align': [] }],
+                [{ 'align': [] }], // စာသားများကို ဘယ်/ညာ/အလယ် ညှိရန်
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 [{ 'indent': '-1'}, { 'indent': '+1' }],
                 ['link', 'image', 'video'],
@@ -26,6 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
             imageResize: {
                 displayStyles: { backgroundColor: 'black', border: 'none', color: 'white' },
                 modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+            },
+            // HTML Source Code ခလုတ် အသက်သွင်းခြင်း
+            htmlEditButton: {
+                msg: "Update HTML Code",
+                buttonHTML: "&lt;/&gt;", // Toolbar တွင် ပေါ်မည့် ခလုတ်ပုံစံ
+                buttonTitle: "Show HTML Source"
             }
         } 
     };
