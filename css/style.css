@@ -521,10 +521,9 @@ footer {
 }
 
 /* ==========================================================================
-   [ULTIMATE FIX] Content Box & Media Responsive Force
+   [GOD MODE FIX] Content Box & Media Responsive Force
    ========================================================================== */
 
-/* (၁) အခြေခံ စာသားနှင့် Typography */
 .single-post-content {
     font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     line-height: 1.8 !important;
@@ -534,16 +533,19 @@ footer {
     overflow-x: hidden;
 }
 
-/* (၂) ပုံများကို ထုပ်ထားသော Box များ အတွင်းပိုင်းတွင် ပြားကပ်မသွားစေရန် */
-.single-post-content p,
-.single-post-content figure,
-.single-post-content span {
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important; /* အတွင်းပိုင်းတွင် Scrollbar ဝင်ပြီး ပြားသွားခြင်းကို အပြတ်ရှင်းမည် */
+/* TinyMCE မှ ထည့်လိုက်သော Fixed Height များနှင့် Scrollbar များကို အပြီးတိုင် ဖျက်ပစ်မည် */
+.single-post-content * {
+    max-height: none !important; 
 }
 
-/* (၃) ဓာတ်ပုံများအတွက် Logic */
+.single-post-content div,
+.single-post-content p,
+.single-post-content figure {
+    height: auto !important;
+    overflow: visible !important; /* Scrollbar လုံးဝ မပေါ်စေရန် အပြတ်ရှင်းမည် */
+}
+
+/* ဓာတ်ပုံများ Desktop/Mobile နေရာတိုင်းတွင် အတိအကျ Responsive ဖြစ်စေရန် */
 .single-post-content img {
     width: 100% !important; 
     max-width: 100% !important; 
@@ -556,18 +558,20 @@ footer {
     float: none !important; 
 }
 
-/* (၄) Iframe နှင့် Video များ (ပြားကပ်သွားခြင်း၏ အဓိကတရားခံ) */
+/* Iframe နှင့် Video များ (YouTube စသည်) ပြားမသွားစေရန် */
 .single-post-content iframe,
 .single-post-content video {
     width: 100% !important;
     max-width: 100% !important;
-    height: 400px !important; /* Desktop တွင် အမြင့်ကို 400px အသေထားမည် (Auto ပေးပါက ပြားသွားတတ်သည်) */
+    aspect-ratio: 16 / 9 !important; /* ၁၆:၉ အချိုးဖြင့် အမြဲပေါ်စေရန် */
+    height: auto !important; 
     border-radius: 12px;
     margin: 1.5rem 0 !important;
     border: none !important;
+    overflow: hidden !important;
 }
 
-/* (၅) ဇယားများ (Table) ဖြင့် ပုံ ၂ ပုံ ဘေးတိုက်ကပ်ခြင်းအတွက် Logic */
+/* ဇယားများ (Tables) */
 .single-post-content table {
     width: 100% !important;
     border-collapse: collapse;
@@ -580,23 +584,15 @@ footer {
     padding: 15px !important; 
     vertical-align: top;
     word-wrap: break-word;
+    overflow: hidden !important;
 }
 
-/* ==========================================================================
-   MOBILE RESPONSIVE (ဖုန်းအတွက် သီးသန့် အချိုးချခြင်း)
-   ========================================================================== */
+/* MOBILE RESPONSIVE (ဖုန်းအတွက် သီးသန့် အချိုးချခြင်း) */
 @media (max-width: 768px) {
     .single-post-content {
         font-size: 1rem; 
     }
     
-    /* Iframe / Video များကို ဖုန်းနှင့် ကွက်တိဖြစ်စေရန် အမြင့်လျှော့မည် */
-    .single-post-content iframe,
-    .single-post-content video {
-        height: 250px !important; /* ဖုန်းတွင် ပြားမသွားစေရန် 250px တိတိ ပေးထားမည် */
-    }
-
-    /* ဇယားများ (Tables) ကို ဖုန်းတွင် အပေါ်/အောက် တစ်ကွက်ချင်း ပြောင်းစီမည် */
     .single-post-content table, 
     .single-post-content tbody, 
     .single-post-content tr, 
