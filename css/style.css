@@ -1,4 +1,6 @@
-/* css/style.css */
+/* ==========================================================================
+   KYAW MIN TUN - Main Stylesheet (Cleaned & Optimized)
+   ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
 
@@ -9,7 +11,7 @@
     --card-bg: #ffffff;
     --text-main: #212529;
     --text-muted: #6c757d;
-    --accent-color: #FF4200;
+    --accent-color: #228B22;
     --border-color: #e9ecef;
     --nav-pill-bg: #f1f3f5;
     --nav-pill-hover: #e2e6ea;
@@ -25,7 +27,7 @@
     --card-bg: #1a1a1a;
     --text-main: #e0e0e0;
     --text-muted: #9ca3af;
-    --accent-color: #FF5A22; /* Dark mode တွင် လိမ္မော်ရောင် အနည်းငယ် ပိုလင်းစေရန် */
+    --accent-color: #FF5A22; 
     --border-color: #2d2d2d;
     --nav-pill-bg: #2a2a2a;
     --nav-pill-hover: #3a3a3a;
@@ -37,7 +39,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Dark Mode ပြောင်းလျှင် Smooth ဖြစ်စေရန် */
+    transition: background-color 0.3s ease, border-color 0.3s ease; 
 }
 
 html, body {
@@ -49,11 +51,11 @@ html, body {
     width: 100%;
 }
 
-.hidden {
-    display: none !important;
-}
+.hidden { display: none !important; }
 
-/* Header & Navigation */
+/* =========================================
+   Header & Navigation
+   ========================================= */
 header {
     border-bottom: 1px solid var(--border-color);
     background-color: var(--primary-bg);
@@ -63,7 +65,6 @@ header {
     z-index: 100;
 }
 
-/* Header ကြီးတစ်ခုလုံး အောက်သို့ ထပ်မကျစေရန် */
 .header-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -78,7 +79,7 @@ header {
     align-items: center;
     gap: 12px; 
     text-decoration: none;
-    flex-shrink: 0; /* နေရာကျဉ်းလည်း ပိန်မသွားစေရန် */
+    flex-shrink: 0; 
 }
 
 .logo-text {
@@ -87,7 +88,7 @@ header {
     letter-spacing: 1px;
     color: var(--accent-color);
     white-space: nowrap !important; 
-    flex-shrink: 0; /* နေရာကျဉ်းလည်း ၃ ကြောင်းမဆင့်သွားစေရန် */
+    flex-shrink: 0; 
 }
 
 .site-logo {
@@ -109,13 +110,10 @@ header {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    flex-shrink: 0; /* ခလုတ်ကို ပိန်မသွားစေရန် */
+    flex-shrink: 0; 
 }
 
-.theme-toggle-btn:hover {
-    background: var(--nav-pill-hover);
-}
-
+.theme-toggle-btn:hover { background: var(--nav-pill-hover); }
 .theme-toggle-btn svg {
     width: 20px;
     height: 20px;
@@ -193,17 +191,16 @@ nav a {
     transition: all 0.2s ease;
 }
 
-nav a:hover {
-    background-color: var(--nav-pill-hover); 
-}
-
+nav a:hover { background-color: var(--nav-pill-hover); }
 nav a.active {
     background-color: var(--accent-color); 
     color: #ffffff !important;
     border-color: var(--accent-color);
 }
 
-/* Main Content */
+/* =========================================
+   Main Content, Grids & Cards
+   ========================================= */
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -218,7 +215,6 @@ nav a.active {
     border-radius: 8px;
     background-color: var(--card-bg);
     color: var(--text-main);
-    font-family: var(--font-family);
     font-size: 1rem;
     outline: none;
     box-shadow: var(--shadow-sm);
@@ -230,7 +226,17 @@ nav a.active {
     box-shadow: 0 0 0 3px rgba(255, 66, 0, 0.1);
 }
 
-/* Section Titles & Sliders */
+#filterTitle {
+    background-color: var(--nav-pill-bg);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 2.5rem;
+    font-size: 1.3rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
 .section-title {
     font-size: 1.4rem;
     font-weight: 700;
@@ -240,11 +246,7 @@ nav a.active {
     border-left: 4px solid var(--accent-color); 
 }
 
-.slider-section {
-    margin-bottom: 3.5rem;
-    width: 100%;
-    overflow: hidden; 
-}
+.slider-section { margin-bottom: 3.5rem; width: 100%; overflow: hidden; }
 
 .slider-container {
     display: flex;
@@ -257,16 +259,21 @@ nav a.active {
     user-select: none; 
     width: 100%; 
 }
-
 .slider-container.active { cursor: grabbing; }
 .slider-container::-webkit-scrollbar { display: none; }
 
-/* Modified Card UI for Professional Look */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
 .slider-card, .post-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 0 !important; /* Image thumbnail နေရာအပြည့်ယူရန် */
+    overflow: hidden; 
     box-shadow: var(--shadow-sm);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     display: flex;
@@ -274,10 +281,7 @@ nav a.active {
     justify-content: space-between;
 }
 
-.slider-card {
-    flex: 0 0 280px; 
-    min-height: 260px;
-}
+.slider-card { flex: 0 0 280px; min-height: 260px; }
 
 .slider-card:hover, .post-card:hover {
     transform: translateY(-4px); 
@@ -286,10 +290,21 @@ nav a.active {
     z-index: 2;
 }
 
-.post-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
+/* Post Card Thumbnail */
+.post-thumbnail {
+    width: 100%;
+    height: 200px; 
+    background-size: cover;
+    background-position: center;
+    background-color: var(--secondary-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; 
 }
 
 .post-category {
@@ -303,17 +318,14 @@ nav a.active {
 }
 
 .post-title {
-    /* Inter ကို ရှေ့ဆုံးက ထားလိုက်ပါသည် */
     font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     font-size: 1.15rem;
     font-weight: 700;
-    margin-bottom: 1rem;
     color: var(--text-main);
     line-height: 1.6; 
 }
 
 .post-excerpt {
-    /* Inter ကို ရှေ့ဆုံးက ထားလိုက်ပါသည် */
     font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
     font-size: 0.95rem;
     color: var(--text-muted);
@@ -332,65 +344,14 @@ nav a.active {
     font-size: 0.85rem;
     font-weight: 600;
     transition: background-color 0.2s ease, transform 0.1s ease;
-    margin-top: 1rem;
     align-self: flex-start; 
     width: max-content; 
 }
 
-.read-more:hover {
-    background-color: #e03a00; 
-    transform: translateY(-2px);
-}
-
-/* Footer */
-footer {
-    background-color: var(--secondary-bg);
-    border-top: 1px solid var(--border-color);
-    padding: 4rem 20px 2rem 20px; 
-    color: var(--text-main);
-    margin-top: 4rem; 
-}
-
-.footer-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem; 
-    margin-bottom: 2.5rem;
-}
-
-.footer-section { text-align: left; }
-.footer-section h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 1rem; 
-    color: var(--accent-color);
-}
-.footer-section p {
-    color: var(--text-muted);
-    margin-bottom: 0.6rem; 
-    line-height: 1.6;
-    font-size: 0.95rem;
-}
-.footer-links { list-style: none; padding: 0; }
-.footer-links li { margin-bottom: 0.6rem; }
-.footer-links a {
-    text-decoration: none;
-    color: var(--text-muted);
-    transition: color 0.2s ease;
-}
-.footer-links a:hover { color: var(--accent-color); }
-.footer-bottom {
-    text-align: center; 
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-color);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
+.read-more:hover { background-color: #e03a00; transform: translateY(-2px); }
 
 /* =========================================
-   Myanmar Font Support (For Posts & Editor ONLY)
+   Myanmar Font Support & Editor Layout Fixes
    ========================================= */
 .ql-editor, 
 .ql-editor p, 
@@ -418,168 +379,6 @@ footer {
     margin-bottom: 0.5rem;
 }
 
-/* =========================================
-   Portfolio Level Content Box (Images & Videos)
-   ========================================= */
-.ql-editor img, .single-post-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-    margin: 10px 15px 10px 0; 
-    transition: transform 0.3s ease;
-}
-
-.ql-editor img:hover, .single-post-content img:hover {
-    transform: scale(1.02); 
-}
-
-.ql-editor iframe.ql-video, .single-post-content iframe.ql-video {
-    width: 100%;
-    height: 400px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    margin: 2rem 0;
-    border: none;
-}
-
-/* ၃။ ဖုန်းစခရင် (Mobile) အတွက် Header အလွဲအချော်များကို အတိအကျ ပြင်ဆင်ခြင်း */
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: row !important; 
-        flex-wrap: nowrap !important;
-        justify-content: space-between;
-        padding: 0 5px; /* ဘေးဘောင် အနည်းငယ် ချန်ထားမည် */
-    }
-    
-    .logo-wrapper {
-        gap: 8px;
-    }
-    
-    .logo-text {
-        font-size: 1.2rem !important; /* ဖုန်းတွင် နာမည်ကို အံဝင်ခွင်ကျ သေးပေးမည် */
-        white-space: nowrap !important;
-    }
-
-    .theme-toggle-btn {
-        width: 36px;
-        height: 36px;
-        display: flex !important;
-        flex-shrink: 0; 
-    }
-
-    .theme-toggle-btn svg {
-        width: 18px;
-        height: 18px;
-    }
-    
-    .nav-scroll-btn {
-        display: none !important;
-    }
-    .category-nav-container {
-        padding: 0 15px; 
-        margin-top: 1.2rem; /* ဖုန်းတွင် Menu နှင့် Header ကြား နေရာချန်ရန် */
-    }
-    
-    nav ul {
-        justify-content: flex-start;
-        gap: 0.6rem;
-    }
-
-    .container {
-        padding: 0.5rem 15px 1.5rem 15px;
-    }
-    
-    .slider-card {
-        flex: 0 0 240px;
-        padding: 1.2rem;
-    }
-
-    /* Single Post Fixes for Mobile */
-    .single-post-container {
-        padding: 1.5rem 15px !important;
-    }
-    .single-post-title {
-        font-size: 1.5rem !important; 
-        line-height: 1.4;
-    }
-    .single-post-content {
-        font-size: 1rem !important; 
-    }
-    .ql-editor h1 { font-size: 1.4rem !important; }
-    .ql-editor h2 { font-size: 1.2rem !important; }
-    .ql-editor img { margin: 1rem 0 !important; }
-}
-
-/* =========================================
-   Professional Full-Page Loading Overlay
-   ========================================= */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.7); /* အလင်းရောင်တွင် အဖြူရောင် Blur */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-
-/* Dark Mode အတွက် နောက်ခံအရောင် ပြောင်းလဲခြင်း */
-[data-theme="dark"] .loading-overlay {
-    background-color: rgba(18, 18, 18, 0.7); 
-}
-
-/* ဤ Class ရောက်လာပါက ညင်သာစွာ ပျောက်သွားမည် */
-.loading-overlay.fade-out {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* လည်နေမည့် အဝိုင်း (Spinner) Design */
-.spinner {
-    width: 30px;
-    height: 30px;
-    border: 4px solid var(--border-color);
-    border-top: 4px solid var(--accent-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.loading-text {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--accent-color);
-    letter-spacing: 1px;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-body, .single-post-content {
-    overflow-x: hidden;
-}
-
-/* =========================================================
-   TinyMCE Editor Layout Fixes (Table Spacing & Mobile Auto Responsive)
-   ========================================================= */
-
-/* ၁။ ဇယားများ (Tables / ပုံ ၂ ပုံ ဘေးတိုက်ကပ်ခြင်းများ) အရမ်းမကပ်နေစေရန် */
 .single-post-content table {
     width: 100%;
     border-collapse: collapse;
@@ -588,86 +387,135 @@ body, .single-post-content {
 
 .single-post-content table td,
 .single-post-content table th {
-    padding: 15px; /* ပုံနှင့် စာများ အရမ်းမကပ်စေရန် ဘေးတိုက်/အပေါ်အောက် ခြားပေးခြင်း */
+    padding: 15px; 
     vertical-align: top;
 }
 
-/* ၂။ ဓာတ်ပုံများ Editor မှ Size အတိုင်းပေါ်စေရန် (မလိုအပ်ဘဲ မဆွဲဆန့်ရန်) */
-.single-post-content img {
-    max-width: 100%; /* ဖုန်းမျက်နှာပြင်ထက် မကျော်သွားစေရန် */
-    height: auto !important; /* ပုံအချိုးအစား မပျက်စေရန် */
+.ql-editor img, .single-post-content img {
+    max-width: 100%;
+    height: auto !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+    margin: 10px 15px 10px 0; 
+    transition: transform 0.3s ease;
     display: inline-block;
 }
 
-/* ၃။ Mobile (ဖုန်း) အတွက် Auto Responsive ဖြစ်စေရန် အသက်သွင်းခြင်း */
+.ql-editor img:hover, .single-post-content img:hover { transform: scale(1.02); }
+
+.ql-editor iframe, .single-post-content iframe,
+.ql-video {
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin: 2rem 0;
+    border: none;
+}
+
+/* =========================================
+   Footer
+   ========================================= */
+footer {
+    background-color: var(--secondary-bg);
+    border-top: 1px solid var(--border-color);
+    padding: 4rem 20px 2rem 20px; 
+    color: var(--text-main);
+    margin-top: 4rem; 
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem; 
+    margin-bottom: 2.5rem;
+}
+
+.footer-section { text-align: left; }
+.footer-section h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--accent-color); }
+.footer-section p { color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.6; font-size: 0.95rem; }
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 0.6rem; }
+.footer-links a { text-decoration: none; color: var(--text-muted); transition: color 0.2s ease; }
+.footer-links a:hover { color: var(--accent-color); }
+.footer-bottom { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; }
+
+/* =========================================
+   Professional Full-Page Loading Overlay
+   ========================================= */
+.loading-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+[data-theme="dark"] .loading-overlay { background-color: rgba(18, 18, 18, 0.7); }
+.loading-overlay.fade-out { opacity: 0; visibility: hidden; }
+.spinner {
+    width: 30px; height: 30px; border: 4px solid var(--border-color); border-top: 4px solid var(--accent-color);
+    border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.loading-text { font-size: 1.1rem; font-weight: 600; color: var(--accent-color); letter-spacing: 1px; animation: pulse 1.5s infinite ease-in-out; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* =========================================================
+   MOBILE RESPONSIVE (All Mobile Fixes Combined)
+   ========================================================= */
 @media (max-width: 768px) {
-    /* ဖုန်းတွင် Table များကို ဘေးတိုက်မှ အပေါ်/အောက် (Stacking) ပြောင်းစီပေးရန် */
+    /* Header & Nav */
+    .header-container { flex-direction: row !important; justify-content: space-between; padding: 0 5px; }
+    .logo-wrapper { gap: 8px; }
+    .logo-text { font-size: 1.2rem !important; }
+    .theme-toggle-btn { width: 36px; height: 36px; display: flex !important; }
+    .theme-toggle-btn svg { width: 18px; height: 18px; }
+    .nav-scroll-btn { display: none !important; }
+    .category-nav-container { padding: 0 15px; margin-top: 1.2rem; }
+    nav ul { justify-content: flex-start; gap: 0.6rem; }
+
+    /* Home Grids */
+    .container { padding: 0.5rem 15px 1.5rem 15px; }
+    .slider-card { flex: 0 0 240px; }
+
+    /* Single Post */
+    .single-post-container { padding: 1.5rem 15px !important; }
+    .single-post-title { font-size: 1.5rem !important; line-height: 1.4; }
+    .single-post-content { font-size: 1rem !important; }
+    .single-post-content h1, .ql-editor h1 { font-size: 1.4rem !important; }
+    .single-post-content h2, .ql-editor h2 { font-size: 1.2rem !important; }
+
+    /* Tables to Stack */
     .single-post-content table, 
     .single-post-content tbody, 
     .single-post-content tr, 
-    .single-post-content td {
+    .single-post-content td,
+    .single-post-content th {
         display: block; 
         width: 100% !important;
     }
-    
-    .single-post-content table td {
-        padding: 15px 0; 
+    .single-post-content table td,
+    .single-post-content table th {
+        padding: 10px 0; 
         border: none;
     }
 
-    /* Editor မှ ပါလာနိုင်သော Fixed Size ဘောင်များကြောင့် ဖုန်းတွင် ပြားမသွားစေရန် */
-    .single-post-content p,
-    .single-post-content span,
-    .single-post-content figure,
-    .single-post-content div {
-        max-width: 100% !important;
-        height: auto !important;
-    }
-
-    /* ဖုန်းမျက်နှာပြင်တွင် ပုံများ အပြည့်ပေါ်ပြီး အချိုးအစားမှန်ကန်စေရန် */
-    .single-post-content img {
-        width: 100% !important; 
+    /* Images and Iframes Size Fixing (No flattening) */
+    .single-post-content img, .ql-editor img {
+        width: auto !important; 
         max-width: 100% !important; 
         height: auto !important;
-        object-fit: contain !important; /* ပုံမပြားသွားစေရန် အချိုးအစားထိန်းပေးခြင်း */
         margin: 15px auto !important; 
         display: block !important;
     }
-
-    /* ဖုန်းမျက်နှာပြင်တွင် Video နှင့် Iframe များ အချိုးကျစေရန် */
     .single-post-content iframe,
     .single-post-content video,
     .ql-video {
         width: 100% !important;
-        height: 250px !important; /* ဖုန်းဖြင့်ကြည့်လျှင် ကွက်တိဖြစ်မည့် အမြင့် */
+        height: auto !important;
+        aspect-ratio: 16/9; 
         margin: 15px 0 !important;
     }
 }
-/* =========================================================
-   Post Card Thumbnail (Preview Image) Design
-   ========================================================= */
-
-/* မူလ Card ၏ Padding ကို ဖျောက်ပြီး အတွင်းပိုင်းတွင် ပြန်ခွဲထည့်မည် (ပုံကို ဘေးဘောင်အပြည့် ပေါ်စေရန်) */
-.slider-card, .post-card {
-    padding: 0 !important; 
-    overflow: hidden; 
-}
-
-/* ဓာတ်ပုံပေါ်မည့် အကွက် */
-.post-thumbnail {
-    width: 100%;
-    height: 200px; 
-    background-size: cover;
-    background-position: center;
-    background-color: var(--secondary-bg);
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* စာသားများပေါ်မည့် အကွက် */
-.post-card-content {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1; /* ခလုတ်ကို အောက်ခြေသို့ ကပ်သွားစေရန် */
-}
-
