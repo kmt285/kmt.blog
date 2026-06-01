@@ -7,78 +7,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const logoutBtn = document.getElementById('logoutBtn');
     
-// ==========================================
-    // ၂။ GrapesJS Page Builder Configuration (Photoshop လို Layout ချရန်)
     // ==========================================
-    let editorCreate, editorEdit;
+    // ၂။ GrapesJS Page Builder (UI Crash မဖြစ်စေရန် Editor (၁) ခုတည်းသာ သုံးမည်)
+    // ==========================================
+    let editor; // Editor အား တစ်ခုတည်းသာ အသုံးပြုမည် 
     
-    try {
-       // GrapesJS အတွက် အခြေခံ သတ်မှတ်ချက်များနှင့် Cloudinary Upload စနစ်
-        const gjsConfig = (containerId) => ({
-            container: `#${containerId}`,
-            fromElement: true,
-            height: '700px', 
-            width: '100%',
-            storageManager: false, 
-            plugins: ['gjs-preset-webpage'], 
+    const gjsConfig = (containerId) => ({
+        container: `#${containerId}`,
+        fromElement: true,
+        height: '700px', 
+        width: '100%',
+        storageManager: false, 
+        plugins: ['gjs-preset-webpage'], 
 
-            assetManager: {
-                // Cloudinary သို့ ပုံတိုက်ရိုက်တင်မည့် စနစ် 
-                uploadFile: async function(e) {
-                    const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
-                    if (!files || files.length === 0) return;
+        assetManager: {
+            uploadFile: async function(e) {
+                const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+                if (!files || files.length === 0) return;
+                
+                const formData = new FormData();
+                formData.append('image', files[0]);
+
+                try {
+                    const res = await fetch(`${API_URL}/upload`, {
+                        method: 'POST',
+                        headers: { 
+                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    });
                     
-                    const formData = new FormData();
-                    formData.append('image', files[0]);
-
+                    const textData = await res.text();
+                    let data;
                     try {
-                        const res = await fetch(`${API_URL}/upload`, {
-                            method: 'POST',
-                            headers: { 
-                                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
-                                'Accept': 'application/json'
-                            },
-                            body: formData
-                        });
-                        
-                        // Backend မှ Error စာသားများ ပြန်လာပါက ဖမ်းယူနိုင်ရန်
-                        const textData = await res.text();
-                        let data;
-                        try {
-                            data = JSON.parse(textData);
-                        } catch (parseErr) {
-                            alert('Server Error: ' + textData); 
-                            return;
-                        }
-                        
-                        if (res.ok && data.url) {
-                            // --- ဤနေရာတွင် အတိအကျ ပြင်ဆင်လိုက်ပါသည် ---
-                            // this.add အစား မည်သည့် Editor (Post အသစ်လား / Edit လား) ကို သုံးနေသလဲ စစ်ဆေးပြီး ပုံကို ထည့်သွင်းမည်
-                            const currentEditor = containerId === 'editor-container' ? editorCreate : editorEdit;
-                            currentEditor.AssetManager.add({ src: data.url });
-                        } else {
-                            alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
-                        }
-                    } catch (err) {
-                        alert('Connection Error: ' + err.message); 
+                        data = JSON.parse(textData);
+                    } catch (parseErr) {
+                        alert('Server Error: ' + textData); 
+                        return;
                     }
+                    
+                    if (res.ok && data.url) {
+                        // Editor တစ်ခုတည်းကိုသာ တိုက်ရိုက်လှမ်းထည့်မည်
+                        editor.AssetManager.add({ src: data.url }); 
+                    } else {
+                        alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
+                    }
+                } catch (err) {
+                    alert('Connection Error: ' + err.message); 
                 }
             }
-        });
+        }
+    });
 
-        // Editor နှစ်ခု (Post အသစ်တင်ရန် နှင့် ပြင်ရန်) ကို အသက်သွင်းခြင်း
-        editorCreate = grapesjs.init(gjsConfig('editor-container'));
-        editorEdit = grapesjs.init(gjsConfig('edit-editor-container'));
-
-    } catch (gjsError) {
-        console.error("GrapesJS Initialization Error: ", gjsError);
+    // နေရာပြောင်းတိုင်း Editor အဟောင်းကို ဖျက်ပြီး အသစ်ပြန်ခေါ်မည့် Function
+    function initGrapesJS(containerId) {
+        if (editor) {
+            try { editor.destroy(); } catch(e) {} // UI မထပ်စေရန် အဟောင်းကို ဖျက်မည်
+            document.getElementById('editor-container').innerHTML = '';
+            document.getElementById('edit-editor-container').innerHTML = '';
+        }
+        editor = grapesjs.init(gjsConfig(containerId));
     }
 
     // ==========================================
-    // လုံခြုံရေးနှင့် Login စနစ် အဆင့်မြှင့်တင်ခြင်း (Auto Logout ပါဝင်သည်)
+    // လုံခြုံရေးနှင့် Login စနစ်
     // ==========================================
     let inactivityTimer;
-    const INACTIVITY_LIMIT = 10 * 60 * 1000; // 10 မိနစ်
+    const INACTIVITY_LIMIT = 10 * 60 * 1000;
 
     function resetInactivityTimer() {
         clearTimeout(inactivityTimer);
@@ -113,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(`${API_URL}/auth/verify`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            
             if (res.ok) {
                 showDashboard();
             } else {
@@ -127,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkAuthStatus(); 
 
-    // --- Login Form လုပ်ဆောင်ချက် အသစ် ---
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const errorText = document.getElementById('loginError');
@@ -135,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerText = 'Logging in...'; 
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
-        submitBtn.disabled = true; 
 
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
@@ -156,13 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error(err);
+            errorText.innerText = "Network Error! Server might be starting up.";
         } finally {
             submitBtn.innerText = 'Login';
-            submitBtn.disabled = false; 
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1'; 
         }
     });
     
-
     logoutBtn.addEventListener('click', () => performLogout(false));
 
     function showDashboard() {
@@ -171,10 +165,15 @@ document.addEventListener('DOMContentLoaded', () => {
         resetInactivityTimer(); 
         loadCategories(); 
         loadAdminPosts();
+        
+        // Dashboard ပေါ်လာမှ Editor ကို စတင်ခေါ်မည်
+        setTimeout(() => {
+            initGrapesJS('editor-container');
+        }, 100);
     }
 
     // ==========================================
-    // Data ဆွဲယူခြင်းနှင့် Manage လုပ်ခြင်း အပိုင်း (မူလအတိုင်း)
+    // Data ဆွဲယူခြင်းနှင့် Manage လုပ်ခြင်း အပိုင်း
     // ==========================================
     async function loadCategories() {
         try {
@@ -258,14 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('editPostCategory').value = post.category ? post.category._id : '';
                 document.getElementById('editFileUrl').value = post.fileUrl || '';
                 
-                // GrapesJS ထဲသို့ Data ပြန်ထည့်ခြင်း
-                if(editorEdit) {
-                    editorEdit.setComponents(post.content); 
-                }
-
                 document.getElementById('createPostDiv').classList.add('hidden');
                 document.getElementById('editPostDiv').classList.remove('hidden');
                 document.getElementById('editPostDiv').scrollIntoView({ behavior: 'smooth' });
+
+                // Editor အဟောင်းကို ဖျက်ပြီး Edit Box တွင် အသစ်ပြန်ခေါ်မည်
+                initGrapesJS('edit-editor-container');
+                setTimeout(() => {
+                    if (editor) editor.setComponents(post.content);
+                }, 200);
+
             } catch (err) { console.error(err); }
         }
     });
@@ -273,6 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cancelEditBtn').addEventListener('click', () => {
         document.getElementById('editPostDiv').classList.add('hidden');
         document.getElementById('createPostDiv').classList.remove('hidden');
+        
+        // Edit Box ကို ပိတ်ပြီး Create Box တွင် Editor ပြန်ခေါ်မည်
+        initGrapesJS('editor-container');
+        document.getElementById('createPostDiv').scrollIntoView({ behavior: 'smooth' });
     });
 
     document.getElementById('categoryForm').addEventListener('submit', async (e) => {
@@ -287,10 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('postMessage').innerText = 'Publishing...';
         document.getElementById('postMessage').style.color = 'blue';
 
-        // Post အသစ်တင်သည့် Form တွင်
         try {
-            // HTML နှင့် CSS ကို ပေါင်း၍ သိမ်းမည်
-            const fullContent = editorCreate ? `<style>${editorCreate.getCss()}</style>${editorCreate.getHtml()}` : '';
+            const fullContent = editor ? `<style>${editor.getCss()}</style>${editor.getHtml()}` : '';
 
             const response = await fetch(`${API_URL}/posts`, { 
                 method: 'POST', 
@@ -299,14 +302,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: document.getElementById('postTitle').value, 
                     category: document.getElementById('postCategory').value, 
                     fileUrl: document.getElementById('fileUrl').value, 
-                    content: fullContent // <--- ဤနေရာတွင် ပြင်လိုက်ပါသည်
+                    content: fullContent
                 }) 
             });
             if (response.ok) { 
                 document.getElementById('postMessage').style.color = 'green';
                 document.getElementById('postMessage').innerText = 'Published Successfully!'; 
                 document.getElementById('postForm').reset(); 
-                if(editorCreate) editorCreate.setComponents(''); // Editor ကို ရှင်းလင်းမည်
+                if(editor) editor.setComponents(''); 
                 loadAdminPosts(); 
                 setTimeout(() => document.getElementById('postMessage').innerText = '', 3000);
             } else { 
@@ -326,9 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('editPostMessage').innerText = 'Updating...';
         document.getElementById('editPostMessage').style.color = 'blue';
 
-        // Edit လုပ်သည့် Form တွင်
         try {
-            const editFullContent = editorEdit ? `<style>${editorEdit.getCss()}</style>${editorEdit.getHtml()}` : '';
+            const editFullContent = editor ? `<style>${editor.getCss()}</style>${editor.getHtml()}` : '';
 
             const response = await fetch(`${API_URL}/posts/${id}`, { 
                 method: 'PUT', 
@@ -337,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: document.getElementById('editPostTitle').value, 
                     category: document.getElementById('editPostCategory').value, 
                     fileUrl: document.getElementById('editFileUrl').value, 
-                    content: editFullContent // <--- ဤနေရာတွင် ပြင်လိုက်ပါသည်
+                    content: editFullContent
                 }) 
             });
             
