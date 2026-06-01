@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Toolbar တွင် forecolor (စာလုံးအရောင်), backcolor (နောက်ခံအရောင်), lineheight (အကွာအဝေး) များကို ထပ်ထည့်ထားပါသည်
         toolbar: 'undo redo | blocks fontsize | bold italic underline forecolor backcolor | lineheight alignleft aligncenter alignright alignjustify | bullist numlist | link image media table | fullscreen code',
         // content_style တွင် p { margin: 0 0 8px 0; } ထည့်ပေးထားသဖြင့် မူလကတည်းက စာကြောင်းများ အရမ်း ဟ/ကွာ မနေတော့ပါ
-        content_style: "body { font-family: 'Pyidaungsu', 'Padauk', 'Myanmar Text', 'Inter', sans-serif; font-size: 16px; line-height: 1.5; color: #333; } p { margin: 0 0 8px 0; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
+        content_style: "body { font-family: 'Pyidaungsu', 'Padauk', 'Myanmar Text', 'Inter', sans-serif; font-size: 16px; line-height: 1.5; color: #333; overflow-x: hidden; } p { margin: 0 0 8px 0; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
         promotion: false, 
         images_upload_handler: async (blobInfo, progress) => {
             const formData = new FormData();
