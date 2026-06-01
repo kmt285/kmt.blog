@@ -15,80 +15,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainPostForm = document.getElementById('mainPostForm');
 
     // ==========================================
-    // ၁။ GrapesJS Page Builder (Single Instance Architecture)
+    // ၁။ TinyMCE Editor Configuration (The Industry Standard)
     // ==========================================
-    let editor = null; 
-    
-    function initEditor() {
-        if (!editor) {
-            editor = grapesjs.init({
-                container: '#gjs-container',
-                fromElement: true,
-                height: '700px', 
-                width: '100%',
-                storageManager: false, 
-                plugins: ['gjs-preset-webpage'], 
+    tinymce.init({
+        selector: '#tinymce-editor',
+        height: 600,
+        menubar: false,
+        plugins: 'advlist autolink lists link image media table code preview fullscreen',
+        toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | link image media table | fullscreen code',
+        content_style: "body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; color: #333; } img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }",
+        promotion: false, // Upgrade ခလုတ်ဖျောက်ရန်
+        images_upload_handler: async (blobInfo, progress) => {
+            const formData = new FormData();
+            formData.append('image', blobInfo.blob());
 
-                assetManager: {
-                    uploadFile: async function(e) {
-                        const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
-                        if (!files || files.length === 0) return;
-                        
-                        const formData = new FormData();
-                        formData.append('image', files[0]);
-
-                        try {
-                            const res = await fetch(`${API_URL}/upload`, {
-                                method: 'POST',
-                                headers: { 
-                                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
-                                    'Accept': 'application/json'
-                                },
-                                body: formData
-                            });
-                            
-                            const textData = await res.text();
-                            let data;
-                            try { data = JSON.parse(textData); } 
-                            catch (err) { alert('Server Error: ' + textData); return; }
-                            
-                            if (res.ok && data.url) {
-                                editor.AssetManager.add({ src: data.url }); 
-                            } else {
-                                alert('Upload Failed: ' + (data.error || 'Unknown error occurred.'));
-                            }
-                        } catch (err) { alert('Connection Error: ' + err.message); }
-                    }
+            try {
+                const res = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok && data.url) {
+                    return data.url; // Cloudinary လင့်ခ်အမှန်ကို Editor သို့ ပြန်ပို့မည်
+                } else {
+                    throw new Error(data.error || 'Upload failed');
                 }
-            });
+            } catch (err) {
+                throw new Error('Image upload failed');
+            }
         }
-    }
+    });
 
     // ==========================================
     // ၂။ Create, Edit နှင့် Cancel ခလုတ်များကို ထိန်းချုပ်ခြင်း
     // ==========================================
-    
-    // Create New Post ခလုတ်နှိပ်လျှင်
     showCreateFormBtn.addEventListener('click', () => {
         document.getElementById('editorFormTitle').innerText = 'Publish New Post';
         document.getElementById('savePostBtn').innerText = 'Publish Post';
         mainPostForm.reset(); 
-        document.getElementById('currentPostId').value = ''; // ID ဖျက်မည်
+        document.getElementById('currentPostId').value = ''; 
         
         managePostsSection.classList.add('hidden');
         editorMainSection.classList.remove('hidden');
         
-        initEditor(); // Box ပေါ်လာမှ Editor ကို ခေါ်မည်
-        editor.setComponents(''); // Editor အခွံလွတ်ပြမည်
+        // Editor ထဲတွင် အခွံလွတ်ပြမည်
+        if (tinymce.get('tinymce-editor')) {
+            tinymce.get('tinymce-editor').setContent('');
+        }
     });
 
-    // Cancel ခလုတ်နှိပ်လျှင်
     cancelEditorBtn.addEventListener('click', () => {
         editorMainSection.classList.add('hidden');
         managePostsSection.classList.remove('hidden');
     });
 
-    // Post Save (Create သို့မဟုတ် Update) လုပ်ခြင်း
     mainPostForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const msgBox = document.getElementById('mainPostMessage');
@@ -96,11 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
         msgBox.innerText = 'Saving...';
 
         const postId = document.getElementById('currentPostId').value;
-        const method = postId ? 'PUT' : 'POST'; // ID ရှိလျှင် Update, မရှိလျှင် Create
+        const method = postId ? 'PUT' : 'POST'; 
         const url = postId ? `${API_URL}/posts/${postId}` : `${API_URL}/posts`;
 
         try {
-            const fullContent = editor ? `<style>${editor.getCss()}</style>${editor.getHtml()}` : '';
+            // TinyMCE မှ Data များကို ဆွဲယူမည်
+            const fullContent = tinymce.get('tinymce-editor').getContent();
 
             const response = await fetch(url, { 
                 method: method, 
@@ -119,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadAdminPosts(); 
                 setTimeout(() => { 
                     msgBox.innerText = ''; 
-                    cancelEditorBtn.click(); // အောင်မြင်လျှင် Form ကို ပိတ်မည်
+                    cancelEditorBtn.click(); 
                 }, 1500);
             } else { 
                 const errorData = await response.json();
@@ -267,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch(`${API_URL}/posts/${id}`);
                 const post = await res.json();
                 
-                // Edit Box တွင် Data များ ပြန်ထည့်ပေးခြင်း
                 document.getElementById('currentPostId').value = post._id;
                 document.getElementById('mainPostTitle').value = post.title;
                 document.getElementById('mainPostCategory').value = post.category ? post.category._id : '';
@@ -279,8 +260,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 managePostsSection.classList.add('hidden');
                 editorMainSection.classList.remove('hidden');
 
-                initEditor(); // Editor ကို ခေါ်မည်
-                setTimeout(() => { if(editor) editor.setComponents(post.content); }, 100);
+                // Edit Box တွင် Data များ ပြန်ထည့်ပေးခြင်း
+                if (tinymce.get('tinymce-editor')) {
+                    tinymce.get('tinymce-editor').setContent(post.content);
+                }
 
             } catch (err) { console.error(err); }
         }
