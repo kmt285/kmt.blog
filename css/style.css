@@ -652,16 +652,3 @@ body, .single-post-content {
     flex-grow: 1; /* ခလုတ်ကို အောက်ခြေသို့ ကပ်သွားစေရန် */
 }
 
-/* =========================================================
-   Category & Search Results Title Design
-   ========================================================= */
-#filterTitle {
-    background-color: var(--nav-pill-bg);
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    display: inline-block;
-    margin-bottom: 2.5rem;
-    font-size: 1.3rem;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-}
