@@ -535,14 +535,17 @@ footer {
 
 /* TinyMCE မှ ထည့်လိုက်သော Fixed Height များနှင့် Scrollbar များကို အပြီးတိုင် ဖျက်ပစ်မည် */
 .single-post-content * {
-    max-height: none !important; 
+    max-height: none !important;
 }
 
+/* ထပ်တိုး FIX: span နှင့် a tag များကိုပါ ထည့်သွင်းပြီး scrollbar ကို အပြတ်ရှင်းပါသည် */
 .single-post-content div,
 .single-post-content p,
-.single-post-content figure {
+.single-post-content figure,
+.single-post-content span,
+.single-post-content a {
     height: auto !important;
-    overflow: visible !important; /* Scrollbar လုံးဝ မပေါ်စေရန် အပြတ်ရှင်းမည် */
+    overflow: visible !important; 
 }
 
 /* ဓာတ်ပုံများ Desktop/Mobile နေရာတိုင်းတွင် အတိအကျ Responsive ဖြစ်စေရန် */
@@ -558,13 +561,14 @@ footer {
     float: none !important; 
 }
 
-/* Iframe နှင့် Video များ (YouTube စသည်) ပြားမသွားစေရန် */
+/* Iframe နှင့် Video များ ပြားမသွားစေရန် (ERROR ဖြေရှင်းထားသောအပိုင်း) */
 .single-post-content iframe,
-.single-post-content video {
+.single-post-content video,
+.ql-video {
     width: 100% !important;
     max-width: 100% !important;
     aspect-ratio: 16 / 9 !important; /* ၁၆:၉ အချိုးဖြင့် အမြဲပေါ်စေရန် */
-    height: auto !important; 
+    height: unset !important; /* အရေးကြီး: auto အစား unset ပြောင်းသုံးထားပါသည် */
     border-radius: 12px;
     margin: 1.5rem 0 !important;
     border: none !important;
