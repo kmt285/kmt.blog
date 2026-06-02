@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoImg = document.querySelector('.site-logo');
     if (logoImg) {
         logoImg.src = `images/${randomLogo}`;
+    }
 
     // Theme Toggle
     const themeToggleBtn = document.getElementById('themeToggle');
