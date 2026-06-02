@@ -521,72 +521,78 @@ footer {
 }
 
 /* ==========================================================================
-   [GOD MODE FIX V4] Perfect Editor Match & Spacing Fix
+   [CMS STANDARD FIX] Blogger / WordPress Style Responsive Reset
    ========================================================================== */
 
 .single-post-content {
     font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
-    line-height: 1.6 !important; /* စာကြောင်းအကွာအဝေး အနည်းငယ် လျှော့လိုက်သည် */
+    line-height: 1.7 !important;
     font-size: 1.05rem;
     color: var(--text-main);
     word-wrap: break-word;
-    overflow-x: hidden;
+    overflow-wrap: break-word;
 }
 
-/* Paragraph များအကြား ကွက်လပ်ကို ပုံမှန်အတိုင်း ပြန်ထားမည် */
-.single-post-content p {
-    margin-bottom: 0.5rem !important; /* အပေါ်အောက် ကွာဟမှုကို လျှော့ချလိုက်ပါပြီ */
+/* ၁။ Master Rule: မည်သည့်အရာမှ (div, p, img, span) Screen အပြင်မထွက်စေရ 
+   ဤအချက်က Scrollbar ပြဿနာကို အပြီးတိုင် ဖြေရှင်းပေးပါသည် */
+.single-post-content * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
+
+/* ၂။ TinyMCE မှ ထည့်ထားသော Fixed Height များကြောင့် ကွက်လပ်ကြီးများ ဖြစ်ခြင်းကို တားဆီးမည် */
+.single-post-content p,
+.single-post-content div,
+.single-post-content span {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+}
+
 .single-post-content p:empty {
     display: none !important;
 }
 
-/* ၁။ ပုံများ (Images) - အကွာအဝေး (Margin) များကို အတင်းအကျပ် မချဲ့တော့ပါ */
+/* ၃။ ပုံများ (Blogger Style) - နေရာလွတ်ရှိလျှင် ဘေးတိုက်စီမည်၊ ဖုန်းတွင် အလိုလို သေးသွားမည် */
 .single-post-content img {
-    max-width: 100% !important; /* ဖုန်းထက် မကြီးသွားစေရန်သာ တားထားသည် */
-    height: auto !important;    /* အချိုးမပျက်စေရန် */
+    max-width: 100% !important;
+    height: auto !important;
+    display: inline-block;
+    vertical-align: middle;
     border-radius: 6px;
-    margin: 3px; /* အရင်က 1.5rem အစား ပုံတစ်ပုံချင်းစီကြား အနည်းငယ်သာ ခြားထားမည် */
-    vertical-align: bottom !important; /* ပုံများ ဘေးတိုက်စီသည့်အခါ အောက်ခြေညီစေရန် သတ်မှတ်လိုက်ပါပြီ */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin: 5px; /* ပုံများအကြား အနည်းငယ်သာ ခြားမည် */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-/* ၂။ Iframe & Video Wrapper (16:9) */
-.responsive-media-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; 
-    height: 0;
-    overflow: hidden;
-    margin: 1.5rem 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.responsive-media-wrapper iframe,
-.responsive-media-wrapper video {
-    position: absolute;
-    top: 0;
-    left: 0;
+/* ၄။ Video & Iframe များကို Wrapper မလိုဘဲ အချိုးကျစေမည် (Modern CMS Style) */
+.single-post-content iframe,
+.single-post-content video,
+.ql-video {
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 12px;
+    margin: 1.5rem 0 !important;
     border: none !important;
 }
 
-/* ၃။ ဇယားများ (Tables) */
+/* ၅။ ဇယားများ (Tables) - Blogger ကဲ့သို့ ဇယားကြီးသွားလျှင် ဇယားနေရာလေးသာ Scroll ဆွဲ၍ရမည် */
 .single-post-content table {
     width: 100% !important;
     border-collapse: collapse;
     margin: 1.5rem 0;
-    table-layout: auto !important; 
-}
-.single-post-content table td,
-.single-post-content table th {
-    padding: 8px !important; 
-    vertical-align: top;
-    word-wrap: break-word;
+    display: block;
+    overflow-x: auto; /* Screen ကိုမရွှေ့ဘဲ ဇယားထဲတွင်သာ ရွှေ့နိုင်သည် */
 }
 
-/* ဖုန်းအတွက် (Mobile View) */
+.single-post-content td,
+.single-post-content th {
+    padding: 10px !important;
+    border: 1px solid var(--border-color);
+    min-width: 100px;
+}
+
+/* ဖုန်းအတွက် သီးသန့် */
 @media (max-width: 768px) {
     .single-post-content { font-size: 1rem; }
 }
