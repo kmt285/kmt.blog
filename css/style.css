@@ -521,7 +521,7 @@ footer {
 }
 
 /* ==========================================================================
-   [GOD MODE FIX] Content Box & Media Responsive Force (Final Update)
+   [GOD MODE FIX V2] Perfect Responsive Media Cleaner
    ========================================================================== */
 
 .single-post-content {
@@ -533,56 +533,41 @@ footer {
     overflow-x: hidden;
 }
 
-/* ၁။ ခလုတ်နှင့် အဝေးကြီးဖြစ်နေသော ကွက်လပ် (Gap) များကို ရှင်းလင်းခြင်း 
-   TinyMCE မှ အလိုအလျောက် ထည့်လိုက်သော ပုံအုပ်ထားသည့် Tag များ၏ Fixed Height များကို အပြတ်ရှင်းပါသည် */
-.single-post-content p,
-.single-post-content div,
-.single-post-content span,
-.single-post-content figure,
-.single-post-content a {
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    width: auto !important;
-    max-width: 100% !important;
-    overflow: visible !important;
-}
-
-/* ပိုနေသော ကွက်လပ်အလွတ်များကို ဖျောက်ရန် */
-.single-post-content p:empty {
-    display: none !important;
-}
-
-/* ၂။ ပုံများ (Images) - ပြားမသွားစေရန် နှင့် အချိုးကျစေရန် */
+/* ၁။ ပုံများ (Images) - TinyMCE အမှိုက်များကင်းစင်သွားသဖြင့် လွတ်လပ်စွာ အချိုးချနိုင်ပြီ */
 .single-post-content img {
-    width: 100% !important; 
-    max-width: 100% !important; 
-    height: auto !important;    
-    aspect-ratio: auto !important; /* ပုံမူလအချိုးအတိုင်း သဘာဝကျကျထားမည် */
-    object-fit: contain !important; 
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     display: block !important;
     margin: 1.5rem auto !important;
-    float: none !important; 
 }
 
-/* ၃။ ဗီဒီယို နှင့် Iframe များ (Windows 11) - Scrollbar ငြိခြင်း၊ ပြားသွားခြင်းကို ဖြေရှင်းခြင်း */
-.single-post-content iframe,
-.single-post-content video,
-.ql-video {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important; 
-    aspect-ratio: 16 / 9 !important; /* ဗီဒီယိုများအတွက် ၁၆:၉ အချိုး */
-    min-height: 250px !important; /* ဖုန်းတွင် လုံးဝပြားမသွားစေရန် အနည်းဆုံးအမြင့် ၂၅၀ ဖမ်းထားသည် */
+/* ၂။ Iframe & Video Wrapper (Industry Standard 16:9 Ratio - လုံးဝ ပြားမသွားတော့ပါ) */
+.responsive-media-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    margin: 1.5rem 0;
     border-radius: 12px;
-    margin: 1.5rem 0 !important;
-    border: none !important;
-    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* ၄။ ဇယားများ (Tables) */
+.responsive-media-wrapper iframe,
+.responsive-media-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+}
+
+/* ၃။ ဇယားများ (Tables) */
 .single-post-content table {
     width: 100% !important;
     border-collapse: collapse;
@@ -598,11 +583,9 @@ footer {
     overflow: hidden !important;
 }
 
-/* ဖုန်းအတွက် သီးသန့် အချိုးချခြင်း (Mobile Overrides) */
+/* ဖုန်းအတွက် (Mobile View) */
 @media (max-width: 768px) {
-    .single-post-content {
-        font-size: 1rem; 
-    }
+    .single-post-content { font-size: 1rem; }
     
     .single-post-content table, 
     .single-post-content tbody, 
