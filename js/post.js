@@ -57,7 +57,44 @@ try {
 
         const categoryName = post.category ? post.category.name : 'Uncategorized';
         const postDate = new Date(post.createdAt).toLocaleDateString();
-        // ဤနေရာတွင် Views ယူသည့် Code ကို ဖယ်ရှားလိုက်ပါသည်
+
+        const categoryName = post.category ? post.category.name : 'Uncategorized';
+        const postDate = new Date(post.createdAt).toLocaleDateString();
+
+        // --- ဤနေရာမှစ၍ အသစ်ထည့်ပါ (TinyMCE Styles များကို ရှင်းလင်းခြင်း) ---
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(post.content, 'text/html');
+
+        // ၁။ ပုံများနှင့် Element အားလုံးမှ fixed height/width များကို အတင်းဖြတ်ထုတ်မည်
+        doc.querySelectorAll('*').forEach(el => {
+            el.style.removeProperty('height');
+            el.style.removeProperty('width');
+            if (el.tagName === 'IMG' || el.tagName === 'IFRAME' || el.tagName === 'VIDEO') {
+                el.removeAttribute('height');
+                el.removeAttribute('width');
+            }
+        });
+
+        // ၂။ Iframe များနှင့် Video များကို 16:9 အတိအကျဖြစ်စေရန် Wrapper ဖြင့် အုပ်ပေးမည်
+        doc.querySelectorAll('iframe, video').forEach(media => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'responsive-media-wrapper';
+            media.parentNode.insertBefore(wrapper, media);
+            wrapper.appendChild(media);
+        });
+
+        const cleanedContent = doc.body.innerHTML;
+        // --- အသစ်ထည့်ခြင်း ပြီးဆုံးပါပြီ ---
+
+        // အောက်ပါ html တွင် post.content အစား cleanedContent ဟု ပြောင်းပေးပါ
+        let html = `
+            <div class="single-post-header">
+                <span class="single-post-meta">${categoryName} • ${postDate}</span>
+                <h1 class="single-post-title">${post.title}</h1>
+            </div>
+            <div class="single-post-content" style="padding: 0;">${cleanedContent}</div>
+        `;
+        
 
         let html = `
             <div class="single-post-header">
