@@ -5,6 +5,14 @@ const API_URL = 'https://kmt285476.onrender.com/api';
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
     const categoryNav = document.getElementById('categoryMenu'); 
+
+    // --- Random Logo ပြောင်းသည့် စနစ် ---
+    const logoFiles = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png','7.png', '8.png','9.png']; 
+    const randomLogo = logoFiles[Math.floor(Math.random() * logoFiles.length)];
+    const logoImg = document.querySelector('.site-logo');
+    if (logoImg) {
+        logoImg.src = `images/${randomLogo}`;
+
     
     // UI Containers များကို ဖမ်းယူခြင်း
     const defaultView = document.getElementById('defaultView');
