@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postId = urlParams.get('id');
     const container = document.getElementById('singlePostContainer');
 
-    // --- Theme Toggle ---
     const themeToggleBtn = document.getElementById('themeToggle');
     const moonIcon = document.getElementById('moonIcon');
     const sunIcon = document.getElementById('sunIcon');
@@ -51,30 +50,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const categoryName = post.category ? post.category.name : 'Uncategorized';
         const postDate = new Date(post.createdAt).toLocaleDateString();
 
-        // --- Editor Data ကို ပြင်ဆင်ခြင်း (Layout များကို မထိခိုက်စေရန် အဆင့်မြှင့်ထားသည်) ---
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(post.content, 'text/html');
-
-        // Iframe များကိုသာ အချိုးမှန်အောင် Wrapper ခံမည် (ပုံများကို မထိတော့ပါ)
-        doc.querySelectorAll('iframe, video').forEach(media => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'responsive-media-wrapper';
-            media.parentNode.insertBefore(wrapper, media);
-            wrapper.appendChild(media);
-            media.removeAttribute('height');
-            media.removeAttribute('width');
-            media.style.removeProperty('height');
-            media.style.removeProperty('width');
-        });
-
-        const cleanedContent = doc.body.innerHTML;
-
         let html = `
             <div class="single-post-header">
                 <span class="single-post-meta">${categoryName} • ${postDate}</span>
                 <h1 class="single-post-title">${post.title}</h1>
             </div>
-            <div class="single-post-content" style="padding: 0;">${cleanedContent}</div>
+            <div class="single-post-content" style="padding: 0;">${post.content}</div>
         `;
 
         if (post.fileUrl) {
