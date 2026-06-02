@@ -62,7 +62,7 @@ nav a.active { background-color: var(--accent-color); color: #ffffff !important;
 /* Main Content & Grid */
 .container { max-width: 1000px; margin: 0 auto; padding: 0.5rem 20px 2rem 20px; }
 .search-bar { width: 100%; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main); font-size: 1rem; outline: none; box-shadow: var(--shadow-sm); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.search-bar:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(255, 66, 0, 0.1); }
+.search-bar:focus { border-color: var(--accent-color); }
 #filterTitle { background-color: var(--nav-pill-bg); padding: 1rem 1.5rem; border-radius: 8px; display: inline-block; margin-bottom: 2.5rem; font-size: 1.3rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); }
 .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-main); padding-left: 12px; border-left: 4px solid var(--accent-color); }
 .slider-section { margin-bottom: 3.5rem; width: 100%; overflow: hidden; }
