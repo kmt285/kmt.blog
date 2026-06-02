@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoImg = document.querySelector('.site-logo');
     if (logoImg) {
         logoImg.src = `images/${randomLogo}`;
+    }
 
     
     // UI Containers များကို ဖမ်းယူခြင်း
