@@ -16,13 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let allPosts = []; 
     let categories = []; 
 
-    // --- Theme (Dark Mode / Light Mode) ခလုတ် လုပ်ဆောင်ချက် (Professional SVG) ---
+    // --- Theme (Dark Mode / Light Mode) ခလုတ် လုပ်ဆောင်ချက် ---
     const themeToggleBtn = document.getElementById('themeToggle');
     const moonIcon = document.getElementById('moonIcon');
     const sunIcon = document.getElementById('sunIcon');
     const currentTheme = localStorage.getItem('theme');
 
-    // ယခင်က Dark Mode သုံးထားလျှင် Page အားလုံးတွင် အလိုအလျောက် ပြန်ခေါ်ရန်
     if (currentTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         if (moonIcon && sunIcon) {
@@ -49,12 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-// ၁။ စတင်ချိန်တွင် Data အားလုံးကို ဆွဲယူမည်
+    // ၁။ စတင်ချိန်တွင် Data အားလုံးကို ဆွဲယူမည်
     async function initApp() {
         const loadingOverlay = document.getElementById('loadingOverlay');
         
         try {
-            // Data များ ဆွဲယူခြင်း
             const [catRes, postRes] = await Promise.all([
                 fetch(`${API_URL}/categories`),
                 fetch(`${API_URL}/posts?page=1&limit=200`) 
@@ -71,13 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error initializing app:', error);
             slidersContainer.innerHTML = '<p style="color: red; text-align: center;">Failed to load data. Server might be sleeping. Please refresh.</p>';
         } finally {
-            // အောင်မြင်သည်ဖြစ်စေ၊ ကျရှုံးသည်ဖြစ်စေ Loading Overlay ကို ညင်သာစွာ ဖျောက်မည်
             if (loadingOverlay) {
                 loadingOverlay.classList.add('fade-out');
             }
         }
     }
-// ၂။ Menu တည်ဆောက်ခြင်း (Desktop မြှားခလုတ်စနစ်ဖြင့်)
+
+    // ၂။ Menu တည်ဆောက်ခြင်း (Desktop မြှားခလုတ်စနစ်ဖြင့်)
     function buildCategoryMenu() {
         categoryNav.innerHTML = `<li><a href="#" class="active" data-id="">All</a></li>`;
         
@@ -86,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryNav.innerHTML += `<li><a href="#" data-id="${cat._id}">${cat.name}</a></li>`;
         });
 
-        // --- Category နှိပ်သည့်အခါ အလုပ်လုပ်မည့်စနစ် ---
         const navLinks = categoryNav.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -114,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-// --- Desktop မြှားခလုတ် (Left / Right) ဖြင့် ညင်သာစွာ Scroll ရွှေ့ခြင်း ---
         const scrollLeftBtn = document.getElementById('scrollLeftBtn');
         const scrollRightBtn = document.getElementById('scrollRightBtn');
 
@@ -125,14 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 scrollLeftBtn.style.display = 'flex';
                 scrollRightBtn.style.display = 'flex';
             } else {
-                // Scroll ဆွဲစရာ မလိုလျှင် ခလုတ်များကို ဖျောက်ထားမည်
                 scrollLeftBtn.style.display = 'none';
                 scrollRightBtn.style.display = 'none';
             }
         }
 
         if (scrollLeftBtn && scrollRightBtn) {
-            // Button များ နှိပ်လျှင် အလုပ်လုပ်မည့် စနစ်
             scrollLeftBtn.addEventListener('click', () => {
                 categoryNav.scrollBy({ left: -250, behavior: 'smooth' });
             });
@@ -141,47 +135,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 categoryNav.scrollBy({ left: 250, behavior: 'smooth' });
             });
 
-            // Data များ ဝင်လာပြီး UI နေရာချပြီးချိန်တွင် ခလုတ်ပြ/မပြ စစ်ဆေးရန် (setTimeout ဖြင့် အနည်းငယ် စောင့်ပြီးမှ စစ်ပါသည်)
             setTimeout(toggleScrollButtons, 100); 
-
-            // Window Size အကျယ် ပြောင်းလဲသွားတိုင်း (ဥပမာ Browser ကို ချုံ့/ချဲ့ လုပ်တိုင်း) အလိုအလျောက် ပြန်စစ်ဆေးပေးမည်
             window.addEventListener('resize', toggleScrollButtons);
         }
     }
     
-    // ၃။ Home Page ပြသခြင်း (Slider အကန့်အသတ် နှင့် Slider အတွင်းရှိ Post များ Random စနစ်)
+    // ၃။ Home Page ပြသခြင်း
     function renderDefaultHomeView() {
         slidersContainer.innerHTML = ''; 
 
-        // ၃.၁ - Recently Added Slider (ဒါကိုတော့ အသစ်အတိုင်းပဲ အသေထားပါမည်)
         const recentPosts = allPosts.slice(0, 10);
         if (recentPosts.length > 0) {
             slidersContainer.appendChild(createSliderSection('Recently Added', recentPosts));
         }
 
-        // ၃.၂ - Category Sliders ကို Random စနစ်ဖြင့် ၄ ခု သာ ကန့်သတ်ပြသမည်
         const shuffledCategories = [...categories].sort(() => 0.5 - Math.random());
-        
         const maxSlidersToShow = 4; 
         let sliderCount = 0;
 
         for (const cat of shuffledCategories) {
             if (sliderCount >= maxSlidersToShow) break; 
 
-            // ထို Category နှင့် သက်ဆိုင်သော Post များကို ရွေးထုတ်ခြင်း
             let catPosts = allPosts.filter(p => p.category && p.category._id === cat._id);
             
             if (catPosts.length > 0) {
-                // *** ဤနေရာတွင် Category အတွင်းရှိ Post များကိုပါ Random (ကျပန်း) ဖြစ်အောင် လုပ်လိုက်ပါသည် ***
                 catPosts = catPosts.sort(() => 0.5 - Math.random());
-
                 slidersContainer.appendChild(createSliderSection(cat.name, catPosts));
                 sliderCount++;
             }
         }
     }
 
-// ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function (Desktop Momentum Scroll ပါဝင်သည်)
+    // ၄။ Slider တစ်ခုချင်းစီကို ဖန်တီးပေးသော Function
     function createSliderSection(title, posts) {
         const section = document.createElement('div');
         section.className = 'slider-section';
@@ -194,20 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
             slider.innerHTML += buildCardHTML(post, 'slider-card');
         });
         
-        // --- Desktop အတွက် Momentum Drag-to-Scroll စနစ် ---
         let isDown = false;
         let startX;
         let scrollLeft;
-        let velX = 0; // အရှိန် (Velocity) ကို မှတ်သားရန်
-        let momentumID; // Animation ကို ထိန်းချုပ်ရန်
+        let velX = 0; 
+        let momentumID; 
 
         slider.addEventListener('mousedown', (e) => {
             isDown = true;
             slider.classList.add('active');
             startX = e.pageX - slider.offsetLeft;
             scrollLeft = slider.scrollLeft;
-            
-            // အသစ်ပြန်ဆွဲပါက ယခင်အရှိန်ကို ချက်ချင်းရပ်မည်
             cancelAnimationFrame(momentumID); 
         });
         
@@ -215,13 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDown) return;
             isDown = false;
             slider.classList.remove('active');
-            beginMomentumTracking(); // Mouse အပြင်ရောက်သွားလျှင် အရှိန်ဖြင့် ဆက်သွားစေရန်
+            beginMomentumTracking(); 
         });
         
         slider.addEventListener('mouseup', () => {
             isDown = false;
             slider.classList.remove('active');
-            beginMomentumTracking(); // Mouse လွှတ်လိုက်လျှင် အရှိန်ဖြင့် ဆက်သွားစေရန်
+            beginMomentumTracking(); 
         });
         
         slider.addEventListener('mousemove', (e) => {
@@ -231,23 +213,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const x = e.pageX - slider.offsetLeft;
             const walk = (x - startX) * 1.5; 
             
-            // လက်ရှိနေရာနှင့် ရွှေ့လိုက်သောနေရာကြားမှ အရှိန် (Velocity) ကို တွက်ချက်ခြင်း
             const prevScrollLeft = slider.scrollLeft;
             slider.scrollLeft = scrollLeft - walk;
             velX = slider.scrollLeft - prevScrollLeft; 
         });
 
-        // --- အရှိန်ဖြင့် လိမ့်သွားစေရန် (Momentum / Inertia) တွက်ချက်သော စနစ် ---
         function beginMomentumTracking() {
             cancelAnimationFrame(momentumID);
             momentumID = requestAnimationFrame(momentumLoop);
         }
 
         function momentumLoop() {
-            // အရှိန်ရှိနေသေးလျှင် ဆက်ရွှေ့မည်
             if (Math.abs(velX) > 0.5) { 
                 slider.scrollLeft += velX;
-                velX *= 0.92; // 0.92 သည် အရှိန်တဖြည်းဖြည်း လျော့ကျသွားမည့် ပမာဏ (Friction) ဖြစ်သည်
+                velX *= 0.92; 
                 momentumID = requestAnimationFrame(momentumLoop);
             }
         }
@@ -256,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return section;
     }
 
-    // ၅။ Search (သို့) သီးသန့် Category အတွက် Grid ပြသသော Function
+    // ၅။ Search (သို့) သီးသန့် Category အတွက် Grid
     function renderGrid(posts, container) {
         container.innerHTML = '';
         if (posts.length === 0) {
@@ -268,12 +247,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-// ၆။ Card HTML Helper
+    // ၆။ Card HTML Helper (Views ဖယ်ရှားထားပြီးပါပြီ)
     function buildCardHTML(post, className) {
         const categoryName = post.category ? post.category.name : 'Uncategorized';
-        const viewsCount = post.views || 0; // View အရေအတွက်ကို ဖမ်းယူမည်
 
-        // --- ပုံဆွဲထုတ်သည့် စနစ် ---
+        // ပုံဆွဲထုတ်သည့် စနစ်
         const imgMatch = post.content.match(/<img[^>]+src=["']([^"']+)["']/);
         const thumbnailUrl = imgMatch ? imgMatch[1] : 'https://placehold.co/600x400/eeeeee/FF4200?text=No+Image';
 
@@ -284,13 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="post-category">${categoryName}</span>
                     <h2 class="post-title" style="font-size: 1.1rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">${post.title}</h2>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto;">
+                    <div style="margin-top: auto;">
                         <a href="post.html?id=${post._id}" class="read-more" style="margin-top: 0;">Read Full Post</a>
-                        
-                        <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 5px;">
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                            ${viewsCount > 999 ? (viewsCount/1000).toFixed(1) + 'K' : viewsCount}
-                        </span>
                     </div>
                 </div>
             </div>
@@ -316,6 +289,5 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGrid(filtered, filteredGridContainer);
     });
 
-    // အားလုံး အသင့်ဖြစ်လျှင် စတင်ခေါ်ယူမည်
     initApp();
 });
