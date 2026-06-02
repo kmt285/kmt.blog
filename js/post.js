@@ -58,9 +58,6 @@ try {
         const categoryName = post.category ? post.category.name : 'Uncategorized';
         const postDate = new Date(post.createdAt).toLocaleDateString();
 
-        const categoryName = post.category ? post.category.name : 'Uncategorized';
-        const postDate = new Date(post.createdAt).toLocaleDateString();
-
         // --- ဤနေရာမှစ၍ အသစ်ထည့်ပါ (TinyMCE Styles များကို ရှင်းလင်းခြင်း) ---
         const parser = new DOMParser();
         const doc = parser.parseFromString(post.content, 'text/html');
