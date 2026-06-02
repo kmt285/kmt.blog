@@ -521,7 +521,7 @@ footer {
 }
 
 /* ==========================================================================
-   [GOD MODE FIX V2] Perfect Responsive Media Cleaner
+   [GOD MODE FIX V3] Layout Preserver & Mobile Optimizer
    ========================================================================== */
 
 .single-post-content {
@@ -533,30 +533,36 @@ footer {
     overflow-x: hidden;
 }
 
-/* ၁။ ပုံများ (Images) - TinyMCE အမှိုက်များကင်းစင်သွားသဖြင့် လွတ်လပ်စွာ အချိုးချနိုင်ပြီ */
-.single-post-content img {
-    width: 100% !important;
-    max-width: 100% !important;
+/* ခလုတ်များနှင့် ကွာဟနေသော အလွတ် (Gap) များကို ပြန်လည်ထိန်းချုပ်ခြင်း */
+.single-post-content p {
     height: auto !important;
-    object-fit: contain !important;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    display: block !important;
-    margin: 1.5rem auto !important;
+    max-height: none !important;
+}
+.single-post-content p:empty {
+    display: none !important;
 }
 
-/* ၂။ Iframe & Video Wrapper (Industry Standard 16:9 Ratio - လုံးဝ ပြားမသွားတော့ပါ) */
+/* ၁။ ပုံများ (Images) - Editor ထဲက အရွယ်အစားနှင့် အစီအစဥ်ကို လေးစားမည်၊ သို့သော် ဖုန်းအပြင်သို့ မထွက်စေရ */
+.single-post-content img {
+    max-width: 100% !important; /* ဖုန်းထက် မကြီးသွားစေရန်သာ တားထားသည် */
+    height: auto !important;    /* အချိုးမပျက်စေရန် */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: inline-block;      /* ဘေးတိုက်ကပ်ခွင့်ပြုသည် */
+    vertical-align: middle;     /* အထက်အောက် ညီစေရန် */
+}
+
+/* ၂။ Iframe & Video Wrapper (16:9) */
 .responsive-media-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    padding-bottom: 56.25%; /* 16:9 Ratio */
     height: 0;
     overflow: hidden;
     margin: 1.5rem 0;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
 .responsive-media-wrapper iframe,
 .responsive-media-wrapper video {
     position: absolute;
@@ -572,33 +578,16 @@ footer {
     width: 100% !important;
     border-collapse: collapse;
     margin: 1.5rem 0;
-    table-layout: fixed !important; 
+    table-layout: auto !important; /* Editor Layout အတိုင်း ပြန်ထားမည် */
 }
-
 .single-post-content table td,
 .single-post-content table th {
-    padding: 15px !important; 
+    padding: 8px !important; 
     vertical-align: top;
     word-wrap: break-word;
-    overflow: hidden !important;
 }
 
-/* ဖုန်းအတွက် (Mobile View) */
+/* ဖုန်းအတွက် (Mobile View) - စာလုံးအရွယ်အစားကိုသာ အနည်းငယ်လျှော့မည် */
 @media (max-width: 768px) {
     .single-post-content { font-size: 1rem; }
-    
-    .single-post-content table, 
-    .single-post-content tbody, 
-    .single-post-content tr, 
-    .single-post-content td,
-    .single-post-content th {
-        display: block !important; 
-        width: 100% !important;
-    }
-    
-    .single-post-content table td,
-    .single-post-content table th {
-        padding: 10px 0 !important; 
-        border: none !important;
-    }
 }
