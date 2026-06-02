@@ -521,7 +521,7 @@ footer {
 }
 
 /* ==========================================================================
-   [GOD MODE FIX] Content Box & Media Responsive Force
+   [GOD MODE FIX] Content Box & Media Responsive Force (Final Update)
    ========================================================================== */
 
 .single-post-content {
@@ -533,27 +533,33 @@ footer {
     overflow-x: hidden;
 }
 
-/* TinyMCE မှ ထည့်လိုက်သော Fixed Height များနှင့် Scrollbar များကို အပြီးတိုင် ဖျက်ပစ်မည် */
-.single-post-content * {
-    max-height: none !important;
-}
-
-/* ထပ်တိုး FIX: span နှင့် a tag များကိုပါ ထည့်သွင်းပြီး scrollbar ကို အပြတ်ရှင်းပါသည် */
-.single-post-content div,
+/* ၁။ ခလုတ်နှင့် အဝေးကြီးဖြစ်နေသော ကွက်လပ် (Gap) များကို ရှင်းလင်းခြင်း 
+   TinyMCE မှ အလိုအလျောက် ထည့်လိုက်သော ပုံအုပ်ထားသည့် Tag များ၏ Fixed Height များကို အပြတ်ရှင်းပါသည် */
 .single-post-content p,
-.single-post-content figure,
+.single-post-content div,
 .single-post-content span,
+.single-post-content figure,
 .single-post-content a {
     height: auto !important;
-    overflow: visible !important; 
+    min-height: 0 !important;
+    max-height: none !important;
+    width: auto !important;
+    max-width: 100% !important;
+    overflow: visible !important;
 }
 
-/* ဓာတ်ပုံများ Desktop/Mobile နေရာတိုင်းတွင် အတိအကျ Responsive ဖြစ်စေရန် */
+/* ပိုနေသော ကွက်လပ်အလွတ်များကို ဖျောက်ရန် */
+.single-post-content p:empty {
+    display: none !important;
+}
+
+/* ၂။ ပုံများ (Images) - ပြားမသွားစေရန် နှင့် အချိုးကျစေရန် */
 .single-post-content img {
     width: 100% !important; 
     max-width: 100% !important; 
     height: auto !important;    
-    object-fit: contain !important;
+    aspect-ratio: auto !important; /* ပုံမူလအချိုးအတိုင်း သဘာဝကျကျထားမည် */
+    object-fit: contain !important; 
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     display: block !important;
@@ -561,21 +567,22 @@ footer {
     float: none !important; 
 }
 
-/* Iframe နှင့် Video များ ပြားမသွားစေရန် (ERROR ဖြေရှင်းထားသောအပိုင်း) */
+/* ၃။ ဗီဒီယို နှင့် Iframe များ (Windows 11) - Scrollbar ငြိခြင်း၊ ပြားသွားခြင်းကို ဖြေရှင်းခြင်း */
 .single-post-content iframe,
 .single-post-content video,
 .ql-video {
     width: 100% !important;
     max-width: 100% !important;
-    aspect-ratio: 16 / 9 !important; /* ၁၆:၉ အချိုးဖြင့် အမြဲပေါ်စေရန် */
-    height: unset !important; /* အရေးကြီး: auto အစား unset ပြောင်းသုံးထားပါသည် */
+    height: auto !important; 
+    aspect-ratio: 16 / 9 !important; /* ဗီဒီယိုများအတွက် ၁၆:၉ အချိုး */
+    min-height: 250px !important; /* ဖုန်းတွင် လုံးဝပြားမသွားစေရန် အနည်းဆုံးအမြင့် ၂၅၀ ဖမ်းထားသည် */
     border-radius: 12px;
     margin: 1.5rem 0 !important;
     border: none !important;
     overflow: hidden !important;
 }
 
-/* ဇယားများ (Tables) */
+/* ၄။ ဇယားများ (Tables) */
 .single-post-content table {
     width: 100% !important;
     border-collapse: collapse;
@@ -591,7 +598,7 @@ footer {
     overflow: hidden !important;
 }
 
-/* MOBILE RESPONSIVE (ဖုန်းအတွက် သီးသန့် အချိုးချခြင်း) */
+/* ဖုန်းအတွက် သီးသန့် အချိုးချခြင်း (Mobile Overrides) */
 @media (max-width: 768px) {
     .single-post-content {
         font-size: 1rem; 
