@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postId = urlParams.get('id');
     const container = document.getElementById('singlePostContainer');
 
+        // --- Random Logo ပြောင်းသည့် စနစ် ---
+    const logoFiles = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png','7.png', '8.png','9.png']; 
+    const randomLogo = logoFiles[Math.floor(Math.random() * logoFiles.length)];
+    const logoImg = document.querySelector('.site-logo');
+    if (logoImg) {
+        logoImg.src = `images/${randomLogo}`;
+
     // Theme Toggle
     const themeToggleBtn = document.getElementById('themeToggle');
     const moonIcon = document.getElementById('moonIcon');
