@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postId = urlParams.get('id');
     const container = document.getElementById('singlePostContainer');
 
+    // Theme Toggle
     const themeToggleBtn = document.getElementById('themeToggle');
     const moonIcon = document.getElementById('moonIcon');
     const sunIcon = document.getElementById('sunIcon');
