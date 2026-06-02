@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const postId = urlParams.get('id');
     const container = document.getElementById('singlePostContainer');
 
-    // --- Theme (Dark Mode / Light Mode) ခလုတ် လုပ်ဆောင်ချက် ---
+    // --- Theme Toggle ---
     const themeToggleBtn = document.getElementById('themeToggle');
     const moonIcon = document.getElementById('moonIcon');
     const sunIcon = document.getElementById('sunIcon');
@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
             let theme = document.documentElement.getAttribute('data-theme');
-            
             if (theme === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (!container) return;
-
     if (!postId) {
         container.innerHTML = '<p style="text-align: center;">Post not found.</p>';
         return;
@@ -53,29 +51,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         const categoryName = post.category ? post.category.name : 'Uncategorized';
         const postDate = new Date(post.createdAt).toLocaleDateString();
 
-        // --- TinyMCE Styles များကို ရှင်းလင်းခြင်း (အမှိုက်များ ဖယ်ရှားခြင်း) ---
+        // --- Editor Data ကို ပြင်ဆင်ခြင်း (Layout များကို မထိခိုက်စေရန် အဆင့်မြှင့်ထားသည်) ---
         const parser = new DOMParser();
         const doc = parser.parseFromString(post.content, 'text/html');
 
-        doc.querySelectorAll('*').forEach(el => {
-            el.style.removeProperty('height');
-            el.style.removeProperty('width');
-            if (el.tagName === 'IMG' || el.tagName === 'IFRAME' || el.tagName === 'VIDEO') {
-                el.removeAttribute('height');
-                el.removeAttribute('width');
-            }
-        });
-
+        // Iframe များကိုသာ အချိုးမှန်အောင် Wrapper ခံမည် (ပုံများကို မထိတော့ပါ)
         doc.querySelectorAll('iframe, video').forEach(media => {
             const wrapper = document.createElement('div');
             wrapper.className = 'responsive-media-wrapper';
             media.parentNode.insertBefore(wrapper, media);
             wrapper.appendChild(media);
+            media.removeAttribute('height');
+            media.removeAttribute('width');
+            media.style.removeProperty('height');
+            media.style.removeProperty('width');
         });
 
         const cleanedContent = doc.body.innerHTML;
 
-        // --- HTML အထွက် ---
         let html = `
             <div class="single-post-header">
                 <span class="single-post-meta">${categoryName} • ${postDate}</span>
@@ -84,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="single-post-content" style="padding: 0;">${cleanedContent}</div>
         `;
 
-        // Download Button ပြန်ထည့်ခြင်း
         if (post.fileUrl) {
             html += `<div style="text-align: center; margin-top: 2rem;">
                         <a href="${post.fileUrl}" target="_blank" class="download-btn">Download File / Source</a>
