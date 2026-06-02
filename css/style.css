@@ -521,42 +521,41 @@ footer {
 }
 
 /* ==========================================================================
-   [GOD MODE FIX V3] Layout Preserver & Mobile Optimizer
+   [GOD MODE FIX V4] Perfect Editor Match & Spacing Fix
    ========================================================================== */
 
 .single-post-content {
     font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
-    line-height: 1.8 !important;
+    line-height: 1.6 !important; /* စာကြောင်းအကွာအဝေး အနည်းငယ် လျှော့လိုက်သည် */
     font-size: 1.05rem;
     color: var(--text-main);
     word-wrap: break-word;
     overflow-x: hidden;
 }
 
-/* ခလုတ်များနှင့် ကွာဟနေသော အလွတ် (Gap) များကို ပြန်လည်ထိန်းချုပ်ခြင်း */
+/* Paragraph များအကြား ကွက်လပ်ကို ပုံမှန်အတိုင်း ပြန်ထားမည် */
 .single-post-content p {
-    height: auto !important;
-    max-height: none !important;
+    margin-bottom: 0.5rem !important; /* အပေါ်အောက် ကွာဟမှုကို လျှော့ချလိုက်ပါပြီ */
 }
 .single-post-content p:empty {
     display: none !important;
 }
 
-/* ၁။ ပုံများ (Images) - Editor ထဲက အရွယ်အစားနှင့် အစီအစဥ်ကို လေးစားမည်၊ သို့သော် ဖုန်းအပြင်သို့ မထွက်စေရ */
+/* ၁။ ပုံများ (Images) - အကွာအဝေး (Margin) များကို အတင်းအကျပ် မချဲ့တော့ပါ */
 .single-post-content img {
     max-width: 100% !important; /* ဖုန်းထက် မကြီးသွားစေရန်သာ တားထားသည် */
     height: auto !important;    /* အချိုးမပျက်စေရန် */
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    display: inline-block;      /* ဘေးတိုက်ကပ်ခွင့်ပြုသည် */
-    vertical-align: middle;     /* အထက်အောက် ညီစေရန် */
+    border-radius: 6px;
+    margin: 3px; /* အရင်က 1.5rem အစား ပုံတစ်ပုံချင်းစီကြား အနည်းငယ်သာ ခြားထားမည် */
+    vertical-align: bottom !important; /* ပုံများ ဘေးတိုက်စီသည့်အခါ အောက်ခြေညီစေရန် သတ်မှတ်လိုက်ပါပြီ */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 /* ၂။ Iframe & Video Wrapper (16:9) */
 .responsive-media-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Ratio */
+    padding-bottom: 56.25%; 
     height: 0;
     overflow: hidden;
     margin: 1.5rem 0;
@@ -578,7 +577,7 @@ footer {
     width: 100% !important;
     border-collapse: collapse;
     margin: 1.5rem 0;
-    table-layout: auto !important; /* Editor Layout အတိုင်း ပြန်ထားမည် */
+    table-layout: auto !important; 
 }
 .single-post-content table td,
 .single-post-content table th {
@@ -587,7 +586,7 @@ footer {
     word-wrap: break-word;
 }
 
-/* ဖုန်းအတွက် (Mobile View) - စာလုံးအရွယ်အစားကိုသာ အနည်းငယ်လျှော့မည် */
+/* ဖုန်းအတွက် (Mobile View) */
 @media (max-width: 768px) {
     .single-post-content { font-size: 1rem; }
 }
