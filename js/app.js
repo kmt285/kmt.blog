@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     defaultView.classList.add('hidden');
                     filteredView.classList.remove('hidden');
-                    filterTitle.innerText = `Category: ${catName}`;
+                    filterTitle.innerText = catName ;
                     
                     const filteredPosts = allPosts.filter(p => p.category && p.category._id === catId);
                     renderGrid(filteredPosts, filteredGridContainer);
