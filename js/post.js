@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('singlePostContainer');
 
         // --- Random Logo ပြောင်းသည့် စနစ် ---
-    const logoFiles = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png','7.png', '8.png','9.png', '10.png','11.png', '12.png','13.png']; 
+    const logoFiles = ['1 (1).png', '1 (2).png', '1 (3).png', '1 (4).png', '1 (5).png', '1 (6).png','1 (7).png', '1 (8).png','1 (9).png', '1 (10).png','1 (11).png', '1 (12).png','1 (13).png', '1 (14).png','1 (15).png', '1 (16).png','1 (17).png', '1 (18).png','1 (19).png', '1 (20).png'];
     const randomLogo = logoFiles[Math.floor(Math.random() * logoFiles.length)];
     const logoImg = document.querySelector('.site-logo');
     if (logoImg) {
