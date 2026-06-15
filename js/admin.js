@@ -278,4 +278,63 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('catMessage').innerText = 'Added!'; document.getElementById('newCategoryName').value = '';
         loadCategories(); setTimeout(() => document.getElementById('catMessage').innerText = '', 2000);
     });
+
+    // ==========================================
+    // ၅။ Change Password (စကားဝှက်ပြောင်းရန် စနစ်)
+    // ==========================================
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const pwdMessage = document.getElementById('pwdMessage');
+            const changePwdBtn = document.getElementById('changePwdBtn');
+
+            // Password အသစ် နှစ်ခု တူညီမှု ရှိ/မရှိ စစ်ဆေးခြင်း
+            if (newPassword !== confirmNewPassword) {
+                pwdMessage.style.color = 'red';
+                pwdMessage.innerText = 'စကားဝှက်အသစ် နှစ်ခု တူညီမှုမရှိပါ။';
+                return;
+            }
+
+            changePwdBtn.innerText = 'Updating...';
+            changePwdBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_URL}/auth/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({ oldPassword, newPassword })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    pwdMessage.style.color = 'green';
+                    pwdMessage.innerText = 'Password အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။ ခေတ္တစောင့်ပါ...';
+                    changePasswordForm.reset();
+                    
+                    // လုံခြုံရေးအရ စကားဝှက်အသစ်ဖြင့် ပြန်ဝင်စေရန် အလိုအလျောက် Logout လုပ်မည်
+                    setTimeout(() => {
+                        performLogout(false);
+                        alert("စကားဝှက် ပြောင်းလဲပြီးသွားပါပြီ။ ကျေးဇူးပြု၍ စကားဝှက်အသစ်ဖြင့် ပြန်လည် ဝင်ရောက်ပါ။");
+                    }, 2000);
+                } else {
+                    pwdMessage.style.color = 'red';
+                    pwdMessage.innerText = data.message || 'Error updating password';
+                }
+            } catch (err) {
+                pwdMessage.style.color = 'red';
+                pwdMessage.innerText = 'Network error. Please try again.';
+            } finally {
+                changePwdBtn.innerText = 'Update Password';
+                changePwdBtn.disabled = false;
+            }
+        });
+    }
 });
