@@ -40,6 +40,26 @@
         </div>
 
         <div style="margin-bottom: 3rem; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;">
+            <h3>Security Settings (Change Password)</h3>
+            <form id="changePasswordForm" style="margin-top: 1rem; max-width: 400px;">
+                <div class="form-group">
+                    <label>Old Password (လက်ရှိစကားဝှက်)</label>
+                    <input type="password" id="oldPassword" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password (စကားဝှက်အသစ်)</label>
+                    <input type="password" id="newPassword" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password (အသစ်ကို ထပ်ရိုက်ပါ)</label>
+                    <input type="password" id="confirmNewPassword" class="form-input" required>
+                </div>
+                <button type="submit" class="btn-primary" id="changePwdBtn" style="background-color: #dc3545;">Update Password</button>
+                <p id="pwdMessage" style="margin-top: 10px; font-weight: bold;"></p>
+            </form>
+        </div>
+
+        <div style="margin-bottom: 3rem; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 4px;">
             <h3>Manage Categories</h3>
             <form id="categoryForm" style="margin-top: 1rem; display: flex; gap: 10px;">
                 <input type="text" id="newCategoryName" class="form-input" placeholder="e.g. Software" required style="flex: 1;">
