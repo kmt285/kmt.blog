@@ -1,188 +1,201 @@
 /* ==========================================================================
-   KYAW MIN TUN - Main Stylesheet (Final Perfected CMS Build)
+   KYAW MIN TUN - Premium UI / UX Stylesheet
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
 
 :root {
-    --primary-bg: #ffffff;
-    --secondary-bg: #f8f9fa;
-    --card-bg: #ffffff;
-    --text-main: #212529;
-    --text-muted: #6c757d;
+    /* ✨ Premium Light Theme */
+    --primary-bg: #F8FAFC; /* အဖြူစစ်စစ်ထက် အနည်းငယ်မှိုင်းသော နောက်ခံ (မျက်စိအေးစေရန်) */
+    --secondary-bg: #F1F5F9;
+    --card-bg: #FFFFFF;
+    --text-main: #0F172A; /* ခဲနက်ရောင် */
+    --text-muted: #64748B;
     --accent-color: #FF5A22;
-    --border-color: #e9ecef;
-    --nav-pill-bg: #f1f3f5;
-    --nav-pill-hover: #e2e6ea;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-    --shadow-md: 0 6px 16px rgba(0,0,0,0.08);
+    --accent-gradient: linear-gradient(135deg, #FF5A22 0%, #FF3D00 100%); /* Premium Gradient */
+    --border-color: rgba(0, 0, 0, 0.06);
+    --nav-pill-bg: #FFFFFF;
+    --nav-pill-hover: #E2E8F0;
+    
+    /* ☁️ Soft UI Shadows */
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+    
+    --glass-bg: rgba(255, 255, 255, 0.85); /* မှန်လိုကြည်လင်သော နောက်ခံ */
     --font-family: 'Inter', sans-serif;
 }
 
 [data-theme="dark"] {
-    --primary-bg: #121212;
-    --secondary-bg: #1e1e1e;
-    --card-bg: #1a1a1a;
-    --text-main: #e0e0e0;
-    --text-muted: #9ca3af;
-    --accent-color: #228B22; 
-    --border-color: #2d2d2d;
-    --nav-pill-bg: #2a2a2a;
-    --nav-pill-hover: #3a3a3a;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
-    --shadow-md: 0 6px 16px rgba(0,0,0,0.6);
+    /* 🌙 Premium Dark Theme (Deep Slate Color) */
+    --primary-bg: #0B1120;
+    --secondary-bg: #111827;
+    --card-bg: #1E293B;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --accent-color: #FF6B3D;
+    --accent-gradient: linear-gradient(135deg, #FF6B3D 0%, #FF4500 100%);
+    --border-color: rgba(255, 255, 255, 0.05);
+    --nav-pill-bg: #0F172A;
+    --nav-pill-hover: #334155;
+    
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    
+    --glass-bg: rgba(11, 17, 32, 0.85);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
-html, body { font-family: var(--font-family); background-color: var(--primary-bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; width: 100%; }
+* { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+html, body { font-family: var(--font-family); background-color: var(--primary-bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; width: 100%; -webkit-font-smoothing: antialiased; }
 .hidden { display: none !important; }
 
-/* Header & Navigation */
-header { border-bottom: 1px solid var(--border-color); background-color: var(--primary-bg); padding: 1.2rem 20px; position: sticky; top: 0; z-index: 100; }
+/* =========================================
+   Glassmorphism Header 
+   ========================================= */
+header { 
+    background-color: var(--glass-bg); 
+    backdrop-filter: blur(12px); /* နောက်ခံကို ဝါးပေးခြင်း */
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color); 
+    padding: 1rem 20px; 
+    position: sticky; 
+    top: 0; 
+    z-index: 100; 
+}
 .header-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap !important; }
 .logo-wrapper { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
-.logo-text { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; color: var(--accent-color); white-space: nowrap !important; flex-shrink: 0; }
-.site-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-.theme-toggle-btn { background: var(--secondary-bg); border: 1px solid var(--border-color); color: var(--text-main); cursor: pointer; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; flex-shrink: 0; }
-.theme-toggle-btn:hover { background: var(--nav-pill-hover); }
+.logo-text { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); white-space: nowrap !important; flex-shrink: 0; }
+.logo-text span { color: var(--accent-color); } /* Logo တွင် အရောင်ခွဲရန် (Optional) */
+.site-logo { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; box-shadow: var(--shadow-sm); }
+.theme-toggle-btn { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); cursor: pointer; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; flex-shrink: 0; box-shadow: var(--shadow-sm); }
+.theme-toggle-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); color: var(--accent-color); }
 .theme-toggle-btn svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.3s ease; }
 
-/* Category Menu */
-.category-nav-container { position: relative; max-width: 1000px; margin: 1.5rem auto 1rem auto; padding: 0 45px; width: 100%; display: flex; align-items: center; }
-.nav-scroll-btn { position: absolute; top: 45%; transform: translateY(-50%); background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: var(--shadow-sm); transition: all 0.2s ease; }
-.nav-scroll-btn:hover { background-color: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+/* Category Menu (Pill Design) */
+.category-nav-container { position: relative; max-width: 1000px; margin: 2rem auto 1.5rem auto; padding: 0 45px; width: 100%; display: flex; align-items: center; }
+.nav-scroll-btn { position: absolute; top: 45%; transform: translateY(-50%); background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: var(--shadow-md); transition: all 0.2s ease; }
+.nav-scroll-btn:hover { background: var(--accent-gradient); color: #fff; border-color: transparent; transform: translateY(-50%) scale(1.1); }
 .left-btn { left: 0; } .right-btn { right: 0; }
 nav ul { list-style: none; display: flex; flex-wrap: nowrap !important; justify-content: flex-start; gap: 0.8rem; overflow-x: auto; white-space: nowrap; padding: 5px 2px 15px 2px; width: 100%; -ms-overflow-style: none; scrollbar-width: none; scroll-behavior: smooth; }
 nav ul::-webkit-scrollbar { display: none; }
 nav ul li { flex: 0 0 auto; }
-nav a { display: inline-block; text-decoration: none; color: var(--text-main); background-color: var(--nav-pill-bg); padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.9rem; font-weight: 500; border: 1px solid var(--border-color); transition: all 0.2s ease; }
-nav a:hover { background-color: var(--nav-pill-hover); }
-nav a.active { background-color: var(--accent-color); color: #ffffff !important; border-color: var(--accent-color); }
+nav a { display: inline-block; text-decoration: none; color: var(--text-main); background-color: var(--card-bg); padding: 0.6rem 1.4rem; border-radius: 30px; font-size: 0.9rem; font-weight: 500; border: 1px solid var(--border-color); transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+nav a:hover { background-color: var(--nav-pill-hover); transform: translateY(-1px); }
+nav a.active { background: var(--accent-gradient); color: #ffffff !important; border-color: transparent; box-shadow: 0 4px 12px rgba(255, 90, 34, 0.3); }
 
 /* Main Content & Grid */
 .container { max-width: 1000px; margin: 0 auto; padding: 0.5rem 20px 2rem 20px; }
-.search-bar { width: 100%; padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-main); font-size: 1rem; outline: none; box-shadow: var(--shadow-sm); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.search-bar:focus { border-color: var(--accent-color); }
-.section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-main); padding-left: 12px; border-left: 4px solid var(--accent-color); }
-.slider-section { margin-bottom: 3.5rem; width: 100%; overflow: hidden; }
-.slider-container { display: flex; overflow-x: auto; gap: 1.5rem; padding: 10px 10px 20px 10px; -ms-overflow-style: none; scrollbar-width: none; cursor: grab; user-select: none; width: 100%; }
+.search-bar { width: 100%; padding: 1.2rem 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: 16px; background-color: var(--card-bg); color: var(--text-main); font-size: 1.05rem; outline: none; box-shadow: var(--shadow-md); transition: all 0.3s ease; }
+.search-bar:focus { border-color: var(--accent-color); box-shadow: 0 0 0 4px rgba(255, 90, 34, 0.1), var(--shadow-md); }
+.section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 1.5rem; color: var(--text-main); padding-left: 12px; border-left: 4px solid var(--accent-color); }
+.slider-section { margin-bottom: 4rem; width: 100%; overflow: hidden; }
+.slider-container { display: flex; overflow-x: auto; gap: 1.8rem; padding: 10px 10px 30px 10px; -ms-overflow-style: none; scrollbar-width: none; cursor: grab; user-select: none; width: 100%; }
 .slider-container.active { cursor: grabbing; }
 .slider-container::-webkit-scrollbar { display: none; }
-.post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
-.slider-card, .post-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 0 !important; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; }
-.slider-card { flex: 0 0 280px; min-height: 260px; }
-.slider-card:hover, .post-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--accent-color); z-index: 2; }
-.post-thumbnail { width: 100%; height: 200px; background-size: cover; background-position: center; background-color: var(--secondary-bg); border-bottom: 1px solid var(--border-color); }
-.post-card-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
-.post-category { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: var(--accent-color); letter-spacing: 1px; margin-bottom: 0.6rem; display: block; }
-.post-title { font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important; font-size: 1.15rem; font-weight: 700; color: var(--text-main); line-height: 1.6; }
-.read-more { display: inline-flex; align-items: center; text-decoration: none; background-color: var(--accent-color); color: #ffffff !important; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; transition: background-color 0.2s ease, transform 0.1s ease; align-self: flex-start; width: max-content; }
-.read-more:hover { background-color: #e03a00; transform: translateY(-2px); }
+.post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2.5rem; }
+
+/* =========================================
+   Premium Cards (အကွေးအဝိုက်နှင့် အရိပ်များ)
+   ========================================= */
+.slider-card, .post-card { 
+    background: var(--card-bg); 
+    border: 1px solid var(--border-color); 
+    border-radius: 20px; /* ထောင့်ချွန်းများကို ပိုမိုဝိုင်းစက်စေခြင်း */
+    padding: 0 !important; 
+    overflow: hidden; 
+    box-shadow: var(--shadow-sm); 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+}
+.slider-card { flex: 0 0 300px; min-height: 300px; }
+.slider-card:hover, .post-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: var(--shadow-hover); 
+    border-color: rgba(255, 90, 34, 0.2); 
+}
+.post-thumbnail { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: var(--secondary-bg); border-bottom: 1px solid var(--border-color); transition: transform 0.5s ease; }
+.slider-card:hover .post-thumbnail, .post-card:hover .post-thumbnail { transform: scale(1.03); /* ပုံကို အနည်းငယ် Zoom ဆွဲပြခြင်း */ }
+.post-card-content { padding: 1.8rem; display: flex; flex-direction: column; flex-grow: 1; position: relative; background: var(--card-bg); z-index: 2; }
+.post-category { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--accent-color); letter-spacing: 1.5px; margin-bottom: 0.8rem; display: block; }
+.post-title { font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important; font-size: 1.25rem; font-weight: 700; color: var(--text-main); line-height: 1.5; margin-bottom: 1.5rem; letter-spacing: -0.3px; }
+
+/* Premium Buttons */
+.read-more, .btn-primary, .download-btn { 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
+    text-decoration: none; 
+    background: var(--accent-gradient); 
+    color: #ffffff !important; 
+    padding: 0.8rem 1.5rem; 
+    border-radius: 12px; 
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    letter-spacing: 0.5px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(255, 90, 34, 0.25);
+    transition: all 0.3s ease; 
+    align-self: flex-start; 
+    width: max-content; 
+    cursor: pointer;
+}
+.read-more:hover, .btn-primary:hover, .download-btn:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 20px rgba(255, 90, 34, 0.4); 
+}
 
 /* Footer */
-footer { background-color: var(--secondary-bg); border-top: 1px solid var(--border-color); padding: 4rem 20px 2rem 20px; color: var(--text-main); margin-top: 4rem; }
-.footer-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2.5rem; }
-.footer-section h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--accent-color); }
-.footer-section p { color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.6; font-size: 0.95rem; }
+footer { background-color: var(--card-bg); border-top: 1px solid var(--border-color); padding: 5rem 20px 2rem 20px; color: var(--text-main); margin-top: 5rem; }
+.footer-container { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+.footer-section h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--text-main); letter-spacing: -0.5px; }
+.footer-section p { color: var(--text-muted); margin-bottom: 0.8rem; line-height: 1.7; font-size: 0.95rem; }
 .footer-links { list-style: none; padding: 0; }
-.footer-links li { margin-bottom: 0.6rem; }
-.footer-links a { text-decoration: none; color: var(--text-muted); transition: color 0.2s ease; }
-.footer-links a:hover { color: var(--accent-color); }
-.footer-bottom { text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; }
+.footer-links li { margin-bottom: 0.8rem; }
+.footer-links a { text-decoration: none; color: var(--text-muted); transition: all 0.2s ease; font-weight: 500; }
+.footer-links a:hover { color: var(--accent-color); padding-left: 5px; }
+.footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; }
 
 /* Loading Overlay */
-.loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s ease; }
-[data-theme="dark"] .loading-overlay { background-color: rgba(18, 18, 18, 0.7); }
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--glass-bg); backdrop-filter: blur(15px); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s ease; }
 .loading-overlay.fade-out { opacity: 0; visibility: hidden; }
-.spinner { width: 30px; height: 30px; border: 4px solid var(--border-color); border-top: 4px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+.spinner { width: 40px; height: 40px; border: 4px solid var(--border-color); border-top: 4px solid var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.5rem; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* =========================================================
-   SINGLE POST CONTENT (Blogger / WordPress Standard Reset)
+   SINGLE POST CONTENT (Premium Typography & Layout)
    ========================================================= */
+.single-post-header { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2.5rem; text-align: center; }
+.single-post-title { font-size: 2.8rem; font-weight: 800; color: var(--text-main); margin-bottom: 1.2rem; letter-spacing: -1px; line-height: 1.2; }
+.single-post-meta { font-size: 0.95rem; font-weight: 600; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; }
+.single-post-content { font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important; line-height: 1.9 !important; font-size: 1.1rem; color: var(--text-main); word-wrap: break-word; overflow-wrap: break-word; }
+.single-post-content * { max-width: 100% !important; box-sizing: border-box !important; }
+.single-post-content p, .single-post-content div, .single-post-content span { height: auto !important; min-height: 0 !important; overflow: visible !important; margin-bottom: 1rem; }
+.single-post-content p:empty { display: none !important; }
 
-.single-post-content {
-    font-family: 'Inter', 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif !important;
-    line-height: 1.7 !important;
-    font-size: 1.05rem;
-    color: var(--text-main);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-/* Master Rule: မည်သည့်အရာမှ (div, p, img, iframe) Screen အပြင်မထွက်စေရ */
-.single-post-content * {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* TinyMCE အမှိုက်များကို ဖျက်ခြင်း */
-.single-post-content p,
-.single-post-content div,
-.single-post-content span {
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible !important;
-    margin-bottom: 0.5rem;
-}
-
-.single-post-content p:empty {
-    display: none !important;
-}
-
-/* ဓာတ်ပုံများ (Editor Layout အတိုင်း နေရာချရန်) */
-.single-post-content img {
-    max-width: 100% !important;
-    height: auto !important;
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 6px;
-    margin: 5px; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-/* Iframe / Video */
-.single-post-content iframe,
-.single-post-content video,
-.ql-video {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 16 / 9 !important;
-    border-radius: 12px;
-    margin: 1.5rem 0 !important;
-    border: none !important;
-}
+/* ဓာတ်ပုံများနှင့် Videos များကို ပိုမိုလှပစေခြင်း */
+.single-post-content img { max-width: 100% !important; height: auto !important; display: inline-block; vertical-align: middle; border-radius: 16px; margin: 2rem 0; box-shadow: var(--shadow-md); transition: transform 0.3s ease; }
+.single-post-content img:hover { transform: scale(1.01); }
+.single-post-content iframe, .single-post-content video, .ql-video { width: 100% !important; height: auto !important; aspect-ratio: 16 / 9 !important; border-radius: 16px; margin: 2rem 0 !important; border: none !important; box-shadow: var(--shadow-md); }
 
 /* ဇယားများ */
-.single-post-content table {
-    width: 100% !important;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-    display: block;
-    overflow-x: auto;
-}
-.single-post-content td,
-.single-post-content th {
-    padding: 10px !important;
-    border: 1px solid var(--border-color);
-}
+.single-post-content table { width: 100% !important; border-collapse: collapse; margin: 2rem 0; display: block; overflow-x: auto; background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.single-post-content td, .single-post-content th { padding: 15px !important; border: 1px solid var(--border-color); }
 
 /* =========================================================
-   MOBILE RESPONSIVE (General Fixes)
+   MOBILE RESPONSIVE
    ========================================================= */
 @media (max-width: 768px) {
-    .header-container { flex-direction: row !important; justify-content: space-between; padding: 0 5px; }
-    .logo-wrapper { gap: 8px; }
-    .logo-text { font-size: 1.2rem !important; }
-    .theme-toggle-btn { width: 36px; height: 36px; display: flex !important; }
-    .theme-toggle-btn svg { width: 18px; height: 18px; }
+    .header-container { padding: 0 5px; }
+    .logo-text { font-size: 1.3rem !important; }
     .nav-scroll-btn { display: none !important; }
-    .category-nav-container { padding: 0 15px; margin-top: 1.2rem; }
-    nav ul { justify-content: flex-start; gap: 0.6rem; }
+    .category-nav-container { padding: 0 15px; margin-top: 1.5rem; }
+    .search-bar { padding: 1rem 1.2rem; margin-bottom: 1.5rem; border-radius: 12px; }
     .container { padding: 0.5rem 15px 1.5rem 15px; }
-    .slider-card { flex: 0 0 240px; }
+    .slider-card { flex: 0 0 260px; }
     .single-post-container { padding: 1.5rem 15px !important; }
-    .single-post-title { font-size: 1.5rem !important; line-height: 1.4; }
-    .single-post-content { font-size: 1rem !important; }
-    /* အရင်က ဒီနေရာမှာရှိတဲ့ .single-post-content img ဆိုတဲ့ အမှားကြီးကို အပြီးတိုင် ဖျက်ပစ်လိုက်ပါပြီ */
+    .single-post-title { font-size: 2rem !important; }
+    .single-post-content { font-size: 1.05rem !important; }
 }
