@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     filteredView.classList.remove('hidden');
                     filterTitle.innerText = catName ;
                     
-                    const filteredPosts = allPosts.filter(p => p.category && p.category._id === catId);
+                    const filteredPosts = allPosts.filter(p => p.category && p.category._id === catId).sort(() => 0.5 - Math.random());
                     renderGrid(filteredPosts, filteredGridContainer);
                 }
                 
