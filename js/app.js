@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const shuffledCategories = [...categories].sort(() => 0.5 - Math.random());
-        const maxSlidersToShow = 4; 
+        const maxSlidersToShow = 3; 
         let sliderCount = 0;
 
         for (const cat of shuffledCategories) {
